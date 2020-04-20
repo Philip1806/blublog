@@ -1,0 +1,24 @@
+{
+    "name": "philip/blublog",
+    "description": "A simple laravel blog",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Philip Dimitrov",
+            "email": "office@blublog.info"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "files": [
+            "Models/Helpers.php"
+        ]
+    },
+    "require": {
+        "php": "^7.2",
+        "laravel/ui": "^1.1",
+        "laravel/framework": "^6.*",
+        "intervention/image": "2.*"
+    }
+}
