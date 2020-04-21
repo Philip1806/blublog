@@ -8,12 +8,9 @@ use Philip\Blublog\Models\Rate;
 
 class BlublogRatingController extends Controller
 {
-    /*
-
-    Not used
-
     public function index()
     {
+        // NOT USED YET
         $ratings = Rate::latest()->paginate(10);
 
         if($ratings){
@@ -26,7 +23,7 @@ class BlublogRatingController extends Controller
         return view('blublog::panel.posts.rating')->with('ratings', $ratings);
 
     }
-
+  /*
     public function duplicate($id)
     {
 

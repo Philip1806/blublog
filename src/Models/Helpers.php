@@ -32,6 +32,9 @@ if (! function_exists('show_route')) {
         $Blublog_User = BlublogUser::where([
             ['user_id', '=', $user_id],
         ])->first();
+        if(!$Blublog_User){
+            return false;
+        }
         if($Blublog_User->role == "Administrator" or $Blublog_User->role == "Moderator"){
             return true;
         }
@@ -49,6 +52,9 @@ if (! function_exists('show_route')) {
             $Blublog_User = BlublogUser::where([
                 ['user_id', '=', Auth::user()->id],
             ])->first();
+            if(!$Blublog_User){
+                return false;
+            }
             if( $Blublog_User->role == "Administrator"){
                 return true;
             }
@@ -66,6 +72,9 @@ if (! function_exists('show_route')) {
             $Blublog_User = BlublogUser::where([
                 ['user_id', '=', Auth::user()->id],
             ])->first();
+            if(!$Blublog_User){
+                return false;
+            }
             if( $Blublog_User->role == "Administrator" or $Blublog_User->role == "Moderator"){
                 return true;
             }

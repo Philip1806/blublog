@@ -11,7 +11,7 @@ return [
     'img_width_type' => "int",
     'img_quality' => 60,
     'img_quality_type' => "int",
-    'post_editor' => false,
+    'post_editor' => true,
     'post_editor_type' => "bool",
     'debug' => true,
     'footer_html' => "Based on Bootstrap. Icons from Font Awesome. Web fonts from Google. <br> Blog made with BLUblog",
@@ -29,4 +29,13 @@ return [
     'tags_posts_per_page' => "10",
     'tags_posts_per_page_type' => "int",
     '' => false,
+    'disable_comments_modul' => false,
+    'disable_comments_modul_type' => "bool",
+    'max_unaproved_comments' => "10",
+    'max_unaproved_comments_type' => "int",
+    'approve_comments_from_users_with_approved_comments' => true,
+    'approve_comments_from_users_with_approved_comments_type' => "bool",
+
+    'disable_search_modul' => false,
+    'disable_search_modul_type' => "bool",
 ];

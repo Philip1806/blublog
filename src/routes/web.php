@@ -80,7 +80,7 @@ Route::group(
                     'as' => 'blublog'
                 ])->only([
                     'index','create', 'store','destroy'
-                ])->middleware('auth');
+                ]);
                 //users
                 Route::get('/users/create', 'BlublogUserController@create')->name('blublog.users.create')->middleware('BlublogAdmin');
                 Route::get('/users', 'BlublogUserController@index')->name('blublog.users.index')->middleware('BlublogAdmin');

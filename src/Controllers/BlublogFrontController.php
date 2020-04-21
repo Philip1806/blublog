@@ -74,7 +74,9 @@ class BlublogFrontController extends Controller
         if($post->tag_id){
             $post->maintag_id = $post->tag_id;
         } else {
-            $post->maintag_id = $post->tags[0]->id;
+            if(isset($post->tags[0]->id)){
+                $post->maintag_id = $post->tags[0]->id;
+            }
         }
         //TO DO get maintag with its 5 last posts
 
@@ -95,14 +97,47 @@ class BlublogFrontController extends Controller
     }
     public function comment_store(Request $request)
     {
+        if(blublog_setting('disable_comments_modul')){
+            return back();
+        }
+
         $rules = [
             'name' => 'required|max:50',
             'comment_body' => 'required|max:1200',
             'email' => 'required|email',
         ];
         $this->validate($request, $rules);
-
         $ip = Post::getIp();
+
+        if(blublog_setting('approve_comments_from_users_with_approved_comments')){
+            $post = Comment::where([
+                ['ip', '=', $ip],
+                ['public', '=', true],
+            ])->first();
+            if($post){
+                Comment::addcomment($request, $ip,0);
+                return back();
+            }
+        }
+
+        if(blublog_setting('max_unaproved_comments')){
+            $comments = Comment::where([
+                ['ip', '=', $ip],
+                ['public', '=', false],
+            ])->get();
+
+            $limit = blublog_setting('max_unaproved_comments');
+            if($comments->count() > $limit){
+
+                Session::flash('error', __('panel.max_unaproved_comments'));
+                return back();
+            }
+            if($comments->count() == $limit){
+                Session::flash('warning', __('panel.warning_unaproved_comments'));
+            }
+            //To DO: Ban user if are too many
+        }
+
         Comment::addcomment($request, $ip);
 
         return back();

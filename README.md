@@ -7,6 +7,8 @@ BLUblog is simple laravel blog. **BLUblog is halfway to BETA version.**
 It's not stable enough for now.
 
 ## Done
+*With * are from last commit.*
+
 1. Posts
 - Have multible categories.
 - Have multible tags.
@@ -19,6 +21,7 @@ It's not stable enough for now.
 - Have excerpt of content. Could be empty.
 
 2. Comments
+- Anti-spam modul.*
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
 
@@ -36,7 +39,10 @@ It's not stable enough for now.
 - Use users from Laravel UI.
 - They are three roles - Administrator, Moderator and Author.
 
-6. Admin
+6. File manager *
+- Upload files that are public and hiden.*
+
+7. Admin
 - Very basic settings page for now.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 
@@ -50,7 +56,6 @@ It's not stable enough for now.
 - Add contact form page.(-)
 
 2. COMMENTS
-- (!) Anti-spam modul.(+)
 - Javascript search for comments in panel.
 - Integrate with ban modul.
 - Make comment rating modul.(-)
@@ -66,8 +71,7 @@ It's not stable enough for now.
 - Javascript search for posts.
 - make sitemap.
 
-4. (!) FILEMANAGER(+)
-- Make file manager.
+4. File manager 
 - Javascript search for file.
 
 5. TAGS

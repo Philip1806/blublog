@@ -15,15 +15,23 @@
     <i class="fas fa-star-half-alt"></i>
     <span>{{ __('panel.posts_rating') }}</span></a>
 </li>
+@if (!blublog_setting('disable_comments_modul'))
 <li class="nav-item">
     <a class="nav-link" href="{{ url('/panel/comments') }}">
     <i class="fas fa-comments"></i>
     <span>{{ __('panel.comments') }}</span></a>
 </li>
+@endif
 <li class="nav-item">
     <a class="nav-link" href="{{ url('/panel/tags') }}">
     <i class="fas fa-tags"></i>
     <span>{{ __('panel.tags') }}</span></a>
+</li>
+<hr class="sidebar-divider">
+<li class="nav-item">
+    <a class="nav-link" href="{{ url('/panel/files') }}">
+    <i class="fas fa-fw fa-file"></i>
+    <span>{{ __('panel.files') }}</span></a>
 </li>
 <hr class="sidebar-divider">
     @if (blublog_is_mod())
@@ -58,12 +66,18 @@
             <a class="collapse-item" href="{{ url('/panel/posts') }}">{{ __('panel.posts') }}</a>
             <a class="collapse-item" href="{{ url('/panel/categories') }}">{{ __('panel.categories') }}</a>
             <a class="collapse-item" href="{{ url('/panel/posts/rating') }}">{{ __('panel.posts_rating') }}</a>
+            @if (!blublog_setting('disable_comments_modul'))
             <a class="collapse-item" href="{{ url('/panel/comments') }}">{{ __('panel.comments') }}</a>
+            @endif
             <a class="collapse-item" href="{{ url('/panel/tags') }}">{{ __('panel.tags') }}</a>
           </div>
         </div>
       </li>
-
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('/panel/files') }}">
+        <i class="fas fa-fw fa-file"></i>
+        <span>{{ __('panel.files') }}</span></a>
+    </li>
     <li class="nav-item">
             <a class="nav-link" href="{{ url('/panel/pages') }}">
             <i class="fas fa-fw fa-pager"></i>

@@ -134,10 +134,25 @@ return [
     'created_at' => 'Created at',
     'comment_edited' => 'Comment edited',
     'comment_deleted' => 'On',
+    'max_unaproved_comments' => 'You hit the limit for unapproved comments. Wait to be approved. You will be auto banned if you try to add more.',
+    'warning_unaproved_comments' => 'You can not post more comments. Wait to be approved.',
     'on' => 'On',
     'on' => 'On',
-    'on' => 'On',
-    'on' => 'On',
+
+    //Files
+
+    'files' => 'Files',
+    'file' => 'file',
+    'add' => 'Add',
+    'size' => 'Size',
+    'download' => 'Download',
+    'uploading_file' => 'Uploading File',
+    'max_size' => 'Max size:',
+    'php_ini' => 'Change it in php.ini',
+    'file_added' => 'File added',
+    'post_image' => 'Image post ',
+
+
     /*
         FRONT
     */
@@ -153,6 +168,7 @@ return [
     'not_approved' => 'The comment is now hidden.',
     'on' => 'On',
     'on' => 'On',
+
 
 
 ];

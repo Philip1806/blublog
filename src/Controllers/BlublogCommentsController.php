@@ -13,6 +13,13 @@ use Philip\Blublog\Models\Log;
 
 class BlublogCommentsController extends Controller
 {
+    public function __construct()
+    {
+        if(blublog_setting('disable_comments_modul')){
+            abort(403);
+        }
+    }
+
     public function index()
     {
         $comments = Comment::latest()->paginate(15);

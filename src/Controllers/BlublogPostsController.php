@@ -42,8 +42,12 @@ class BlublogPostsController extends Controller
      */
     public function listimg()
     {
-        $posts = File::latest()->paginate(14);
-        return response()->json($posts);
+        $files = File::where([
+            ['filename', 'LIKE', '%'."posts".'%'],
+        ])->latest()->paginate(10);
+        $images = File::only_img($files);
+
+        return response()->json($images);
 
     }
     /**
@@ -154,7 +158,7 @@ class BlublogPostsController extends Controller
 
                 $file = new File;
                 $file->size = $size;
-                $file->descr = "postimg " . $request->id;
+                $file->descr =  "'". $request->title . "'". __('panel.post_image');
                 $file->filename = 'posts/' . $address;
                 $file->save();
 
@@ -259,7 +263,7 @@ class BlublogPostsController extends Controller
 
             $file = new File;
             $file->size = $size;
-            $file->descr = __('files.image_for_post') . $request->title;
+            $file->descr =  "'". $request->title . "'". __('panel.post_image');
             $file->filename = 'posts/' . $address;
             $file->save();
 

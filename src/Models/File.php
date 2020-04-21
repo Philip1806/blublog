@@ -4,7 +4,7 @@ namespace Philip\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
-use Philip\Blublog\Models\Log;
+use Philip\Blublog\Models\Post;
 use Session;
 
 class File extends Model
@@ -70,9 +70,32 @@ class File extends Model
         $file = new File;
         $file->slug = $numb2;
         $file->size = $size;
-        $file->descr = __('files.image_for_post') . $post->title;
+        $file->descr =  "'". $post->title . "'". __('panel.post_image');
         $file->filename = 'posts/' . $address;
         $file->save();
+
+    }
+
+    public static function only_img($files)
+    {
+        $img_extensions = array("jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif",
+        "webp", "tiff", "bmp", "dib", "jpx", "Linux", "svg", "svgz", "Linux");
+
+        if($files){
+            //Make collection
+            $images = collect(new Post);
+
+            //Add only files with image extension to the collection
+            foreach ($files as $file) {
+                $ext = pathinfo($file->filename, PATHINFO_EXTENSION);
+                if(in_array($ext, $img_extensions)){
+                    $images->push($file);
+                }
+            }
+            return $images;
+        } else{
+            return $files;
+        }
 
     }
 

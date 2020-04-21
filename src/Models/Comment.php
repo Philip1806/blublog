@@ -37,6 +37,13 @@ class Comment extends Model
             }
             $comment->email = $request->email;
             $comment->ip = $ip;
+            $post = Post::find($request->get('post_id'));
+            if(isset($request->user()->name)){
+                if($post->user->name == $request->user()->name){
+                    $comment->author = true;
+                    $comment->public = true;
+                }
+            }
             $comment->body = $request->get('comment_body');
             $comment->parent_id = $request->get('comment_id');
             $post = Post::find($request->get('post_id'));

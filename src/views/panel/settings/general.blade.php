@@ -32,7 +32,7 @@
                     @if ($setting->type == "bool")
                     {{ Form::label($setting->name, $setting->name) }}
                     {{Form::hidden($setting->name,0)}}
-                    {{Form::checkbox($setting->name, unserialize($setting->val),unserialize($setting->val))}}
+                    {{Form::checkbox($setting->name, null,unserialize($setting->val))}}
                     @endif
                     @endforeach
                   </div>

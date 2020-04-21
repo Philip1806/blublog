@@ -221,7 +221,7 @@ function get_last_files(){
     fetch(url)
     .then((resp) => resp.json())
     .then(function(data) {
-    show_files(data.data);
+    show_files(data);
 })
 }
 get_last_files();

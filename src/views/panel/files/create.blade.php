@@ -1,22 +1,22 @@
 @extends('blublog::panel.main')
 
 @section('content')
-<div class="card">
-        <div class="card-header">Качване на файл | Максимален размер (MAX FILESIZE): <b>{{ $filesize }}</b> (зависи от php.ini)</div>
+<div class="card border-primary shadow">
+        <div class="card-header text-white bg-primary">{{__('panel.uploading_file')}} | {{__('panel.max_size')}} <b>{{ $filesize }}</b> ({{__('panel.php_ini')}})</div>
 
-            <div class="card-body">
-                {!! Form::open(['route' => 'blublog.files.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+        <div class="card-body">
+            {!! Form::open(['route' => 'blublog.files.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
-                            <p> <b>{{__('panel.short_descr')}}:</b> </p>
-                                {{ Form::text('descr', null, ['class' => 'form-control']) }} <br>
+            <p> <b>{{__('panel.descr')}}:</b> </p>
+            {{ Form::text('descr', null, ['class' => 'form-control']) }} <br>
 
-                                <input type="file" name="file" />
-                                <p></p>
-                                <p> {{ Form::checkbox('public', true, true) }}
-                                        {{ Form::label('public', 'Публично') }} </p>
-                {{ Form::submit('ЗАПИС', ['class' => 'btn btn-info btn-block']) }}
-                {!! Form::close() !!}
+            <input type="file" name="file" />
+            <p></p>
+            <p> {{ Form::checkbox('public', true, true) }}
+            {{ Form::label('public', __('panel.public')) }} </p>
 
-            </div>
+            {{ Form::submit('ЗАПИС', ['class' => 'btn btn-info btn-block']) }}
+            {!! Form::close() !!}
         </div>
+</div>
 @endsection
