@@ -28,7 +28,6 @@ return [
     'category_posts_per_page_type' => "int",
     'tags_posts_per_page' => "10",
     'tags_posts_per_page_type' => "int",
-    '' => false,
     'disable_comments_modul' => false,
     'disable_comments_modul_type' => "bool",
     'max_unaproved_comments' => "10",

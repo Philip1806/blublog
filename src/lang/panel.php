@@ -152,6 +152,18 @@ return [
     'file_added' => 'File added',
     'post_image' => 'Image post ',
 
+    //Menu
+    'menu' => 'Menu',
+    'add_menu' => 'Add Menu',
+    'add_link' => 'Add link',
+    'show_links' => 'Show links',
+    'add_link_to' => 'Add link to',
+    'no_menu' => 'No menu found.',
+    'no_links' => 'No links for this menu.',
+    'add_child_link' => 'Add child link',
+    'url' => 'URL',
+    'contentedit' => 'Successfully edited',
+
 
     /*
         FRONT

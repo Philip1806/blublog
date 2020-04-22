@@ -2,7 +2,8 @@
 use Philip\Blublog\Models\Setting;
 use Philip\Blublog\Models\Post;
 use Philip\Blublog\Models\BlublogUser;
-
+use Philip\Blublog\Models\MenuItem;
+use Philip\Blublog\Models\Menu;
 if (! function_exists('show_route')) {
     function blublog_setting($name)
     {
@@ -23,6 +24,58 @@ if (! function_exists('show_route')) {
             $setting->save();
             return config($set);
         }
+    }
+}
+if (! function_exists('show_route')) {
+    function blublog_draw_menu($menu_name)
+    {
+        $get_menu = Menu::where([
+            ['name', '=', $menu_name],
+        ])->first();
+        //
+        if($get_menu){
+        $menu = MenuItem::where([
+            ['parent', '=', "0"],
+            ['menu', '=', $get_menu->id],
+        ])->get();
+        }
+        if($get_menu){
+            foreach($menu as $item){
+                $sublinks = MenuItem::where([
+                    ['parent', '=', $item->id],
+                    ['menu', '=', $get_menu->id],
+                ])->get();
+                if($sublinks){
+                    $item->sublinks = $sublinks;
+                } else{
+                    $item->sublinks = null;
+                }
+
+            }
+
+            $HTML = "";
+
+            foreach($menu as $item){
+                if($item->sublinks->count() > 1){
+                    $HTML = $HTML . '<li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="' .$item->url. '" id="navbarDropdown"
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.
+                    $item->label. '</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">';
+                    foreach($item->sublinks as $link){
+                        $HTML = $HTML . '<a class="dropdown-item" href="' . $link->url . '"> '. $link->label . '</a>';
+                    }
+                    $HTML = $HTML . '</div></li>';
+                } else {
+                    $HTML = $HTML . '<li class="nav-item">';
+                    $HTML = $HTML . '<a class="nav-link" href="' .$item->url . '">' .  $item->label . '</a></li>';
+                }
+
+            }
+            return $HTML;
+        }
+        return false;
+
     }
 }
 if (! function_exists('show_route')) {

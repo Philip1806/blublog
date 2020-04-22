@@ -36,6 +36,23 @@ Route::group(
 
                 Route::get('/comments/approve/{id}', 'BlublogCommentsController@approve')->name('comments.approve');
 
+                Route::get('/menu/menu_items/{id}', 'BlublogMenuController@menu_items')->name('menu.menu_items');
+
+                Route::get('/menu/edit_item/{id}', 'BlublogMenuController@edit_item')->name('menu.edit_item');
+                Route::put('/menu/edit_item', 'BlublogMenuController@edit_item_update')->name('menu.edit_item_update');
+
+                Route::put('/menu/update', 'BlublogMenuController@edit_menu_update')->name('menu.edit_menu_update');
+                Route::delete('/menu/items/{item}', 'BlublogMenuController@destroy_item')->name('menu.destroy_item');
+                Route::delete('/menu/menus/{menu}', 'BlublogMenuController@destroy_menu')->name('menu.destroy_menu');
+
+                Route::post('/menu/add_parent/store', 'BlublogMenuController@add_parent_store')->name('menu.add_parent_store');
+                Route::post('/menu/add/store', 'BlublogMenuController@add_menu_store')->name('menu.add_menu_store');
+                Route::post('/menu/add_child/store', 'BlublogMenuController@add_child_store')->name('menu.add_child_store');
+
+
+                Route::get('/menu', 'BlublogMenuController@index')->name('menu.index');
+
+
                 Route::resource('/logs', 'BlublogLogController', [
                     'as' => 'blublog'
                 ])->only([

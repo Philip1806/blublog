@@ -83,24 +83,11 @@
             <i class="fas fa-fw fa-pager"></i>
             <span>{{ __('panel.pages') }}</span></a>
     </li>
-      <hr class="sidebar-divider">
-
-      <div class="sidebar-heading">
-          {{ __('panel.addons') }}
-      </div>
-
-
 
       <li class="nav-item">
-        <a class="nav-link disabled" href="{{ url('/panel/events') }}">
-          <i class="fas fa-fw fa-calendar"></i>
-          <span>{{ __('panel.Calendar') }}</span></a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link disabled" href="{{ url('/panel/menu') }}">
+        <a class="nav-link" href="{{ url('/panel/menu') }}">
           <i class="fas fa-fw fa-ellipsis-h"></i>
-          <span>{{ __('panel.Menu') }}</span></a>
+          <span>{{ __('panel.menu') }}</span></a>
       </li>
     <hr class="sidebar-divider">
 

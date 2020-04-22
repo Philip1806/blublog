@@ -21,7 +21,7 @@ It's not stable enough for now.
 - Have excerpt of content. Could be empty.
 
 2. Comments
-- Anti-spam modul.*
+- Anti-spam modul.
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
 
@@ -39,11 +39,12 @@ It's not stable enough for now.
 - Use users from Laravel UI.
 - They are three roles - Administrator, Moderator and Author.
 
-6. File manager *
-- Upload files that are public and hiden.*
+6. File manager
+- Upload files that are public and hiden.
 
 7. Admin
 - Very basic settings page for now.
+- Very basic menu options. You can make link or dropdown.*
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 
 ## TO DO
@@ -78,7 +79,7 @@ It's not stable enough for now.
 - Javascript search for tags in panel.
 
 6. ADMIN THINGS
-- (!) Add editable menu for front end(+)
+- Make a better menu.(-)
 - (!) Cashing.(-)
 - (!) Add BAN modul.
 - Add maintenance mode.(-)
