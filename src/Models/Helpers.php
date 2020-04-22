@@ -1,9 +1,9 @@
 <?php
-use Philip\Blublog\Models\Setting;
-use Philip\Blublog\Models\Post;
-use Philip\Blublog\Models\BlublogUser;
-use Philip\Blublog\Models\MenuItem;
-use Philip\Blublog\Models\Menu;
+use Philip1503\Blublog\Models\Setting;
+use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\BlublogUser;
+use Philip1503\Blublog\Models\MenuItem;
+use Philip1503\Blublog\Models\Menu;
 
 if (! function_exists('show_route')) {
     function blublog_setting($name)

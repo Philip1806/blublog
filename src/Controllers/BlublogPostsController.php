@@ -1,16 +1,16 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\Post;
-use Philip\Blublog\Models\Tag;
-use Philip\Blublog\Models\PostsViews;
-use Philip\Blublog\Models\Category;
-use Philip\Blublog\Models\File;
-use Philip\Blublog\Models\Log;
+use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Tag;
+use Philip1503\Blublog\Models\PostsViews;
+use Philip1503\Blublog\Models\Category;
+use Philip1503\Blublog\Models\File;
+use Philip1503\Blublog\Models\Log;
 use Session;
 use Auth;
 
@@ -19,7 +19,7 @@ class BlublogPostsController extends Controller
     /**
      * Display a listing of the posts.
      *
-     * @return Philip\Blublog\Models\Post
+     * @return Philip1503\Blublog\Models\Post
      */
     public function index()
     {
@@ -112,7 +112,7 @@ class BlublogPostsController extends Controller
      * Display the specified post.
      *
      * @param  int  $id
-     * @return Philip\Blublog\Models\Post
+     * @return Philip1503\Blublog\Models\Post
     */
     public function show($id)
     {

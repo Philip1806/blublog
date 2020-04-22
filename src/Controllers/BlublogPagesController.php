@@ -1,13 +1,13 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\Page;
-use Philip\Blublog\Models\Post;
-use Philip\Blublog\Models\Log;
+use Philip1503\Blublog\Models\Page;
+use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Log;
 use Session;
 
 class BlublogPagesController extends Controller

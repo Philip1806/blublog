@@ -15,12 +15,12 @@ composer require intervention/image
 ```
 In app.php from config folder add this in providers if it's not there:
 ```
-Philip\Blublog\BlublogServiceProvider::class,
+Philip1503\Blublog\BlublogServiceProvider::class,
 ```
 Log into your app without going to the blog. Run these one by one:
 ```
 php artisan migrate
-php artisan vendor:publish --provider="Philip\Blublog\BlublogServiceProvider"
+php artisan vendor:publish --provider="Philip1503\Blublog\BlublogServiceProvider"
 php artisan blublog:setup
 ```
 Cool. Everything except uploading/deleting files should work.

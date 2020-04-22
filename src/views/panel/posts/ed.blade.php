@@ -92,13 +92,6 @@
             <div id="pagepanel"></div><br>
             <button type="button" class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target=".bd-example-modal-lg">Upload Post Image</button>
            <hr>
-
-        <div class="card border-primary" style="margin-top:10px;">
-            <div class="card-header  text-white bg-primary">{{__('panel.headlight')}}</div>
-            <div class="card-body text-primary">
-                {{ Form::text('headlight', null, ['class' => 'form-control']) }}
-            </div>
-        </div>
         <div class="card border-primary" style="margin-top:10px;">
             <div class="card-header  text-white bg-primary">{{__('panel.slug')}}</div>
             <div class="card-body text-primary">
@@ -113,6 +106,12 @@
                         {{Form::checkbox('slider', null)}} {{__('panel.slider')}}<br>
                         {{Form::checkbox('front', null)}} {{__('panel.front_page')}}<br>
                         {{Form::checkbox('recommended', null)}} {{__('panel.recommended')}}
+                    </div>
+                </div>
+                <div class="card border-primary" style="margin-top:10px;">
+                    <div class="card-header  text-white bg-primary">{{__('panel.headlight')}}</div>
+                    <div class="card-body text-primary">
+                        {{ Form::text('headlight', null, ['class' => 'form-control']) }}
                     </div>
                 </div>
 

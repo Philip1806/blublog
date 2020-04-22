@@ -1,14 +1,14 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\Post;
-use Philip\Blublog\Models\Page;
-use Philip\Blublog\Models\Category;
-use Philip\Blublog\Models\Comment;
-use Philip\Blublog\Models\Tag;
+use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Page;
+use Philip1503\Blublog\Models\Category;
+use Philip1503\Blublog\Models\Comment;
+use Philip1503\Blublog\Models\Tag;
 use Carbon\Carbon;
 use Session;
 

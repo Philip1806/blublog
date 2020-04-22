@@ -1,6 +1,6 @@
 <?php
 
-namespace Philip\Blublog\Models;
+namespace Philip1503\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

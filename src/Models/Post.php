@@ -1,15 +1,15 @@
 <?php
 
-namespace Philip\Blublog\Models;
+namespace Philip1503\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Philip\Blublog\Models\Category;
-use Philip\Blublog\Models\Tag;
-use Philip\Blublog\Models\Post;
-use Philip\Blublog\Models\Comment;
+use Philip1503\Blublog\Models\Category;
+use Philip1503\Blublog\Models\Tag;
+use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Comment;
 use Carbon\Carbon;
-use Philip\Blublog\Models\Rate;
-use Philip\Blublog\Models\PostsViews;
+use Philip1503\Blublog\Models\Rate;
+use Philip1503\Blublog\Models\PostsViews;
 use Session;
 class Post extends Model
 {

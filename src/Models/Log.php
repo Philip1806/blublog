@@ -1,10 +1,10 @@
 <?php
 
-namespace Philip\Blublog\Models;
+namespace Philip1503\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
-use Philip\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Post;
 use Session;
 
 class Log extends Model

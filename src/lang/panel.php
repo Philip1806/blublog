@@ -12,6 +12,8 @@ return [
     */
     //general
     'blublog_version' => 'Version of BLUblog',
+    'general' => 'General',
+    'admin' => 'Admin',
     '404' => 'The element for this action is not found. 404',
     'admin_panel' => 'Administration',
     'welcome' => 'Welcome!',
@@ -77,7 +79,7 @@ return [
     'draft_con' => 'Continue writing your post',
     'private_posts' => 'Your private posts',
     'comments' => 'Comments',
-    'comments_waiting' => 'Comments waiting to be public.',
+    'comments_waiting' => 'Comments are waiting for approval.',
 
     //Logs
     'logs' => 'Logs',
@@ -88,6 +90,7 @@ return [
     'lastlogs' => 'Last logs:',
     'show_all_data' => 'Show all data',
     'can_be_empty' => 'Can be empty',
+    'logs_this' => 'Logs/Events this month',
 
 
     //posts
@@ -164,6 +167,7 @@ return [
     'add_child_link' => 'Add child link',
     'url' => 'URL',
     'contentedit' => 'Successfully edited',
+    'set_main_menu' => 'Set as main',
 
     //Search
     'search' => 'search',

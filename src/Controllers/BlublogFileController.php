@@ -1,13 +1,13 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\File;
-use Philip\Blublog\Models\Post;
-use Philip\Blublog\Models\Category;
+use Philip1503\Blublog\Models\File;
+use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Category;
 use Session;
 
 class BlublogFileController extends Controller

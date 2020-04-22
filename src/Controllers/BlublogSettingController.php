@@ -1,12 +1,12 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\Setting;
-use Philip\Blublog\Models\Log;
+use Philip1503\Blublog\Models\Setting;
+use Philip1503\Blublog\Models\Log;
 use App\User;
 use Session;
 

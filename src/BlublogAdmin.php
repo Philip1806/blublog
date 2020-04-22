@@ -1,8 +1,8 @@
 <?php
-namespace Philip\Blublog;
+namespace Philip1503\Blublog;
 
 use Closure;
-use Philip\Blublog\Models\BlublogUser;
+use Philip1503\Blublog\Models\BlublogUser;
 class BlublogAdmin
 {
     /**

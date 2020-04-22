@@ -107,12 +107,6 @@
          <button type="button" class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target=".bd-example-modal-lg">Upload Post Image</button>
 
         <div class="card border-primary" style="margin-top:10px;">
-            <div class="card-header  text-white bg-primary">{{__('panel.headlight')}}</div>
-            <div class="card-body text-primary">
-                {{ Form::text('headlight', null, ['class' => 'form-control']) }}
-            </div>
-        </div>
-        <div class="card border-primary" style="margin-top:10px;">
             <div class="card-header  text-white bg-primary">{{__('panel.settings')}}</div>
             <div class="card-body text-primary">
                 <p>{{Form::checkbox('password', 'value', null, ['onclick' => 'add_pass_fil()'])}} {{__('panel.post_password')}}<div id="passw"></div></p>
@@ -120,6 +114,12 @@
                 {{Form::checkbox('slider', null)}} {{__('panel.slider')}}<br>
                 {{Form::checkbox('front', null)}} {{__('panel.front_page')}}<br>
                 {{Form::checkbox('recommended', null)}} {{__('panel.recommended')}}
+            </div>
+        </div>
+        <div class="card border-primary" style="margin-top:10px;">
+            <div class="card-header  text-white bg-primary">{{__('panel.headlight')}}</div>
+            <div class="card-body text-primary">
+                {{ Form::text('headlight', null, ['class' => 'form-control']) }}
             </div>
         </div>
 

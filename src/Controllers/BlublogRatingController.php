@@ -1,10 +1,10 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\Rate;
+use Philip1503\Blublog\Models\Rate;
 
 class BlublogRatingController extends Controller
 {

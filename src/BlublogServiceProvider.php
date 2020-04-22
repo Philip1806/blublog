@@ -1,6 +1,6 @@
 <?php
 
-namespace Philip\Blublog;
+namespace Philip1503\Blublog;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\View;
 class BlublogServiceProvider extends ServiceProvider
 {
     protected $commands = [
-        'Philip\Blublog\Commands\BlublogSetUp',
+        'Philip1503\Blublog\Commands\BlublogSetUp',
     ];
     /**
      * Register any application services.
@@ -32,7 +32,7 @@ class BlublogServiceProvider extends ServiceProvider
         if (file_exists($file)) {
             require_once($file);
         }
-        app('router')->aliasMiddleware('BlublogAdmin', \Philip\Blublog\BlublogAdmin::class);
+        app('router')->aliasMiddleware('BlublogAdmin', \Philip1503\Blublog\BlublogAdmin::class);
 
     }
 

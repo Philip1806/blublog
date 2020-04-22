@@ -1,5 +1,5 @@
 {
-    "name": "philip/blublog",
+    "name": "philip1503/blublog",
     "keywords": [
         "laravel",
         "blog",
@@ -22,7 +22,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Philip\\Blublog\\": "src"
+            "Philip1503\\Blublog\\": "src"
         },
         "files": [
             "Models/Helpers.php"
@@ -37,7 +37,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Philip\\Blublog\\BlublogServiceProvider"
+                "Philip1503\\Blublog\\BlublogServiceProvider"
             ]
         }
     }

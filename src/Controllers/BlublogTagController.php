@@ -1,13 +1,13 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Post;
 use Illuminate\Support\Facades\Storage;
-use Philip\Blublog\Models\File;
-use Philip\Blublog\Models\Tag;
+use Philip1503\Blublog\Models\File;
+use Philip1503\Blublog\Models\Tag;
 use Session;
 
 class BlublogTagController extends Controller

@@ -1,15 +1,16 @@
 <?php
 
-namespace   Philip\blublog\Controllers;
+namespace   Philip1503\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
-use Philip\Blublog\Models\Post;
-use Philip\Blublog\Models\File;
-use Philip\Blublog\Models\Comment;
-use Philip\Blublog\Models\Setting;
+use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\File;
+use Philip1503\Blublog\Models\Comment;
+use Philip1503\Blublog\Models\Setting;
 use Auth;
+use Philip1503\Blublog\Models\Log;
 
 class BlublogController extends Controller
 {
@@ -61,7 +62,11 @@ class BlublogController extends Controller
         ])->get()->count();
 
         if(blublog_is_admin()){
-            return view("blublog::panel.index")->with('php_errors', $php_errors)->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts)->with('moduls', $moduls);
+            $this_month_logs = Log::where([
+                ['created_at', '>', $thismonth],
+                ['created_at', '<', $nextmonth],
+            ])->get()->count();
+            return view("blublog::panel.index")->with('this_month_logs', $this_month_logs)->with('php_errors', $php_errors)->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts)->with('moduls', $moduls);
         }elseif(blublog_is_mod()){
             return view("blublog::panel.index_mod")->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts)->with('moduls', $moduls);
         }
