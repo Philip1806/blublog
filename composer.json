@@ -30,7 +30,7 @@
     },
     "require": {
         "laravel/ui": "^1.1",
-        "laravel/framework": "^6.*",
+        "laravel/framework": "^6.0",
         "laravelcollective/html": "^6.0",
         "intervention/image": "2.*"
     },
