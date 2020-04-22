@@ -25,7 +25,7 @@
             "Philip1503\\Blublog\\": "src"
         },
         "files": [
-            "Models/Helpers.php"
+            "src/helpers.php"
         ]
     },
     "require": {

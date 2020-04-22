@@ -1,4 +1,6 @@
 <?php
+namespace Philip1503\Blublog;
+
 use Philip1503\Blublog\Models\Setting;
 use Philip1503\Blublog\Models\Post;
 use Philip1503\Blublog\Models\BlublogUser;
