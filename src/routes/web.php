@@ -21,6 +21,8 @@ Route::group(
                 Route::post('/comment/reply/store', 'BlublogFrontController@comment_store')->name('blublog.front.comment_reply_store');
                 Route::get('/categories/{slug}', 'BlublogFrontController@category_show')->name('blublog.front.category_show');
                 Route::get('/tags/{slug}', 'BlublogFrontController@tag_show')->name('blublog.front.tag_show');
+                Route::post('/search', 'BlublogFrontController@search')->name('blublog.front.search');
+                Route::get('/search/{slug}', 'PostFrontController@search_result')->name('blublog.front.searchresult');
 
             }
         );
@@ -35,6 +37,7 @@ Route::group(
             static function () {
 
                 Route::get('/comments/approve/{id}', 'BlublogCommentsController@approve')->name('comments.approve');
+                Route::get('/menu/set-main/{id}', 'BlublogMenuController@set_main_menu')->name('menu.set_main_menu');
 
                 Route::get('/menu/menu_items/{id}', 'BlublogMenuController@menu_items')->name('menu.menu_items');
 

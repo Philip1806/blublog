@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Philip\Blublog\Models\Post;
+use Philip\Blublog\Models\Page;
 use Philip\Blublog\Models\Category;
 use Philip\Blublog\Models\Comment;
 use Philip\Blublog\Models\Tag;
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 use Session;
 
 class BlublogFrontController extends Controller
@@ -31,6 +32,52 @@ class BlublogFrontController extends Controller
         return view($path)->with('posts', $posts);
     }
 
+    public function page($slug)
+    {
+        $page = Page::where([
+            ['slug', '=', $slug],
+            ['public', '=', true],
+        ])->first();
+
+        if(!$page){
+            abort(404);
+        }
+        $path = "blublog::" . config('blublog.theme', 'blublog') . ".pages.show";
+        return view($path)->with('page', $page);
+    }
+    public function search(Request $request)
+    {
+        $rules = [
+            'search' => 'required|max:150',
+        ];
+        $this->validate($request, $rules);
+        $search=  $request->search;
+
+        $result = collect(new Post);
+
+        $posts = Post::where([
+            ['title', 'LIKE', '%' . $search . '%'],
+        ])->latest()->get();
+
+        foreach ($posts as $post) {
+            $result->push($post);
+        }
+
+        $posts = Post::where([
+            ['content', 'LIKE', '%' . $search . '%'],
+        ])->latest()->get();
+
+
+        foreach ($posts as $post) {
+            $result->push($post);
+        }
+
+        $result = $result->unique('id');
+        $result = Post::processing($result);
+
+        $path = "blublog::" . config('blublog.theme', 'blublog') . ".posts.search";
+        return view($path)->with('posts', $result)->with('search', $search);
+    }
     public function category_show($slug)
     {
         $category = Category::where([
@@ -70,7 +117,7 @@ class BlublogFrontController extends Controller
         if(!$post){
             abort(404);
         }
-
+        $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
         if($post->tag_id){
             $post->maintag_id = $post->tag_id;
         } else {

@@ -136,8 +136,8 @@ return [
     'comment_deleted' => 'On',
     'max_unaproved_comments' => 'You hit the limit for unapproved comments. Wait to be approved. You will be auto banned if you try to add more.',
     'warning_unaproved_comments' => 'You can not post more comments. Wait to be approved.',
-    'on' => 'On',
-    'on' => 'On',
+    'comment_added_wait' => 'Comment added. When it is approved it will show.',
+    'comment_added' => 'Comment added.',
 
     //Files
 
@@ -155,6 +155,7 @@ return [
     //Menu
     'menu' => 'Menu',
     'add_menu' => 'Add Menu',
+    'show_items' => 'Show items',
     'add_link' => 'Add link',
     'show_links' => 'Show links',
     'add_link_to' => 'Add link to',
@@ -163,6 +164,12 @@ return [
     'add_child_link' => 'Add child link',
     'url' => 'URL',
     'contentedit' => 'Successfully edited',
+
+    //Search
+    'search' => 'search',
+    'search_in_blog' => 'Search in blog...',
+    'search_resuts' => 'Search results for:',
+    'on' => 'On',
 
 
     /*

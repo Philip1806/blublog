@@ -40,12 +40,12 @@ class CreateBlublogTables extends Migration
             $table->bigIncrements('id');
             $table->string('name', 250);
             $table->string('email', 150);
-            $table->unsignedBigInteger('parent_id');
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->text('body');
             $table->string('commentable_type', 250);
             $table->integer('commentable_id');
-            $table->integer('likes');
-            $table->integer('dislikes');
+            $table->integer('likes')->default(0);
+            $table->integer('dislikes')->default(0);
             $table->string('ip', 250)->nullable();
             $table->string('extra', 250)->nullable();
             $table->string('agent', 255)->nullable();

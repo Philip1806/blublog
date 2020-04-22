@@ -22,7 +22,7 @@
                 {!! Form::close() !!}
         </div>
         <div class="col-lg">
-        <a href="" class="btn btn-success btn-block">{{__('panel.view_frontend')}}</a>
+        <a href="{{ route('blublog.front.post_show', $post->slug) }}" class="btn btn-success btn-block">{{__('panel.view_frontend')}}</a>
         </div>
         <div class="col-lg">
                 <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ModalLong">

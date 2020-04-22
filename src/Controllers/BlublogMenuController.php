@@ -20,6 +20,27 @@ class BlublogMenuController extends Controller
         $menus = Menu::latest()->get();
         return view('blublog::panel.menu.index')->with('menus', $menus);
     }
+    public function set_main_menu($id)
+    {
+        $menu = Menu::find($id);
+        if(!$menu){
+            abort(404);
+        }
+        $setting = Setting::where([
+            ['name', '=', "main_menu_name"],
+        ])->first();
+        if(!$setting){
+            $setting = new Setting;
+            $setting->name = "main_menu_name";
+            $setting->val = serialize($menu->name);
+            $setting->type = "string";
+            $setting->save();
+        } else {
+            $setting->val = serialize($menu->name);
+            $setting->save();
+        }
+        return back();
+    }
     public function menu_items($id)
     {
         $menu = Menu::find($id);

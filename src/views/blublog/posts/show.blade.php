@@ -46,7 +46,7 @@
 
             {!! $post->content !!}
             <hr>
-          <small>Posted by {{ $post->user->name }} on {{ $post->created_at }}</small>
+          <small>Posted by {{ $post->user->name }} on {{ $post->date }}</small>
           @foreach ($post->tags as $tag)
           <a href="{{ route('blublog.front.tag_show', $tag->slug) }}"><span class="badge badge-pill badge-dark">{{$tag->title}}</span></a>
           @endforeach

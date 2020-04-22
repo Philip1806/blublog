@@ -4,6 +4,7 @@ use Philip\Blublog\Models\Post;
 use Philip\Blublog\Models\BlublogUser;
 use Philip\Blublog\Models\MenuItem;
 use Philip\Blublog\Models\Menu;
+
 if (! function_exists('show_route')) {
     function blublog_setting($name)
     {
@@ -24,6 +25,12 @@ if (! function_exists('show_route')) {
             $setting->save();
             return config($set);
         }
+    }
+}
+if (! function_exists('show_route')) {
+    function blublog_main_menu()
+    {
+        return blublog_draw_menu(blublog_setting('main_menu_name'));
     }
 }
 if (! function_exists('show_route')) {

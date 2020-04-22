@@ -1,24 +1,44 @@
 {
     "name": "philip/blublog",
+    "keywords": [
+        "laravel",
+        "blog",
+        "package",
+        "admin",
+        "panel",
+        "posts",
+        "pages"
+    ],
     "description": "A simple laravel blog",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Philip Dimitrov",
+            "homepage": "https://blublog.info/",
             "email": "office@blublog.info"
         }
     ],
     "minimum-stability": "dev",
     "autoload": {
+        "psr-4": {
+            "Philip\\Blublog\\": "src"
+        },
         "files": [
             "Models/Helpers.php"
         ]
     },
     "require": {
-        "php": "^7.2",
         "laravel/ui": "^1.1",
         "laravel/framework": "^6.*",
+        "laravelcollective/html": "^6.0",
         "intervention/image": "2.*"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Philip\\Blublog\\BlublogServiceProvider"
+            ]
+        }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'version' => "0.5 ALPHA",
+    'version' => "0.7 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -13,8 +13,7 @@ return [
     'img_quality_type' => "int",
     'post_editor' => true,
     'post_editor_type' => "bool",
-    'debug' => true,
-    'footer_html' => "Based on Bootstrap. Icons from Font Awesome. Web fonts from Google. <br> Blog made with BLUblog",
+    'footer_html' => "Based on Bootstrap. Icons from Font Awesome. Web fonts from Google.<br>Blog made with <a href='https://blublog.info'>BLUblog</a>.",
     'footer_html_type' => "text",
     'head_html' => "<h1>Welcome to BLUblog!</h1><p>This is info panel for front page that can be edited or removed.<p>",
     'head_html_type' => "text",
@@ -37,4 +36,6 @@ return [
 
     'disable_search_modul' => false,
     'disable_search_modul_type' => "bool",
+    'main_menu_name' => "Main",
+    'main_menu_name_type' => "string",
 ];

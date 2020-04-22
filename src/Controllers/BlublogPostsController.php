@@ -221,7 +221,7 @@ class BlublogPostsController extends Controller
         $post->tags()->sync($request->tags, false);
         $post->categories()->sync($request->categories, false);
 
-        Session::flash('success', __('general.contentcreate'));
+        Session::flash('success', __('panel.contentcreate'));
         return redirect()->route('blublog.posts.show', $post->id);
     }
     public function update(Request $request, $id)
@@ -332,7 +332,7 @@ class BlublogPostsController extends Controller
                $post->tags()->sync(array());
            }
 
-        Session::flash('success', __('general.contentupdate'));
+        Session::flash('success', __('panel.contentupdate'));
         return redirect()->route('blublog.posts.show', $post->id);
     }
     public function destroy($id){

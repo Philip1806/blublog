@@ -22,7 +22,9 @@
 </div>
 <hr>
 @endforeach
+@if (isset($posts->links))
 {!!$posts->links()!!}
+@endif
 @else
 <center><b>{{__('panel.no_posts')}}</b></center>
 @endif

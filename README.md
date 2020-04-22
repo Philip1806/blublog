@@ -1,11 +1,40 @@
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 ## About BLUBLOG
-BLUblog is simple laravel blog. **BLUblog is halfway to BETA version.**
+**BLUblog is close to BETA version.**
+BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation.
+URL address of the panel and blog can be changed in config file.
 
 ## Instaling
-It's not stable enough for now.
-
+The package requires three other packages - intervention image, laravelcollective/html and laravel/ui.
+You can install them with:
+```
+composer require laravel/ui
+composer require laravelcollective/html
+composer require intervention/image
+```
+In app.php from config folder add this in providers if it's not there:
+```
+Philip\Blublog\BlublogServiceProvider::class,
+```
+Log into your app without going to the blog. Run these one by one:
+```
+php artisan migrate
+php artisan vendor:publish --provider="Philip\Blublog\BlublogServiceProvider"
+php artisan blublog:setup
+```
+Cool. Everything except uploading/deleting files should work.
+You need to add this in filesystems.php from config folder:
+```
+'blublog' => [
+    'driver' => 'local',
+    'root' => public_path('/uploads'),
+    'url' => env('APP_URL').'/public',
+    'visibility' => 'public',
+],
+```
+You can set up where all files from the package go. It's not stable for now, so don't change this above.
+By default you can access the blog from /blog and panel from /panel.
 ## Done
 *With * are from last commit.*
 
@@ -19,6 +48,7 @@ It's not stable enough for now.
 - Comments can be allowed or forbiden.
 - Post can be public, private or draft. Private can be seen only from post author. Drafts are seen by all users with access to the panel.
 - Have excerpt of content. Could be empty.
+- Basic search for posts.*
 
 2. Comments
 - Anti-spam modul.
@@ -29,7 +59,7 @@ It's not stable enough for now.
 - Can have background image.
 - Can have custom color code (for now is auto generated).
 
-4. Pages
+4. Pages*
 - TinyMCE - WYSIWYG HTML Editor.
 - Page could have sidebar or not.
 - Can have background image.
@@ -44,7 +74,7 @@ It's not stable enough for now.
 
 7. Admin
 - Very basic settings page for now.
-- Very basic menu options. You can make link or dropdown.*
+- Very basic menu options. You can make link or dropdown.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 
 ## TO DO
@@ -52,7 +82,6 @@ It's not stable enough for now.
 *With (-) are low priority and with (+) are high priority.*
 
 1. FRONTEND
-- (!) Add search page.(+)
 - Add author page.
 - Add contact form page.(-)
 

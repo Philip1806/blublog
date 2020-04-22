@@ -34,6 +34,7 @@
                 <a href="{{ route('menu.menu_items', $menu->id) }}" class="badge badge-primary">{{__('panel.show_links')}}</a>
                 <a  data-toggle="collapse" href="#addparent-{{$menu->id}}" role="button" aria-expanded="false" aria-controls="addparent-{{$menu->id}}"class="badge badge-dark">{{__('panel.add_link')}}</a>
                 <a class="badge badge-warning" data-toggle="collapse" href="#editmenu-{{$menu->id}}" role="button" aria-expanded="false" aria-controls="#editmenu-{{$menu->id}}">{{__('panel.edit')}}</a>
+                <a href="{{ route('menu.set_main_menu', $menu->id) }}" class="badge badge-info">{{__('panel.set_main_menu')}}</a>
             </li>
             <li class="list-group-item">
                 <div class="collapse" id="addparent-{{$menu->id}}">

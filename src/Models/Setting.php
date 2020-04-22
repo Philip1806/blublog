@@ -8,6 +8,14 @@ class Setting extends Model
 {
     protected $table = 'blublog_settings';
 
+    public static function set_default_settings(){
+        $settings = config('blublog');
+        $keys = array_keys($settings);
+        for ($i=4; $i < count($settings); $i = $i + 2) {
+            blublog_setting($keys[$i]);
+        }
+        return true;
+    }
     public static function PhpCheck(){
         if(!isset($errors)){
             $errors = array();

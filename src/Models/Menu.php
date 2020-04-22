@@ -12,5 +12,7 @@ class Menu extends Model
     {
         return $this->hasMany(MenuItem::class, 'menu');
     }
+    public static function set_main_menu(){
 
+    }
 }

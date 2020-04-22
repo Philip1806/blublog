@@ -4,6 +4,7 @@ namespace Philip\Blublog\Commands;
 use Illuminate\Console\Command;
 use App\User;
 use Philip\Blublog\Models\BlublogUser;
+use Philip\Blublog\Models\Setting;
 
 class BlublogSetUp extends Command
 {
@@ -38,12 +39,15 @@ class BlublogSetUp extends Command
      */
     public function handle()
     {
-        $users = User::get();
-        foreach ($users as $user){
-            $Blublog_User = new BlublogUser;
-            $Blublog_User->user_id = $user->id;
-            $Blublog_User->role = "Administrator";
-            $Blublog_User->save();
+        if(!BlublogUser::find(1)){
+            $users = User::get();
+            foreach ($users as $user){
+                $Blublog_User = new BlublogUser;
+                $Blublog_User->user_id = $user->id;
+                $Blublog_User->role = "Administrator";
+                $Blublog_User->save();
+            }
         }
+        Setting::set_default_settings();
     }
 }

@@ -42,6 +42,13 @@ class Comment extends Model
                 if($post->user->name == $request->user()->name){
                     $comment->author = true;
                     $comment->public = true;
+                    Session::flash('success',  __('panel.comment_added'));
+                }
+            } else {
+                if($notpublic){
+                    Session::flash('success',  __('panel.comment_added_wait'));
+                } else {
+                    Session::flash('success',  __('panel.comment_added'));
                 }
             }
             $comment->body = $request->get('comment_body');
@@ -54,11 +61,6 @@ class Comment extends Model
             }
             $post->allcomments()->save($comment);
 
-            if(!$notpublic){
-                Session::flash('success', __('general.contentcreate'));
-                return back();
-            }
-            Session::flash('success', 'Успешно добавено. Очаква одобрение, за да бъде видим.');
             return back();
     }
 
