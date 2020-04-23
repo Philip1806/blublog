@@ -28,6 +28,10 @@ class BlublogServiceProvider extends ServiceProvider
             __DIR__.'/public' => public_path('/'),
         ], 'public');
         $this->commands($this->commands);
+        $file = __DIR__ . '/Models/Helpers.php';
+        if (file_exists($file)) {
+            require_once($file);
+        }
         app('router')->aliasMiddleware('BlublogAdmin', \Philip1503\Blublog\BlublogAdmin::class);
 
     }

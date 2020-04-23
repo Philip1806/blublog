@@ -23,10 +23,7 @@
     "autoload": {
         "psr-4": {
             "Philip1503\\Blublog\\": "src"
-        },
-        "files": [
-            "src/helpers.php"
-        ]
+        }
     },
     "require": {
         "laravel/ui": "^1.1",
