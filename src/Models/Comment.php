@@ -4,6 +4,7 @@ namespace Philip1503\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Philip1503\Blublog\Models\Post;
+use Philip1503\Blublog\Models\Log;
 use Session;
 
 
@@ -62,6 +63,18 @@ class Comment extends Model
             $post->allcomments()->save($comment);
 
             return back();
+    }
+    public static function limit_unapproved_comments_reached_soon()
+    {
+        $ban = Log::where([
+            ['type', '=', "error"],
+            ['message', '=', __('panel.max_unaproved_comments')],
+            ['created_at', '>', Ban::get_to()],
+        ])->first();
+        if($ban){
+            return true;
+        }
+        return false;
     }
 
 }

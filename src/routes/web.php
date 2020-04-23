@@ -6,8 +6,8 @@ Route::group(
     static function () {
 
         Route::post('/blublog/uploadimg', 'BlublogPostsController@uploadimg')->name('blublog.posts.uploadimg')->middleware('auth');
-        Route::get('/blublog/listimg', 'BlublogPostsController@listimg')->name('blublog.posts.listimg')->middleware('auth');
-        Route::post('/blublog/searchfile', 'BlublogPostsController@searchfile')->name('blublog.posts.searchfile')->middleware('auth');
+        Route::get('/blublog/listimg', 'BlublogAPIController@listimg')->name('blublog.posts.listimg')->middleware('auth');
+        Route::post('/blublog/search', 'BlublogAPIController@search')->name('blublog.api.searchfile')->middleware('auth');
 
 
         //Blog front end group
@@ -37,6 +37,10 @@ Route::group(
             static function () {
 
                 Route::get('/comments/approve/{id}', 'BlublogCommentsController@approve')->name('comments.approve');
+                Route::get('/comments/ban/{id}', 'BlublogCommentsController@ban')->name('blublog.comments.ban');
+                Route::get('/ban', 'BlublogBanController@index')->name('blublog.ban.index');
+                Route::delete('/ban/delete/{ban}', 'BlublogBanController@destroy')->name('blublog.ban.destroy');
+                Route::post('/ban/add/store', 'BlublogBanController@ban')->name('blublog.ban.user');
 
                 //Menu
                 Route::get('/menu/set-main/{id}', 'BlublogMenuController@set_main_menu')->name('menu.set_main_menu');

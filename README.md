@@ -1,9 +1,11 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+<p align="center"><img src="http://demo.blublog.info/uploads/posts/1-panel-index.jpg"></p>
 
 ## About BLUBLOG
 **BLUblog is close to BETA version.**
 BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation.
 URL address of the panel and blog can be changed in config file.
+
+Front end demo and documentation at http://demo.blublog.info/blog
 
 ## Instaling
 The package requires three other packages - intervention image, laravelcollective/html and laravel/ui.
@@ -13,17 +15,21 @@ composer require laravel/ui
 composer require laravelcollective/html
 composer require intervention/image
 ```
-In app.php from config folder add this in providers if it's not there:
+1. Add package to laravel with:
+```
+composer require philip1503/blublog
+```
+2. In app.php from config folder add this in providers if it's not there:
 ```
 Philip1503\Blublog\BlublogServiceProvider::class,
 ```
-Log into your app without going to the blog. Run these one by one:
+3. login into your app without going to the blog. Run these one by one:
 ```
 php artisan migrate
 php artisan vendor:publish --provider="Philip1503\Blublog\BlublogServiceProvider"
 php artisan blublog:setup
 ```
-Cool. Everything except uploading/deleting files should work.
+4. Cool. Everything except uploading/deleting files should work.
 You need to add this in filesystems.php from config folder:
 ```
 'blublog' => [
@@ -51,7 +57,7 @@ By default you can access the blog from /blog and panel from /panel.
 - Basic search for posts.*
 
 2. Comments
-- Anti-spam modul.
+- Anti-spam modul.*
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
 
@@ -68,11 +74,15 @@ By default you can access the blog from /blog and panel from /panel.
 5. Users
 - Use users from Laravel UI.
 - They are three roles - Administrator, Moderator and Author.
+- Authors can edit and delete only their own posts. Can create tags and upload files.
+- Moderator can edit and delete all posts, tags, comments and categories.
+- Administrator have full access with control over users, menu, site settings, logs and others.
 
 6. File manager
 - Upload files that are public and hiden.
 
 7. Admin
+- BAN option. You can ban users from the blog or from commenting.*
 - Very basic settings page for now.
 - Very basic menu options. You can make link or dropdown.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
@@ -86,34 +96,23 @@ By default you can access the blog from /blog and panel from /panel.
 - Add contact form page.(-)
 
 2. COMMENTS
-- Javascript search for comments in panel.
-- Integrate with ban modul.
 - Make comment rating modul.(-)
 - Add support for facebook comments.(-)
 - Add support for disqus comments.(-)
 
 3. POSTS
-- Add searchbar in panel.
 - Add main tag.(+)
 - Add password protection.(-)
 - Add VIDEO type.(-)
 - Make slider.(-)
-- Javascript search for posts.
 - make sitemap.
 
-4. File manager 
-- Javascript search for file.
-
-5. TAGS
-- Javascript search for tags in panel.
-
-6. ADMIN THINGS
+4. ADMIN THINGS
+- Fix user role restrictions. (+)
 - Make a better menu.(-)
 - (!) Cashing.(-)
-- (!) Add BAN modul.
 - Add maintenance mode.(-)
 - A proper themes support.
-- API.(-)
 - Improve settings page.(-)
 - (!) Write better code...
 

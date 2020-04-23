@@ -82,4 +82,15 @@ class BlublogTagController extends Controller
         return redirect()->back();
     }
 
+    public function destroy ($id)
+    {
+        $tag = Tag::find($id);
+        if($tag){
+            $tag->posts()->detach();
+            $tag->delete();
+            Session::flash('success', __('panel.contentdelete'));
+        }
+        return redirect()->back();
+    }
+
 }

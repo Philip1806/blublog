@@ -9,6 +9,8 @@ use Philip1503\Blublog\Models\Page;
 use Philip1503\Blublog\Models\Category;
 use Philip1503\Blublog\Models\Comment;
 use Philip1503\Blublog\Models\Tag;
+use Philip1503\Blublog\Models\Ban;
+use Philip1503\Blublog\Models\Log;
 use Carbon\Carbon;
 use Session;
 
@@ -20,7 +22,10 @@ class BlublogFrontController extends Controller
     {
         $categories = Category::get();
         View::share('categories', $categories );
-
+        $ip = Post::getIp();
+        if(Ban::is_banned($ip)){
+            abort(403);
+        }
     }
 
     //Index page of the blog
@@ -47,6 +52,10 @@ class BlublogFrontController extends Controller
     }
     public function search(Request $request)
     {
+        if(blublog_setting('disable_search_modul')){
+            Session::flash('error', __('panel.search_turnoff'));
+            return back();
+        }
         $rules = [
             'search' => 'required|max:150',
         ];
@@ -72,7 +81,7 @@ class BlublogFrontController extends Controller
             $result->push($post);
         }
 
-        $result = $result->unique('id');
+        $result = $result->unique('id')->take(30);
         $result = Post::processing($result);
 
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".posts.search";
@@ -147,6 +156,10 @@ class BlublogFrontController extends Controller
         if(blublog_setting('disable_comments_modul')){
             return back();
         }
+        $ip = Post::getIp();
+        if(Ban::is_banned_from_comments($ip)){
+            abort(403);
+        }
 
         $rules = [
             'name' => 'required|max:50',
@@ -175,14 +188,19 @@ class BlublogFrontController extends Controller
 
             $limit = blublog_setting('max_unaproved_comments');
             if($comments->count() > $limit){
-
+                if(Comment::limit_unapproved_comments_reached_soon()){
+                    Ban::ip($ip,__('panel.spam'), 1);
+                    Log::add($request, "alert", __('panel.spam') );
+                    abort(403);
+                }
+                Log::add($request, "error", __('panel.max_unaproved_comments') );
                 Session::flash('error', __('panel.max_unaproved_comments'));
                 return back();
             }
             if($comments->count() == $limit){
+                Log::add($request, "alert", __('panel.warning_unaproved_comments') );
                 Session::flash('warning', __('panel.warning_unaproved_comments'));
             }
-            //To DO: Ban user if are too many
         }
 
         Comment::addcomment($request, $ip);

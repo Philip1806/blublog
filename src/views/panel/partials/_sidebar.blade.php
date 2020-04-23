@@ -109,9 +109,7 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ url('/panel/settings') }}">{{ __('panel.settings') }}</a>
                 <a class="collapse-item" href="{{ url('/panel/logs') }}">{{ __('panel.logs') }}</a>
-                <a class="collapse-item" href="{{ url('/panel/settings/up') }}">{{ __('panel.updates') }}</a>
-                <a class="collapse-item" href="{{ url('/panel/settings/backup') }}">{{ __('panel.backups') }}</a>
-                <a class="collapse-item" href="{{ url('/panel/security') }}">{{ __('panel.security') }}</a>
+                <a class="collapse-item" href="{{ url('/panel/ban') }}">{{ __('panel.ban') }}</a>
                 </div>
             </div>
     </li>

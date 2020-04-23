@@ -36,36 +36,6 @@ class BlublogPostsController extends Controller
 
         return view("blublog::panel.posts.index")->with('draft_posts', $draft_posts)->with('posts', $posts)->with('private_posts', $private_posts);
     }
-    /**
-     * Used from modal from creating posts.
-     *
-     */
-    public function listimg()
-    {
-        $files = File::where([
-            ['filename', 'LIKE', '%'."posts".'%'],
-        ])->latest()->paginate(10);
-        $images = File::only_img($files);
-
-        return response()->json($images);
-
-    }
-    /**
-     * Used from modal from creating posts.
-     *
-     */
-    public function searchfile(Request $request)
-    {
-
-        $files = File::where([
-            ['filename', 'LIKE', '%'.$request->slug.'%'],
-        ])->latest()->get();
-        if($files->count() > 0){
-            return response()->json($files);
-        } else {
-            return response()->json(false);
-        }
-    }
 
     public function uploadimg(Request $request)
     {

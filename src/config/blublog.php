@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'version' => "0.7 ALPHA",
+    'version' => "0.8 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",

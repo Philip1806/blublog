@@ -5,6 +5,7 @@ namespace   Philip1503\Blublog\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use Philip1503\Blublog\Models\Ban;
 use Philip1503\Blublog\Models\Comment;
 use Session;
 use Philip1503\Blublog\Models\Post;
@@ -22,7 +23,7 @@ class BlublogCommentsController extends Controller
 
     public function index()
     {
-        $comments = Comment::latest()->paginate(15);
+        $comments = Comment::latest()->paginate(10);
         if(!$comments){
             abort(404);
         }
@@ -60,6 +61,7 @@ class BlublogCommentsController extends Controller
         $comment->email = $request->email;
         $comment->ip = $request->ip;
         $comment->body = $request->body;
+        $comment->save();
         Session::flash('success', __('panel.comment_edited'));
         Log::add($request, "info", __('panel.comment_edited') );
         return back();
@@ -93,6 +95,24 @@ class BlublogCommentsController extends Controller
             return redirect()->back();
         } else {
             Log::add($id . "|BlublogCommentsController::destroy", "alert", __('panel.404') );
+            Session::flash('error', __('panel.404'));
+            return redirect()->back();
+        }
+    }
+    public function ban($id){
+        $comment = Comment::find($id);
+        if($comment){
+            if(!Ban::is_banned_from_comments($comment->ip)){
+                Ban::ip($comment->ip,__('panel.banned_from_comments'), 1);
+                Log::add($id . "|BlublogCommentsController::ban", "info", __('panel.banned_from_comments') );
+                Session::flash('success', __('panel.banned_from_comments'));
+                return redirect()->back();
+            } else {
+                Session::flash('success', __('panel.its_banned'));
+                return redirect()->back();
+            }
+        } else {
+            Log::add($id . "|BlublogCommentsController::ban", "alert", __('panel.404') );
             Session::flash('error', __('panel.404'));
             return redirect()->back();
         }

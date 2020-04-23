@@ -12,7 +12,19 @@
 @section('content')
 <a href="{{ route('blublog.posts.create') }}" class="btn btn-primary btn-block">{{__('panel.add_post')}}</a>
 <br>
-<br>
+<div class="card border-primary shadow" style="margin-bottom:20px;">
+    <div class="card-header text-white bg-primary">
+     {{ __('panel.search_post') }}
+    </div><br>
+    <div class="card-body">
+        <input type="text" class="form-control" id="searchfor" placeholder="Search for post here">
+        <br><input type="button" class="btn btn-info " onclick="searchfor('post')" value="Search">
+        <h2><div id="infopanel"></div></h2>
+        <ul class="list-group">
+            <div id="results"></div>
+        </ul>
+    </div>
+</div>
 
 <div class="card border-primary shadow">
     <div class="card-header text-white bg-primary">
@@ -46,4 +58,19 @@
 </div>
 
 
+@include('blublog::panel.partials._searchjs')
+<script>
+function show_files(files){
+    let panel = document.getElementById("results");
+    remove_all_child(panel);
+
+    for (let i =0; i<files.length ; i++){
+        let link = "{{ url('/'). "/". blublog_setting('panel_prefix') }}" + "/posts/" + files[i].id;
+        let li = document.createElement("li");
+        li.innerHTML= '<a href="'  + link + '">' + files[i].title + '</a>';
+        li.className="list-group-item";
+        panel.appendChild(li);
+    }
+}
+</script>
 @endsection

@@ -191,9 +191,9 @@ window.setInterval(function(){
 
     type:'POST',
 
-    url:"{{ url('/blublog/searchfile') }}",
+    url:"{{ url('/blublog/search') }}",
 
-    data:{"_token": "{{ csrf_token() }}",slug:searchfor},
+    data:{"_token": "{{ csrf_token() }}",slug:searchfor,type:"file"},
 
     success:function(data){
 

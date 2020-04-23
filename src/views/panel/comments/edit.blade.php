@@ -26,6 +26,9 @@
                         {{ Form::textarea('body', null, ['class' => 'form-control', 'rows' => '5']) }}
         <br>
         {{ Form::submit(__('panel.edit'), ['class' => 'btn btn-primary btn-block']) }}
+        {!! Form::close() !!}<br>
+        {!! Form::open(['route' => ['blublog.comments.destroy', $comment->id], 'method' => 'DELETE']) !!}
+        {!! form::submit(__('panel.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
         {!! Form::close() !!}
     </div>
 </div>
