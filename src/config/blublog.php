@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'version' => "0.8 ALPHA",
+    'version' => "0.8.4 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -33,7 +33,8 @@ return [
     'max_unaproved_comments_type' => "int",
     'approve_comments_from_users_with_approved_comments' => true,
     'approve_comments_from_users_with_approved_comments_type' => "bool",
-
+    'no_ratings' => false,
+    'no_ratings_type' => "bool",
     'disable_search_modul' => false,
     'disable_search_modul_type' => "bool",
     'main_menu_name' => "Main",

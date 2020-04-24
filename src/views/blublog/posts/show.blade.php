@@ -42,22 +42,75 @@
 </div>
 @endsection
 @section('content')
-          <div class="col-lg-9">
 
-            {!! $post->content !!}
-            <hr>
-          <small>Posted by {{ $post->user->name }} on {{ $post->date }}</small>
-          @foreach ($post->tags as $tag)
-          <a href="{{ route('blublog.front.tag_show', $tag->slug) }}"><span class="badge badge-pill badge-dark">{{$tag->title}}</span></a>
-          @endforeach
-          <hr>
-        @if ($post->comments)
-                @include('blublog::comments._comments')
-        @else
-            <div class="text-center"><small>{{__('panel.comments_disabled')}}</small></div>
-        @endif
-          </div>
-          <div class="col-lg-3">
-            @include('blublog::blublog.parts._sidebar')
-          </div>
+<div class="col-lg-9">
+    {!! $post->content !!}
+    {!! $post->STARS_HTML !!}
+<br><small>Posted by <a href="{{$post->author_url}}"> {{ $post->user->name }}</a> on {{ $post->date }}</small>
+    @foreach ($post->tags as $tag)
+        <a href="{{ route('blublog.front.tag_show', $tag->slug) }}"><span class="badge badge-pill badge-dark">{{$tag->title}}</span></a>
+    @endforeach
+        <hr>
+    @if ($post->comments)
+        @include('blublog::comments._comments')
+    @else
+        <div class="text-center"><small>{{__('panel.comments_disabled')}}</small></div>
+    @endif
+</div>
+
+<div class="col-lg-3">
+    @include('blublog::blublog.parts._sidebar')
+</div>
+
+
+<script>
+function rating(){
+    let rating_info = document.getElementById("rating_info");
+rating_info.innerHTML = "Searching for ";
+}
+function clear_stars(){
+    for (let i = 1; i<6; i++){
+        let star = document.getElementById(i + "_star");
+        star.style = "";
+    }
+}
+function set_ratingto(star_id){
+    clear_stars();
+    let rating_info = document.getElementById("rating_info");
+    for (let i = 1; i<6; i++){
+        let star_now = i + "_star";
+        let star = document.getElementById(star_now);
+        star.style = "color:blue;";
+        if(star_now == star_id){
+            send_rating(i);
+            break;
+        }
+    }
+
+}
+function send_rating(selected_star){
+    let rating_info = document.getElementById("rating_info");
+    let errormsg =  "<b>Rating refused or there was a error. Admin is notified.</b>";
+
+    $.ajax({
+
+    type:'POST',
+
+    url:"{{ url('/blublog/set_rating') }}",
+
+    data:{"_token": "{{ csrf_token() }}",post:"{{$post->id}}",star:selected_star},
+
+    success:function(data){
+        if(data){
+            rating_info.innerHTML = data;
+        } else {
+            rating_info.innerHTML = errormsg;
+        }
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        rating_info.innerHTML = errormsg;
+    }
+    });
+}
+</script>
 @endsection

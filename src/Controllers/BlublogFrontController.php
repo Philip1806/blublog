@@ -9,8 +9,10 @@ use Philip1503\Blublog\Models\Page;
 use Philip1503\Blublog\Models\Category;
 use Philip1503\Blublog\Models\Comment;
 use Philip1503\Blublog\Models\Tag;
+use Philip1503\Blublog\Models\BlublogUser;
 use Philip1503\Blublog\Models\Ban;
 use Philip1503\Blublog\Models\Log;
+use App\User;
 use Carbon\Carbon;
 use Session;
 
@@ -36,7 +38,21 @@ class BlublogFrontController extends Controller
 
         return view($path)->with('posts', $posts);
     }
-
+    public function author($name)
+    {
+        $user = User::where([
+            ['name', '=', $name],
+        ])->first();
+        if($user){
+            $posts = Post::where([
+                ['user_id', '=', $user->id],
+                ['status', '=', "publish"],
+            ])->latest()->paginate(10);
+            $posts = Post::processing($posts);
+        }
+        $path = "blublog::" . config('blublog.theme', 'blublog') . ".author";
+        return view($path)->with('user', $user)->with('posts', $posts);
+    }
     public function page($slug)
     {
         $page = Page::where([
@@ -66,6 +82,7 @@ class BlublogFrontController extends Controller
 
         $posts = Post::where([
             ['title', 'LIKE', '%' . $search . '%'],
+            ['status', '=', "publish"],
         ])->latest()->get();
 
         foreach ($posts as $post) {
@@ -74,6 +91,7 @@ class BlublogFrontController extends Controller
 
         $posts = Post::where([
             ['content', 'LIKE', '%' . $search . '%'],
+            ['status', '=', "publish"],
         ])->latest()->get();
 
 
@@ -96,7 +114,7 @@ class BlublogFrontController extends Controller
             abort(404);
         }
         $posts = $category->posts()->latest()->paginate(blublog_setting('category_posts_per_page'));
-
+        $posts = Post::public($posts);
         $posts = Post::processing($posts);
 
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".categories.index";
@@ -111,7 +129,7 @@ class BlublogFrontController extends Controller
             abort(404);
         }
         $posts = $tag->posts()->latest()->paginate(blublog_setting('tags_posts_per_page'));
-
+        $posts = Post::public($posts);
         $posts = Post::processing($posts);
 
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".tags.index";
@@ -134,8 +152,9 @@ class BlublogFrontController extends Controller
                 $post->maintag_id = $post->tags[0]->id;
             }
         }
+        $post = Post::get_posts_stars($post);
+        $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
         //TO DO get maintag with its 5 last posts
-
         if($post->comments){
             $comments = $post->allcomments;
             foreach($comments as $comment){

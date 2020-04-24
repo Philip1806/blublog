@@ -44,6 +44,5 @@ box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);" >
 
     <script src="{{ url('/blublog/js/jquery.min.js') }}"></script>
     <script src="{{ url('/blublog/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url('/blublog/js/custom.js') }}../_assets/js/custom.js"></script>
   </body>
 </html>

@@ -64,22 +64,73 @@ class Post extends Model
             $slug = mb_strimwidth($slug, 0, 190, null);
             return $slug;
     }
-    public static function processing($posts, $null = 0)
+    public static function public($posts)
     {
         $foo =0;
-        foreach ($posts as $post){
+        foreach($posts as $post){
             if($post->status != "publish"){
                 unset($posts[$foo]);
             }
+            $foo++;
+        }
+        return $posts;
+    }
+    public static function processing($posts, $null = 0)
+    {
+        foreach ($posts as $post){
             $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
             $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
             $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
-            $foo++;
+            $post = Post::get_posts_stars($post,false);
+            $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
         }
         if(!$posts->count() and $null == 1){
             $posts = null;
         }
         return $posts;
+    }
+
+    public static function get_posts_stars($post, $show_avg = true)
+    {
+        if(blublog_setting('no_ratings')){
+            return $post;
+        }
+
+        $total_ratings =  $post->ratings->count();
+        if($total_ratings){
+        $total = 0;
+        foreach($post->ratings as $rate){
+            $total = $total + $rate->rating;
+        }
+        $avg_stars = $total / $post->ratings->count();
+        } else {
+            $avg_stars = 0;
+        }
+        if(!$show_avg){
+            $STARS_HTML = "";
+        } else {
+            $STARS_HTML = "<hr>";
+        }
+        for($i=1; $i<6; $i++){
+            if($show_avg){
+                $js_fun = "('" .$i . "_star')";
+                $onclick = 'onclick="set_ratingto'. $js_fun . '"';
+            } else {
+                $onclick = "";
+            }
+            if($i <= $avg_stars){
+                $STARS_HTML = $STARS_HTML . '<span '. ' style="color:#2780E3;"' . ' class="oi oi-star" id="' . $i . '_star"  '.$onclick.' ></span>';
+            } else{
+                $STARS_HTML = $STARS_HTML . '<span '. ' style="color:black;"' . ' class="oi oi-star" id="' . $i . '_star"  '.$onclick.' ></span>';
+            }
+        }
+        if($show_avg){
+            $STARS_HTML = $STARS_HTML . " (". $avg_stars . ")" . '<p id="rating_info">Click on stars to rate this post.</p><hr>';
+        } else {
+            $STARS_HTML = $STARS_HTML . "";
+        }
+        $post->STARS_HTML = $STARS_HTML;
+        return $post;
     }
 
 
@@ -145,6 +196,7 @@ class Post extends Model
         ])->latest()->paginate($pages);
         if($posts){
             foreach ($posts as $post){
+                $post = Post::get_posts_stars($post,false);
                 $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
                 $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
                 $post->date = Carbon::parse($post->created_at)->format('d.m.Y');

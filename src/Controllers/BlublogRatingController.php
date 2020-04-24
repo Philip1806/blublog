@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Philip1503\Blublog\Models\Rate;
+use Philip1503\Blublog\Models\Post;
+use Session;
 
 class BlublogRatingController extends Controller
 {
@@ -15,18 +17,24 @@ class BlublogRatingController extends Controller
 
         if($ratings){
             foreach( $ratings as $rating){
-                $postt = Post::find($rating->rateable_id);
+                $postt = Post::find($rating->post_id);
                 $rating->postname = $postt['title'];
-                $rating->postslug = $postt['slug'];
             }
         }
         return view('blublog::panel.posts.rating')->with('ratings', $ratings);
 
     }
-  /*
+
     public function duplicate($id)
     {
-
+        $current = Rate::find($id);
+        if($current){
+            $rating = new Rate;
+            $rating->post_id = $current->post_id;
+            $rating->rating = $current->rating;
+            $rating->ip = $current->ip;
+            $rating->save();
+        }
 
         return redirect()->back();
 
@@ -37,14 +45,14 @@ class BlublogRatingController extends Controller
         $rating = Rate::find($id);
         if($rating){
             $rating->delete();
-            Session::flash('success', __('general.contentdelete'));
+            Session::flash('success', __('panel.contentdelete'));
             return redirect()->back();
         }
 
-        Session::flash('error', __('general.content_does_not_found'));
+        Session::flash('error', __('panel.404'));
         return redirect()->back();
 
 
     }
-    */
+
 }

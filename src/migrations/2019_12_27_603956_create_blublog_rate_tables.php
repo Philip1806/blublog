@@ -18,8 +18,8 @@ class CreateBlublogRateTables extends Migration
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id')->default(0);
             $table->unsignedBigInteger('rating');
-            $table->string('type', 250)->nullable();;
-            $table->string('ip', 250);
+            $table->string('type', 250)->nullable();
+            $table->string('ip', 250)->nullable();
             $table->timestamps();
             //$table->foreign('post_id')->references('id')->on('blublog_posts');
         });

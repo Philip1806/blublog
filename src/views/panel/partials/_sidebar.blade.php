@@ -9,12 +9,6 @@
     <span>{{ __('panel.posts') }}</span></a>
 </li>
 
-
-<li class="nav-item">
-    <a class="nav-link" href="{{ url('/panel/posts/rating') }}">
-    <i class="fas fa-star-half-alt"></i>
-    <span>{{ __('panel.posts_rating') }}</span></a>
-</li>
 @if (!blublog_setting('disable_comments_modul'))
 <li class="nav-item">
     <a class="nav-link" href="{{ url('/panel/comments') }}">
@@ -35,6 +29,11 @@
 </li>
 <hr class="sidebar-divider">
     @if (blublog_is_mod())
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('/panel/posts/rating') }}">
+        <i class="fas fa-star-half-alt"></i>
+        <span>{{ __('panel.posts_rating') }}</span></a>
+    </li>
     <div class="sidebar-heading">
         {{ __('panel.mod_panel') }}
     </div>

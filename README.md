@@ -54,10 +54,11 @@ By default you can access the blog from /blog and panel from /panel.
 - Comments can be allowed or forbiden.
 - Post can be public, private or draft. Private can be seen only from post author. Drafts are seen by all users with access to the panel.
 - Have excerpt of content. Could be empty.
-- Basic search for posts.*
+- Basic search for posts.
+- Rating system with five stars.*
 
 2. Comments
-- Anti-spam modul.*
+- Anti-spam modul.
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
 
@@ -65,7 +66,7 @@ By default you can access the blog from /blog and panel from /panel.
 - Can have background image.
 - Can have custom color code (for now is auto generated).
 
-4. Pages*
+4. Pages
 - TinyMCE - WYSIWYG HTML Editor.
 - Page could have sidebar or not.
 - Can have background image.
@@ -82,7 +83,7 @@ By default you can access the blog from /blog and panel from /panel.
 - Upload files that are public and hiden.
 
 7. Admin
-- BAN option. You can ban users from the blog or from commenting.*
+- BAN option. You can ban users from the blog or from commenting.
 - Very basic settings page for now.
 - Very basic menu options. You can make link or dropdown.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
@@ -92,24 +93,21 @@ By default you can access the blog from /blog and panel from /panel.
 *With (-) are low priority and with (+) are high priority.*
 
 1. FRONTEND
-- Add author page.
 - Add contact form page.(-)
 
 2. COMMENTS
-- Make comment rating modul.(-)
 - Add support for facebook comments.(-)
 - Add support for disqus comments.(-)
 
 3. POSTS
 - Add main tag.(+)
+- Similar posts.(+)
 - Add password protection.(-)
 - Add VIDEO type.(-)
 - Make slider.(-)
 - make sitemap.
 
 4. ADMIN THINGS
-- Fix user role restrictions. (+)
-- Make a better menu.(-)
 - (!) Cashing.(-)
 - Add maintenance mode.(-)
 - A proper themes support.

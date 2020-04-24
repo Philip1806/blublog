@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="{{ url('/blublog/css/bootstrap.min.css') }}" media="screen">
 <link rel="stylesheet" href="{{ url('/blublog/css/custom.min.css') }}">
+<link href="{{ url('/blublog/css/open-iconic-bootstrap.min.css') }}" rel="stylesheet">
 <!--
     ^_-
     App name: BLUblog

@@ -10,10 +10,10 @@
         </ul>
 
       </div>
-      @auth
       {!! Form::open(['route' => 'blublog.front.search', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
       {{ Form::text('search', null, ['required', 'class' => 'form-control form-control-borderless', 'placeholder'=>__('panel.search_in_blog')]) }}
      {!! Form::close() !!}
+      @auth
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
         <a class="nav-link" href="{{ url(config('blublog.panel_prefix')) }}">Panel</a>

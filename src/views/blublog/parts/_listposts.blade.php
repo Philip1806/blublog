@@ -7,7 +7,7 @@
     <div class="col-sm-8">
         <h5 class="mt-0"><a href="{{$post->slug_url}}">{{$post->title}}</a></h5>
         <p>{{$post->excerpt}}</p>
-        <small>
+        <small>{!!$post->STARS_HTML!!}<br>
             @foreach ($post->categories as $category)
             <a href="{{ route('blublog.front.category_show', $category->slug) }}" style="color:white"><span class="badge badge-{{$category->id}}">{{$category->title}}</span></a>
             @endforeach
@@ -22,7 +22,7 @@
 </div>
 <hr>
 @endforeach
-@if (isset($posts->links))
+@if ($posts->nextPageUrl())
 {!!$posts->links()!!}
 @endif
 @else

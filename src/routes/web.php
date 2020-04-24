@@ -4,15 +4,16 @@
 Route::group(
     ['middleware' => ['web'], 'namespace' => 'Philip1503\Blublog\Controllers'],
     static function () {
-
+        //Something like API
         Route::post('/blublog/uploadimg', 'BlublogPostsController@uploadimg')->name('blublog.posts.uploadimg')->middleware('auth');
         Route::get('/blublog/listimg', 'BlublogAPIController@listimg')->name('blublog.posts.listimg')->middleware('auth');
         Route::post('/blublog/search', 'BlublogAPIController@search')->name('blublog.api.searchfile')->middleware('auth');
+        Route::post('/blublog/set_rating', 'BlublogAPIController@set_rating')->name('blublog.api.set_rating')->middleware('throttle:30,1');;
 
 
         //Blog front end group
         Route::group(
-            ['prefix' => config('blublog.blog_prefix', 'blog')],
+            ['prefix' => config('blublog.blog_prefix', 'blog'),'middleware'=>'throttle:60,1'],
             static function () {
                 Route::get('/page/{slug}', 'BlublogFrontController@page')->name('blublog.front.pages.show');
                 Route::get('/', 'BlublogFrontController@index')->name('blublog.index');
@@ -22,7 +23,7 @@ Route::group(
                 Route::get('/categories/{slug}', 'BlublogFrontController@category_show')->name('blublog.front.category_show');
                 Route::get('/tags/{slug}', 'BlublogFrontController@tag_show')->name('blublog.front.tag_show');
                 Route::post('/search', 'BlublogFrontController@search')->name('blublog.front.search');
-                Route::get('/search/{slug}', 'PostFrontController@search_result')->name('blublog.front.searchresult');
+                Route::get('/author/{name}', 'BlublogFrontController@author')->name('blublog.front.author');
 
             }
         );
@@ -35,26 +36,48 @@ Route::group(
 
             ],
             static function () {
-
                 Route::get('/comments/approve/{id}', 'BlublogCommentsController@approve')->name('comments.approve');
-                Route::get('/comments/ban/{id}', 'BlublogCommentsController@ban')->name('blublog.comments.ban');
-                Route::get('/ban', 'BlublogBanController@index')->name('blublog.ban.index');
-                Route::delete('/ban/delete/{ban}', 'BlublogBanController@destroy')->name('blublog.ban.destroy');
-                Route::post('/ban/add/store', 'BlublogBanController@ban')->name('blublog.ban.user');
 
-                //Menu
-                Route::get('/menu/set-main/{id}', 'BlublogMenuController@set_main_menu')->name('menu.set_main_menu');
-                Route::get('/menu/menu_items/{id}', 'BlublogMenuController@menu_items')->name('menu.menu_items');
-                Route::get('/menu/edit_item/{id}', 'BlublogMenuController@edit_item')->name('menu.edit_item');
-                Route::put('/menu/edit_item', 'BlublogMenuController@edit_item_update')->name('menu.edit_item_update');
-                Route::put('/menu/update', 'BlublogMenuController@edit_menu_update')->name('menu.edit_menu_update');
-                Route::delete('/menu/items/{item}', 'BlublogMenuController@destroy_item')->name('menu.destroy_item');
-                Route::delete('/menu/menus/{menu}', 'BlublogMenuController@destroy_menu')->name('menu.destroy_menu');
-                Route::post('/menu/add_parent/store', 'BlublogMenuController@add_parent_store')->name('menu.add_parent_store');
-                Route::post('/menu/add/store', 'BlublogMenuController@add_menu_store')->name('menu.add_menu_store');
-                Route::post('/menu/add_child/store', 'BlublogMenuController@add_child_store')->name('menu.add_child_store');
-                Route::get('/menu', 'BlublogMenuController@index')->name('menu.index');
+                Route::group(
+                    [
+                        'middleware' => 'BlublogMod',
+                    ],
+                    static function () {
+                        //Rating
+                        Route::get('/rating/duplicate/{id}', 'BlublogRatingController@duplicate')->name('blublog.posts.rating.duplicate');
+                        Route::delete('/rating/delete/{id}', 'BlublogRatingController@destroy')->name('blublog.posts.rating.destroy');
+                        Route::resource('/posts/rating', 'BlublogRatingController', [
+                            'as' => 'blublog'
+                        ])->only([
+                            'index', 'destroy'
+                        ]);
+                        //Comments and ban users
+                        Route::get('/comments/ban/{id}', 'BlublogCommentsController@ban')->name('blublog.comments.ban');
+                        Route::get('/ban', 'BlublogBanController@index')->name('blublog.ban.index');
+                        Route::delete('/ban/delete/{ban}', 'BlublogBanController@destroy')->name('blublog.ban.destroy');
+                        Route::post('/ban/add/store', 'BlublogBanController@ban')->name('blublog.ban.user');
+                    }
+                );
 
+                Route::group(
+                    [
+                        'middleware' => 'BlublogAdmin',
+                    ],
+                    static function () {
+                        //Menu
+                        Route::get('/menu/set-main/{id}', 'BlublogMenuController@set_main_menu')->name('menu.set_main_menu');
+                        Route::get('/menu/menu_items/{id}', 'BlublogMenuController@menu_items')->name('menu.menu_items');
+                        Route::get('/menu/edit_item/{id}', 'BlublogMenuController@edit_item')->name('menu.edit_item');
+                        Route::put('/menu/edit_item', 'BlublogMenuController@edit_item_update')->name('menu.edit_item_update');
+                        Route::put('/menu/update', 'BlublogMenuController@edit_menu_update')->name('menu.edit_menu_update');
+                        Route::delete('/menu/items/{item}', 'BlublogMenuController@destroy_item')->name('menu.destroy_item');
+                        Route::delete('/menu/menus/{menu}', 'BlublogMenuController@destroy_menu')->name('menu.destroy_menu');
+                        Route::post('/menu/add_parent/store', 'BlublogMenuController@add_parent_store')->name('menu.add_parent_store');
+                        Route::post('/menu/add/store', 'BlublogMenuController@add_menu_store')->name('menu.add_menu_store');
+                        Route::post('/menu/add_child/store', 'BlublogMenuController@add_child_store')->name('menu.add_child_store');
+                        Route::get('/menu', 'BlublogMenuController@index')->name('menu.index');
+                    }
+                );
 
                 Route::resource('/logs', 'BlublogLogController', [
                     'as' => 'blublog'
@@ -71,31 +94,31 @@ Route::group(
                     'as' => 'blublog'
                 ])->only([
                     'index','edit', 'store','update','destroy'
-                ])->middleware('BlublogAdmin');
+                ])->middleware('BlublogMod');
 
                 Route::get('/', 'BlublogController@panel')->name('blublog.panel');
-                Route::resource('/posts/rating', 'BlublogRatingController', [
-                    'as' => 'blublog'
-                ])->only([
-                    'index', 'destroy'
-                ])->middleware('auth');
+
                 Route::resource('/posts', 'BlublogPostsController', [
                     'as' => 'blublog'
                 ])->only([
                     'index','edit','show', 'create', 'store','update','destroy'
                 ])->middleware('auth');
+                Route::resource('/comments', 'BlublogCommentsController', [
+                    'as' => 'blublog'
+                ])->only([
+                    'index', 'edit', 'update'
+                ])->middleware('auth');
+                Route::resource('/comments', 'BlublogCommentsController', [
+                    'as' => 'blublog'
+                ])->only([
+                    'destroy'
+                ])->middleware('BlublogMod');
                 Route::resource('/tags', 'BlublogTagController', [
                     'as' => 'blublog'
                 ])->only([
                     'index','edit', 'store','update','destroy'
                 ])->middleware('auth');
-                Route::resource('/comments', 'BlublogCommentsController', [
-                    'as' => 'blublog'
-                ])->only([
-                    'index', 'edit', 'update','destroy'
-                ])->middleware('auth');
                 Route::get('/files/{id}/download', 'BlublogFileController@download')->name('blublog.files.download');
-
                 Route::resource('/files', 'BlublogFileController', [
                     'as' => 'blublog'
                 ])->only([

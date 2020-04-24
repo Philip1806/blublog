@@ -33,6 +33,8 @@ class BlublogServiceProvider extends ServiceProvider
             require_once($file);
         }
         app('router')->aliasMiddleware('BlublogAdmin', \Philip1503\Blublog\BlublogAdmin::class);
+        app('router')->aliasMiddleware('BlublogMod', \Philip1503\Blublog\BlublogMod::class);
+
 
     }
 

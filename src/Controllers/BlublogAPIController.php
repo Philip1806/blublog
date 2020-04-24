@@ -8,6 +8,7 @@ use Philip1503\Blublog\Models\Post;
 use Philip1503\Blublog\Models\File;
 use Philip1503\Blublog\Models\Comment;
 use Philip1503\Blublog\Models\Tag;
+use Philip1503\Blublog\Models\Rate;
 
 class BlublogAPIController extends Controller
 {
@@ -15,6 +16,38 @@ class BlublogAPIController extends Controller
     {
 
     }
+    public function set_rating(Request $request)
+    {
+        if(blublog_setting('no_ratings')){
+            return response()->json(false,403);
+        }
+        $ip = Post::getIp();
+        if($request->post and is_numeric($request->star) ){
+            $post_id = preg_replace('/\D/', '', $request->post);
+            $selected_stars = preg_replace('/\D/', '', $request->star);
+            $have_rating = Rate::where([
+                ['post_id', '=', $post_id],
+                ['ip', '=', $ip],
+            ])->first();
+            if($have_rating){
+                $have_rating->rating = $selected_stars;
+                $have_rating->save();
+                return response()->json("Rating changed to " . $selected_stars . " stars.");
+            } else {
+                $rating = new Rate;
+                $rating->post_id = $post_id;
+                $rating->rating = $selected_stars;
+                $rating->ip = $ip;
+                $rating->save();
+                return response()->json("You rate this with ". $selected_stars ." stars.");
+
+            }
+        }
+        return response()->json(false,400);
+    }
+
+
+
     /**
      * Used from modal from creating posts.
      *

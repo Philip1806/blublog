@@ -11,6 +11,8 @@ use Philip1503\Blublog\Models\PostsViews;
 use Philip1503\Blublog\Models\Category;
 use Philip1503\Blublog\Models\File;
 use Philip1503\Blublog\Models\Log;
+use Philip1503\Blublog\Models\Rate;
+use Philip1503\Blublog\Models\Comment;
 use Session;
 use Auth;
 
@@ -111,7 +113,6 @@ class BlublogPostsController extends Controller
     }
     public function store(Request $request)
     {
-
         $rules = [
             'title' => 'required|max:250',
             'categories' => 'required',
@@ -308,10 +309,12 @@ class BlublogPostsController extends Controller
     public function destroy($id){
 
         $post =Post::find($id);
-        //TODO
-        $view = PostsViews::where([
-            ['post_id', '=', $post->id],
-            ])->get();
+        $views = Rate::where([
+        ['post_id', '=', $post->id],
+        ])->get();
+        foreach($views as $view){
+            $view->delete();
+        }
 
         if(!isset($post->id)){
             Session::flash('error', __('general.404'));
@@ -342,6 +345,12 @@ class BlublogPostsController extends Controller
         }
         $post->categories()->detach();
         $post->tags()->detach();
+        $comments = Comment::where([
+        ['commentable_id', '=', $post->id],
+        ])->get();
+        foreach($comments as $comments){
+            $comments->delete();
+        }
         $post->delete();
 
         Session::flash('success', __('panel.contentdelete'));

@@ -29,8 +29,10 @@ class BlublogCommentsController extends Controller
         }
         foreach ($comments as $comment) {
             $post = Post::find($comment->commentable_id);
-            $comment->post_title = $post->title;
-            $comment->post_slug = $post->slug;
+            if($post){
+                $comment->post_title = $post->title;
+                $comment->post_slug = $post->slug;
+            }
         }
         return view('blublog::panel.comments.index')->with('comments', $comments);
     }
