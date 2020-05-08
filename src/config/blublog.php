@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'version' => "0.8.4 ALPHA",
+    'version' => "0.8.9 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -19,6 +19,16 @@ return [
     'head_html_type' => "text",
     'sidebar_html' => "<div class='alert alert-primary' role='alert'>This is sidebar html area. Could be edited or removed.</div>",
     'sidebar_html_type' => "text",
+
+    'global_header_html' => "",
+    'global_header_html_type' => "text",
+    'global_footer_html' => "",
+    'global_footer_html_type' => "text",
+    'post_header_html' => "",
+    'post_header_html_type' => "text",
+    'post_additional_html' => "",
+    'post_additional_html_type' => "text",
+
     'site_name' => "BLUblog",
     'site_name_type' => "string",
     'index_posts_per_page' => "10",
@@ -39,4 +49,16 @@ return [
     'disable_search_modul_type' => "bool",
     'main_menu_name' => "Main",
     'main_menu_name_type' => "string",
+    'number_main_tag_posts' => "4",
+    'number_main_tag_posts_type' => "int",
+    'number_of_similar_post' => "10",
+    'number_of_similar_post_type' => "int",
+    'front_page_posts_only' => false,
+    'front_page_posts_only_type' => "bool",
+    'add_front_page_posts' => false,
+    'add_front_page_posts_type' => "bool",  // Theme need to support it
+    'under_attack' => false,
+    'under_attack_type' => "bool",
+    'maintenance_massage' => "Site is under maintenance.",
+    'maintenance_massage_type' => "string",
 ];

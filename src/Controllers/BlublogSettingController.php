@@ -3,10 +3,12 @@
 namespace   Philip1503\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Philip1503\Blublog\Models\Setting;
 use Philip1503\Blublog\Models\Log;
+use Philip1503\Blublog\Models\Post;
 use App\User;
 use Session;
 
@@ -17,6 +19,70 @@ class BlublogSettingController extends Controller
     {
         $settings = Setting::latest()->get();
         return view('blublog::panel.settings.index')->with('settings', $settings);
+    }
+    public function admin_control($setting)
+    {
+        if($setting == 0){
+            Artisan::call('cache:clear');
+            Session::flash('success', __('panel.cache_clear'));
+            Log::add($setting, "info", __('panel.cache_clear') );
+            return redirect()->back();
+        }
+        if($setting == 1){
+            Artisan::call('blublog:sitemap');
+            Session::flash('success', __('panel.rss_generated'));
+            Log::add($setting, "info", __('panel.rss_generated') );
+            return redirect()->back();
+        }
+        if($setting == 2){
+            if(!file_exists( storage_path().'/framework/down')){
+                Artisan::call('down', [
+                    '--allow' => Post::getIp(), '--message' => blublog_setting('maintenance_massage')
+                ]);
+                Log::add($setting, "info", __('panel.turn_on_maintenance') );
+            } else {
+                Artisan::call('up');
+                Log::add($setting, "info", __('panel.turn_off_maintenance') );
+            }
+            return redirect()->back();
+        }
+        if($setting == 3){
+            $settings = Setting::get();
+            if(blublog_setting('under_attack')){
+                foreach($settings as $setting){
+                    if($setting->name == "disable_comments_modul"){
+                        $setting->val = serialize(false);
+                    }
+                    if($setting->name == "no_ratings"){
+                        $setting->val = serialize(false);
+                    }
+                    if($setting->name == "disable_search_modul"){
+                        $setting->val = serialize(false);
+                    }
+                    if($setting->name == "under_attack"){
+                        $setting->val = serialize(false);
+                    }
+                    $setting->save();
+                }
+            } else {
+                foreach($settings as $setting){
+                    if($setting->name == "disable_comments_modul"){
+                        $setting->val = serialize(true);
+                    }
+                    if($setting->name == "no_ratings"){
+                        $setting->val = serialize(true);
+                    }
+                    if($setting->name == "disable_search_modul"){
+                        $setting->val = serialize(true);
+                    }
+                    if($setting->name == "under_attack"){
+                        $setting->val = serialize(true);
+                    }
+                    $setting->save();
+                }
+            }
+            return redirect()->back();
+        }
     }
     public function logs()
     {

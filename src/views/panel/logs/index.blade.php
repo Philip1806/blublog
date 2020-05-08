@@ -15,15 +15,15 @@
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-error-tab" data-toggle="tab" href="#nav-error" role="tab" aria-controls="nav-error" aria-selected="true">
-                Errors ({{$error_logs->count()}})</a>
+                Errors ({{$error_logs->total()}})</a>
               <a class="nav-item nav-link" id="nav-visit-tab" data-toggle="tab" href="#nav-visit" role="tab" aria-controls="nav-visit" aria-selected="false">
-                Visits ({{$visit_logs->count()}})</a>
+                Visits ({{$visit_logs->total()}})</a>
               <a class="nav-item nav-link" id="nav-bot-tab" data-toggle="tab" href="#nav-bot" role="tab" aria-controls="nav-bot" aria-selected="false">
-                Bots visits ({{$bot_logs->count()}})</a>
+                Bots visits ({{$bot_logs->total()}})</a>
               <a class="nav-item nav-link" id="nav-alert-tab" data-toggle="tab" href="#nav-alert" role="tab" aria-controls="nav-alert" aria-selected="false">
-                Alerts ({{$alert_logs->count()}})</a>
+                Alerts ({{$alert_logs->total()}})</a>
               <a class="nav-item nav-link" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="false">
-                Info ({{$info_logs->count()}})</a>
+                Info ({{$info_logs->total()}})</a>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">

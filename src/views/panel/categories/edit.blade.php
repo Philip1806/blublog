@@ -1,6 +1,7 @@
 @extends('blublog::panel.main')
 
 @section('content')
+<script src="{{ url('/') }}\blublog/js/jscolor.js"></script>
 
 <div class="card border-primary">
     <div class="card-header text-white bg-primary">{{__('panel.edit')}} {{__('panel.categories')}}</div>
@@ -13,8 +14,9 @@
         {{ Form::text('descr', null, ['class' => 'form-control']) }}
 
 
-        {{ Form::label('colorcode', 'Color Code:') }}
-        {{ Form::text('colorcode', null, ['class' => 'form-control']) }}
+        {{ Form::label('colorcode', __('panel.colorcode')) }}
+        {{ Form::text('colorcode', null, ['class' => "form-control jscolor  {onFineChange:'update(this)',required:false}" ,'id'=>'colorcode']) }}
+        {{Form::hidden("rgb", null, ['id'=>'rgb'])}}
 
         {{ Form::label('slug', __('panel.slug')) }}
         {{ Form::text('slug', null, ['class' => 'form-control']) }}
@@ -26,4 +28,9 @@
 
     </div>
 </div>
+<script>
+    function update(picker) {
+        document.getElementById('rgb').value =picker.toRGBString();
+    }
+</script>
 @endsection

@@ -46,6 +46,169 @@ class Post extends Model
             }
         }
     }
+    public static function recommended($limit= 20)
+    {
+        $posts = Post::where([
+            ['recommended', '=', true],
+            ['status', '=', "publish"],
+        ])->latest()->limit($limit)->get();
+        if($posts){
+            return Post::processing($posts);
+        }
+    }
+    public static function slider()
+    {
+        $posts = Post::where([
+            ['slider', '=', true],
+            ['status', '=', "publish"],
+        ])->latest()->get();
+        if($posts){
+            return Post::processing($posts);
+        }
+    }
+    public static function for_front_page($limit= 20)
+    {
+        $posts = Post::where([
+            ['front', '=', true],
+            ['status', '=', "publish"],
+        ])->latest()->paginate($limit);
+        if($posts){
+            return Post::processing($posts);
+        }
+    }
+    public static function with_filename($filename)
+    {
+        return Post::where('img', 'LIKE', '%' . $filename . '%')->first();
+    }
+    public static function convert_date($unformated_date, $del = "/", $carbon = false)
+    {
+        $date = explode($del, $unformated_date);
+        if($carbon){
+            $date = Carbon::createFromDate($date[2], $date[1], $date[0]);
+        } else {
+            $date = Carbon::createFromDate($date[2], $date[1], $date[0])->toDateTimeString();
+        }
+        return $date;
+    }
+    public static function remove_post_from_collection($collection, $post)
+    {
+        $collection = $collection->filter(function ($value, $key) use($post){
+            return $value->id != $post->id;
+        });
+        return $collection;
+    }
+    public static function similar_posts($postid)
+    {
+        // Basically, get the posts from all tags of the post.
+        // If they are too many remove lower rated or/and lower viewed.
+
+        $needed_similar_posts = blublog_setting('number_of_similar_post');
+        $half_needed_similar_posts = $needed_similar_posts / 2;
+
+        // Get the main post
+        $mainpost = Post::find($postid);
+
+        // Check if post do not have tags
+        if (!isset($mainpost->tags[0]->id)) {
+            $cat_post = Post::get_category_posts($mainpost->categories[0]->id);
+            $cat_post = Post::remove_post_from_collection($cat_post,$mainpost);
+            return $cat_post->shuffle();
+        }
+
+        // Make collection
+        $similarpost = collect(new Post);
+
+        // Add all posts from all tags in the collection
+        foreach ($mainpost->tags as $tag) {
+            foreach ($tag->posts as $post) {
+                $similarpost->push($post);
+            }
+        }
+
+        // Filter the collection. No duplicates. Remove main post from collection.
+        $similarpost = $similarpost->unique('id')->shuffle();
+        $similarpost = Post::remove_post_from_collection($similarpost,$mainpost);
+
+        if($similarpost->count() <= $half_needed_similar_posts){
+            // We have enough similar posts
+            return $similarpost;
+        }
+        // We have too many similar post. Continue processing
+
+        // Get average rating of all similar posts
+        $rating_average = Post::get_rating_avg_of_posts_collection($similarpost);
+        $rating_average = $rating_average - 0.5;
+
+        // Remove posts with below average rating
+        $similarpost_rating = $similarpost->filter(function ($value, $key) use($rating_average){
+            if(Post::get_rating_avg($value)){
+                return Post::get_rating_avg($value) >= $rating_average;
+            }
+        });
+
+        if($similarpost_rating->count() >= $half_needed_similar_posts){
+            // We have enough similar posts
+            return $similarpost_rating->take($needed_similar_posts);
+        }
+        // We have too little posts with above avg rating.
+
+        // Get average views of all similar posts
+        $average_views = Post::get_views_avg_of_posts_collection($similarpost);
+        $average_views = $average_views - 1.5;
+
+        // Remove all posts that have below avg views from the collection
+        $similarpost_views = $similarpost->filter(function ($value, $key) use($average_views){
+            return $value['views']->count() >= $average_views;
+        });
+
+        // Merge posts with above average rating and posts with above views
+        $ready_similarpost = $similarpost_views->merge($similarpost_rating)->unique('id')->take($needed_similar_posts);
+
+        return  $ready_similarpost;
+
+    }
+    public static function get_category_posts($category_id, $limit = 10)
+    {
+        $category = Category::find($category_id);
+        if($limit){
+            $reletedposts = $category->posts()->latest()->take($limit)->get();
+        } else {
+            $reletedposts = $category->posts()->latest()->get();
+        }
+        return $reletedposts;
+    }
+    public static function get_rating_avg_of_posts_collection($posts)
+    {
+        $all_ratings = array();
+        foreach ($posts as $post) {
+            if(Post::get_rating_avg($post)){
+                array_push($all_ratings, Post::get_rating_avg($post));
+            }
+        }
+        return array_sum($all_ratings)/count($all_ratings);
+    }
+    public static function get_views_avg_of_posts_collection($posts)
+    {
+        $all_views = array();
+        foreach ($posts as $post) {
+            array_push($all_views,$post->views->count());
+        }
+        return array_sum($all_views)/count($all_views);
+    }
+    public static function get_rating_avg($post)
+    {
+        if($post->ratings->count()){
+            $total = 0;
+            foreach($post->ratings as $rate){
+                $total = $total + $rate->rating;
+            }
+            $avg_stars = $total / $post->ratings->count();
+        } else {
+            $avg_stars = 0;
+        }
+        return $avg_stars;
+
+    }
     public static function next_post_id()
     {
         if(!is_null(Post::latest()->first())){
@@ -83,6 +246,7 @@ class Post extends Model
             $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
             $post = Post::get_posts_stars($post,false);
             $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
+            $post->total_views = $post->views->count();
         }
         if(!$posts->count() and $null == 1){
             $posts = null;
@@ -195,11 +359,14 @@ class Post extends Model
             ['status', '=', "publish"],
         ])->latest()->paginate($pages);
         if($posts){
+            $posts = Post::processing($posts);
+            return $posts;
             foreach ($posts as $post){
                 $post = Post::get_posts_stars($post,false);
                 $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
                 $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
                 $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
+                $post->total_views = $post->count();
 
                 if($post->tag_id){
                     $post->maintag_id = $post->tag_id;

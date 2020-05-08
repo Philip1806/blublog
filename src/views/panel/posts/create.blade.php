@@ -3,7 +3,14 @@
 @section('navbar')
 @if (blublog_setting("post_editor"))
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
-<script>tinymce.init({ selector:'textarea',   plugins: "link, image, fullscreen, textcolor, table, textcolor colorpicker, print, media mediaembed"});
+<script>tinymce.init({ selector:'textarea',   plugins: "link, image, fullscreen, textcolor, table, textcolor colorpicker, print, media mediaembed",
+image_class_list: [
+    {title: 'Responsive', value: 'img-fluid'},
+    {title: 'Tumb', value: 'img-thumbnail'},
+    {title: 'Right', value: 'rounded float-right'},
+    {title: 'Left', value: 'rounded float-left pull-right mr-2'},
+]
+});
 </script>
 @endif
 <nav aria-label="breadcrumb">
@@ -32,7 +39,7 @@
                   <label for="exampleFormControlFile1">{{__('panel.file_input')}}</label>
                   <input type="file"  name="file"   id="file" class="form-control-file" id="exampleFormControlFile1">
                   <hr>
-                  <input type="text" class="form-control" id="searchfor" placeholder="Search for file here">
+                  <input type="text" class="form-control" id="searchforfile" placeholder="Search for file here">
                   <br><input type="button" class="btn btn-info " onclick="searchforfile()" value="Search">
                   <hr>
                   <p id="infopanel">{{__('panel.latest_img')}}</p>
@@ -101,6 +108,7 @@
             <div class="card-body text-primary">
                 {{Form::select('status', [ 'publish' => 'Public', 'draft' => 'Draft', 'private' => 'Private']) }}
                 {{Form::select('type', [ 'posts' => 'Post', 'video' => 'Video']) }}
+                {{ Form::text('created_at', null, ['class' => 'form-control', 'placeholder'=>$date,'id'=>'datepicker','style'=>'margin-top:20px;']) }}
             </div>
         </div>
         <div id="pagepanel"></div>
@@ -109,59 +117,20 @@
         <div class="card border-primary" style="margin-top:10px;">
             <div class="card-header  text-white bg-primary">{{__('panel.settings')}}</div>
             <div class="card-body text-primary">
-                <p>{{Form::checkbox('password', 'value', null, ['onclick' => 'add_pass_fil()'])}} {{__('panel.post_password')}}<div id="passw"></div></p>
                 {{Form::checkbox('comments', null, true)}} {{__('panel.allow_comments')}}<br>
                 {{Form::checkbox('slider', null)}} {{__('panel.slider')}}<br>
                 {{Form::checkbox('front', null)}} {{__('panel.front_page')}}<br>
                 {{Form::checkbox('recommended', null)}} {{__('panel.recommended')}}
             </div>
         </div>
-        <div class="card border-primary" style="margin-top:10px;">
-            <div class="card-header  text-white bg-primary">{{__('panel.headlight')}}</div>
-            <div class="card-body text-primary">
-                {{ Form::text('headlight', null, ['class' => 'form-control']) }}
-            </div>
-        </div>
-
+        @include('blublog::panel.partials._maintag')
         </div>
 </div>
-
-
-
-
-
-<div class="card" style="margin-top:10px;">
-<div class="card-header text-white bg-primary bg">{{__('panel.seoinfo')}} - {{__('panel.autogen')}}</div>
-    <div class="card-body">
-        <h4>{{__('panel.seotitle')}}:</span></h4>
-        {{ Form::text('seo_title', null, ['class' => 'form-control']) }}
-        <h4>{{__('panel.seodescr')}}:</h4>
-        {{ Form::text('descr', null, ['class' => 'form-control']) }}
-    </div>
-</div>
-<div class="card" style="margin-top:10px;">
-    <div class="card-header text-white bg-primary bg">{{__('panel.descr')}} - {{__('panel.can_be_empty')}}</div>
-        <div class="card-body">
-            {{ Form::text('excerpt', null, ['class' => 'form-control']) }}
-
-    </div>
-</div>
+@include('blublog::panel.partials._seoanddescr')
 {!! Form::close() !!}
 </div>
-
+@include('blublog::panel.partials._maintagjs')
 <script>
-let times = 0 ;
-function add_pass_fil(){
-    if(times == 0){
-        let content = document.getElementById("passw");
-        let element = document.createElement("INPUT");
-        element.setAttribute("type", "password");
-        element.setAttribute("name", "password");
-        element.className="form-control";
-        content.appendChild(element);
-        times++;
-    }
-}
 
 
 function we_are_offline(){
@@ -189,7 +158,7 @@ window.setInterval(function(){
 
 
 function searchforfile(){
-    let searchfor = document.getElementById("searchfor").value;
+    let searchfor = document.getElementById("searchforfile").value;
     if(searchfor != ""){
     let infopanel = document.getElementById("infopanel");
     infopanel.innerHTML = "Searching for " + searchfor;

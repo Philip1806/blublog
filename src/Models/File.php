@@ -17,6 +17,10 @@ class File extends Model
         $NewFilename = preg_replace('/\s+/', '', $OriginalFilename);
         return $NewFilename;
     }
+    public static function remove_directory($dir_and_filename)
+    {
+        return substr($dir_and_filename, strpos($dir_and_filename, "/") + 1);
+    }
 
     public static function get_img_path($dir, $type, $filename, $id = 0)
     {

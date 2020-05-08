@@ -13,6 +13,7 @@ use Philip1503\Blublog\Models\File;
 use Philip1503\Blublog\Models\Log;
 use Philip1503\Blublog\Models\Rate;
 use Philip1503\Blublog\Models\Comment;
+use Carbon\Carbon;
 use Session;
 use Auth;
 
@@ -75,8 +76,8 @@ class BlublogPostsController extends Controller
         }
         $tags = Tag::latest()->get();
         $categories = Category::latest()->get();
-
-        return view("blublog::panel.posts.create")->with('tags', $tags)->with('categories', $categories);
+        $date =  Carbon::now()->format('d/m/Y');
+        return view("blublog::panel.posts.create")->with('tags', $tags)->with('date', $date)->with('categories', $categories);
     }
 
 
@@ -96,7 +97,7 @@ class BlublogPostsController extends Controller
     public function edit($id)
     {
         $post = Post::getpost($id,Auth::user()->id);
-
+        $date =  Carbon::now()->format('d/m/Y');
         $tags = Tag::all();
         $tags2 = array();
         foreach ($tags as $tag){
@@ -109,7 +110,7 @@ class BlublogPostsController extends Controller
             $categories2[$category->id] = $category->title;
         }
 
-        return view("blublog::panel.posts.ed")->with('tags', $tags2)->with('post', $post)->with('categories', $categories2);
+        return view("blublog::panel.posts.ed")->with('tags', $tags2)->with('date', $date)->with('post', $post)->with('categories', $categories2);
     }
     public function store(Request $request)
     {
@@ -122,9 +123,7 @@ class BlublogPostsController extends Controller
         $this->validate($request, $rules);
         if($request->file){
                 $size = File::get_file_size($request->file);
-                $un_numb = Post::next_post_id();
-
-                $address = $un_numb . "-" . File::clear_filename($request->file->getClientOriginalName());
+                $address = Post::next_post_id() . "-" . File::clear_filename($request->file->getClientOriginalName());
                 $main_file = Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('posts', $request->file, $address);
 
                 $file = new File;
@@ -170,8 +169,10 @@ class BlublogPostsController extends Controller
         } else {
             $post->front = false;
         }
-
-        if($request->recommend){
+        if($request->main_tag_id){
+            $post->tag_id = $request->main_tag_id;
+        }
+        if($request->recommended){
             $post->recommended = true;
         } else {
             $post->recommended = false;
@@ -187,6 +188,9 @@ class BlublogPostsController extends Controller
             $post->slider = true;
         } else {
             $post->slider = false;
+        }
+        if($request->created_at){
+            $post->created_at = Post::convert_date($request->created_at);
         }
         $post->save();
         $post->tags()->sync($request->tags, false);
@@ -268,7 +272,7 @@ class BlublogPostsController extends Controller
         } else {
             $post->front = false;
         }
-        if($request->recommend){
+        if($request->recommended){
             $post->recommended = true;
         } else {
             $post->recommended = false;
@@ -278,11 +282,16 @@ class BlublogPostsController extends Controller
         } else {
             $post->comments = false;
         }
-
+        if($request->main_tag_id){
+            $post->tag_id = $request->main_tag_id;
+        }
         if($request->slider){
             $post->slider = true;
         } else {
             $post->slider = false;
+        }
+        if($request->new_date){
+            $post->created_at = Post::convert_date($request->new_date);
         }
         $post->img = $address;
         $post->save();

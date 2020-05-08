@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Philip1503\Blublog\Models\Post;
 use Philip1503\Blublog\Models\Log;
 use Session;
-
+use Carbon\Carbon;
 
 class Comment extends Model
 {
@@ -69,7 +69,7 @@ class Comment extends Model
         $ban = Log::where([
             ['type', '=', "error"],
             ['message', '=', __('panel.max_unaproved_comments')],
-            ['created_at', '>', Ban::get_to()],
+            ['created_at', '>', Carbon::today()->subHour()],
         ])->first();
         if($ban){
             return true;

@@ -24,7 +24,7 @@ class CreateBlublogSettingsTables extends Migration
         Schema::create('blublog_posts_views', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('post_id');
-            $table->string('ip', 250);
+            $table->string('ip', 250)->nullable();
             $table->string('agent', 250);
             $table->text('data')->nullable();
             $table->timestamps();

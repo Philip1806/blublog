@@ -10,6 +10,7 @@ class BlublogServiceProvider extends ServiceProvider
 {
     protected $commands = [
         'Philip1503\Blublog\Commands\BlublogSetUp',
+        'Philip1503\Blublog\Commands\BlublogSitemap',
     ];
     /**
      * Register any application services.

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Philip1503\Blublog\Models\File;
 use Philip1503\Blublog\Models\Post;
 use Philip1503\Blublog\Models\Category;
+use Philip1503\Blublog\Models\Log;
 use Session;
 
 class BlublogFileController extends Controller
@@ -55,21 +56,26 @@ class BlublogFileController extends Controller
 
         $file = new File;
 
-        $numb = rand(0, 9999);
-        $address = $numb .  File::clear_filename($request->file->getClientOriginalName());
+        $address = rand(0, 9999) .  File::clear_filename($request->file->getClientOriginalName());
         if($request->public){
-            Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('files', $request->file, $address);
+            $saved = Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('files', $request->file, $address);
             $file->public = true;
         } else{
-            Storage::disk('local')->putFileAs('files', $request->file, $address);
+            $saved = Storage::disk('local')->putFileAs('files', $request->file, $address);
             $file->public = false;
+        }
+
+        if(!$saved){
+            Session::flash('error', __('panel.error_uploading'));
+            Log::add($request->all(), "error", __('panel.error_uploading') );
+            return redirect()->route('blublog.files.index');
         }
 
         $file->size = $size;
         $file->descr = $request->descr;
         $file->filename = 'files/' . $address;
         $file->save();
-
+        Log::add($request->all(), "info", __('panel.file_added') );
         Session::flash('success', __('panel.file_added'));
         return redirect()->route('blublog.files.index');
     }
@@ -84,18 +90,17 @@ class BlublogFileController extends Controller
             return redirect()->route('blublog.files.index');
         }
 
-        $filename = substr($file->filename, strpos($file->filename, "/") + 1);
-
-        $post = Post::where('img', 'LIKE', '%' . $filename . '%')->first();
-        $category = Category::where('img', 'LIKE', '%' . $filename . '%')->first();
+        $filename = File::remove_directory($file->filename);
+        $post = Post::with_filename($filename);
+        $category = Category::with_filename($filename);
         if($post){
-            $massage = 'File you try to delete is related to this post. Upload new image for this post to remove the current image.' ;
-            Session::flash('error', $massage);
+            Log::add($id, "alert", __('panel.delete_post_img') );
+            Session::flash('error', __('panel.delete_post_img'));
             return redirect()->route('blublog.posts.show', $post->id);
         }
         if($category){
-            $massage = 'File you try to delete is related to this category. Upload new image for this category to remove the current image.' ;
-            Session::flash('error', $massage);
+            Log::add($id, "alert", __('panel.delete_category_img') );
+            Session::flash('error', __('panel.delete_category_img'));
             return redirect()->route('blublog.categories.edit', $category->id);
         }
 
@@ -105,14 +110,14 @@ class BlublogFileController extends Controller
             $removed = Storage::disk('local')->delete($file->filename);
         }
 
-
         if($removed){
+            Log::add($file, "info", __('panel.contentdelete') );
             $file->delete();
             Session::flash('success', __('panel.contentdelete'));
             return redirect()->route('blublog.files.index');
         }
-
-        Session::flash('error', "File could not be removed. Check Laravel filesystem cofiguration file.");
+        Log::add($id, "error", __('panel.error_removing') );
+        Session::flash('error', __('panel.error_removing'));
         return redirect()->route('blublog.files.index');
     }
 

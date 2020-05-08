@@ -14,4 +14,8 @@ class Category extends Model
     public function posts() {
         return $this->belongsToMany(Post::class, 'blublog_posts_categories', 'category_id', 'post_id');
     }
+    public static function with_filename($filename)
+    {
+        return Category::where('img', 'LIKE', '%' . $filename . '%')->first();
+    }
 }

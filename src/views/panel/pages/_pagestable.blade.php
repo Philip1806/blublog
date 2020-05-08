@@ -5,7 +5,7 @@
                 <tr>
                         <td>{{ $post->title }}</td>
                         <td><a href="{{ route('blublog.front.pages.show', $post->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('panel.view')}}</a></td>
-                        <td><a href="{{ route('blublog.front.pages.show', $post->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('panel.edit')}}</a></td>
+                        <td><a href="{{ route('blublog.pages.edit', $post->id) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('panel.edit')}}</a></td>
                         <td>
                         {!! Form::open(['route' => ['blublog.pages.destroy', $post->id], 'method' => 'DELETE']) !!}
                         {!! form::submit(__('panel.delete'), ['class' => 'btn btn-outline-danger btn-block ','onsubmit' => 'return validate(this);' ]) !!}

@@ -30,6 +30,7 @@
         <div class="row">
             @yield('content')
         </div>
+        @yield('similar_posts')
     </div>
 <div class="p-1 mb-2 bg-primary text-white " style="margin-top:50px;-webkit-box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);
 -moz-box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);

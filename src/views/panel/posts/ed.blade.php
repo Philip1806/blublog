@@ -3,7 +3,14 @@
 @section('navbar')
 @if (blublog_setting("post_editor"))
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
-<script>tinymce.init({ selector:'textarea',   plugins: "link, image, fullscreen, textcolor, table, textcolor colorpicker, print, media mediaembed"});
+<script>tinymce.init({ selector:'textarea',   plugins: "link, image, fullscreen, textcolor, table, textcolor colorpicker, print, media mediaembed",
+image_class_list: [
+    {title: 'Responsive', value: 'img-fluid'},
+    {title: 'Tumb', value: 'img-thumbnail'},
+    {title: 'Right', value: 'rounded float-right'},
+    {title: 'Left', value: 'rounded float-left pull-right mr-2'},
+]
+});
 </script>
 @endif
 <nav aria-label="breadcrumb">
@@ -21,7 +28,6 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
 
 {{ Form::model($post, ['route' => ['blublog.posts.update', $post->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
 <div class="modal fade bd-example-modal-lg"  id="imgModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -82,11 +88,11 @@
         <div class="col-xl-3">
             <div class="card border-success" style="margin-bottom:10px;">
                 <div class="card-header  text-white bg-success">
-                    {{ Form::submit(__('panel.edit'), ['class' => 'btn btn-success btn-block', 'id'=>'submitBtn']) }}
-                </div>
+                    {{ Form::submit(__('panel.edit'), ['class' => 'btn btn-success btn-block', 'id'=>'submitBtn']) }}                </div>
                 <div class="card-body text-primary">
                     {{Form::select('status', [ 'publish' => 'Public', 'draft' => 'Draft', 'private' => 'Private']) }}
                     {{Form::select('type', [ 'posts' => 'Post', 'video' => 'Video']) }}
+                    {{ Form::text('new_date', null, ['class' => 'form-control', 'placeholder'=>$date,'id'=>'datepicker','style'=>'margin-top:20px;']) }}
                 </div>
             </div>
             <div id="pagepanel"></div><br>
@@ -101,55 +107,23 @@
                 <div class="card border-primary" style="margin-top:10px;">
                 <div class="card-header  text-white bg-primary">{{__('panel.settings')}}</div>
                 <div class="card-body text-primary">
-                        <p>{{Form::checkbox('password', 'value', null, ['onclick' => 'add_pass_fil()'])}} {{__('panel.post_password')}}<div id="passw"></div></p>
                         {{Form::checkbox('comments', null)}} {{__('panel.allow_comments')}}<br>
                         {{Form::checkbox('slider', null)}} {{__('panel.slider')}}<br>
                         {{Form::checkbox('front', null)}} {{__('panel.front_page')}}<br>
                         {{Form::checkbox('recommended', null)}} {{__('panel.recommended')}}
                     </div>
                 </div>
-                <div class="card border-primary" style="margin-top:10px;">
-                    <div class="card-header  text-white bg-primary">{{__('panel.headlight')}}</div>
-                    <div class="card-body text-primary">
-                        {{ Form::text('headlight', null, ['class' => 'form-control']) }}
-                    </div>
-                </div>
-
+                @include('blublog::panel.partials._maintag')
            </div>
       </div>
 
+      @include('blublog::panel.partials._seoanddescr')
 
-      <div class="card" style="margin-top:10px;">
-        <div class="card-header text-white bg-primary bg">{{__('panel.seoinfo')}} - {{__('panel.autogen')}}</div>
-            <div class="card-body">
-                <h4>{{__('panel.seotitle')}}:</h4>
-                {{ Form::text('seo_title', null, ['class' => 'form-control']) }}
-                <h4>{{__('panel.seodescr')}}:</h4>
-                {{ Form::text('descr', null, ['class' => 'form-control']) }}
-            </div>
-        </div>
-        <div class="card" style="margin-top:10px;">
-            <div class="card-header text-white bg-primary bg">{{__('panel.descr')}} - {{__('panel.can_be_empty')}}</div>
-                <div class="card-body">
-                    {{ Form::text('excerpt', null, ['class' => 'form-control']) }}
-                </div>
-        </div>
         {!! Form::close() !!}
         </div>
 
+@include('blublog::panel.partials._maintagjs')
 <script>
-    let times = 0 ;
-    function add_pass_fil(){
-        if(times == 0){
-            let content = document.getElementById("passw");
-            let element = document.createElement("INPUT");
-            element.setAttribute("type", "password");
-            element.setAttribute("name", "password");
-            element.className="form-control";
-            content.appendChild(element);
-            times++;
-        }
-    }
 function we_are_offline(){
     $('#alert_placeholder').html('<div class="alert alert-warning"><a class="close" data-dismiss="alert">×</a><span>'+'Warrning! Its posible that there is no internet connection.'+'</span></div>');
     $('button').prop('disabled', true);

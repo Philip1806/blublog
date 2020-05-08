@@ -1,6 +1,7 @@
 @extends('blublog::panel.main')
 
 @section('content')
+<script src="{{ url('/') }}\blublog/js/jscolor.js"></script>
 <div class="card border-primary shadow">
         <div class="card-header text-white bg-primary">
          {{ __('panel.add_category') }}
@@ -19,6 +20,9 @@
                 </div>
                                 {{ Form::label('descr', __('panel.descr')) }}
                                 {{ Form::text('descr', null, ['class' => 'form-control']) }}
+                                {{ Form::label('pick', __('panel.colorcode')) }}
+                                {{ Form::text('pick', null, ['class' => "form-control jscolor  {onFineChange:'update(this)',required:false}" ,'id'=>'colorcode']) }}
+                                {{Form::hidden("rgb", null, ['id'=>'rgb'])}}
                                 <br>{{__('panel.img')}}:
                                 <input name="file" type="file" id="file"/>
                 <br> <p></p>
@@ -26,6 +30,12 @@
                 {!! Form::close() !!}
         </div>
 
+
+        <script>
+            function update(picker) {
+                document.getElementById('rgb').value =picker.toRGBString();
+            }
+        </script>
 </div>
 <hr>
 @if (!empty($categories[0]->id))

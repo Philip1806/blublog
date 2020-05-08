@@ -6,7 +6,7 @@ use Philip1503\Blublog\Models\BlublogUser;
 use Philip1503\Blublog\Models\MenuItem;
 use Philip1503\Blublog\Models\Menu;
 
-if (! function_exists('show_route')) {
+if (! function_exists('blublog_setting')) {
     function blublog_setting($name)
     {
         $setting = Setting::where([
@@ -28,13 +28,26 @@ if (! function_exists('show_route')) {
         }
     }
 }
-if (! function_exists('show_route')) {
+if (! function_exists('blublog_under_attack')) {
+    function blublog_under_attack($bool)
+    {
+        //TODO
+        /*
+            If true, stopps search, comments, rating,
+            API and all that requires resources for processing.
+            Visits logs are also disabled.
+
+        */
+        return false;
+    }
+}
+if (! function_exists('blublog_main_menu')) {
     function blublog_main_menu()
     {
         return blublog_draw_menu(blublog_setting('main_menu_name'));
     }
 }
-if (! function_exists('show_route')) {
+if (! function_exists('blublog_draw_menu')) {
     function blublog_draw_menu($menu_name)
     {
         $get_menu = Menu::where([
@@ -86,7 +99,7 @@ if (! function_exists('show_route')) {
 
     }
 }
-if (! function_exists('show_route')) {
+if (! function_exists('blublog_can_edit_post')) {
     function blublog_can_edit_post($post_id, $user_id)
     {
         $post = Post::find($post_id);
@@ -106,7 +119,7 @@ if (! function_exists('show_route')) {
 
     }
 }
-if (! function_exists('show_route')) {
+if (! function_exists('blublog_is_admin')) {
     function blublog_is_admin()
     {
         if(auth()->check()){
@@ -126,7 +139,7 @@ if (! function_exists('show_route')) {
 
     }
 }
-if (! function_exists('show_route')) {
+if (! function_exists('blublog_is_mod')) {
     function blublog_is_mod()
     {
         if(auth()->check()){

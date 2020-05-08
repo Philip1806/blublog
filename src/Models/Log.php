@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
 use Philip1503\Blublog\Models\Post;
 use Session;
+use Carbon\Carbon;
 
 class Log extends Model
 {
     protected $table = 'blublog_logs';
 
 //Types: Error, Alert, Visit, Info, bot
-    public static function add($data, $type, $message = "Посещение")
+    public static function add($data, $type, $message = "Visit")
     {
         if(\Request::header('connection') and \Request::header('cache-control') and \Request::header('upgrade-insecure-requests') and \Request::header('accept') and \Request::header('accept-encoding') and \Request::header('cookie') ){
             $data =  \Request::header('host') . \Request::header('connection') . \Request::header('cache-control') . \Request::header('upgrade-insecure-requests') .\Request::header('User-Agent') .\Request::header('accept') .\Request::header('referer').\Request::header('accept-encoding').\Request::header('cookie');

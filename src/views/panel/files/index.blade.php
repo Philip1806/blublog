@@ -82,7 +82,7 @@ function show_files(files){
         <hr>
         @else
         <hr>
-        <center> <b>{{ __('front.no_results')}}</b> </center>
+        <center> <b>{{ __('panel.no_results')}}</b> </center>
         @endif
 
 </div>

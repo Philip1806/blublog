@@ -23,6 +23,34 @@
     ({{$notpubliccomments}}) {{__('panel.comments_waiting')}}
   </div>
   @endif
-
   @include('blublog::panel.partials.continue_edit')
+  <div class="card border-danger shadow" style="margin-top: 20px;">
+    <div class="card-header bg-danger  text-white">
+    {{__('panel.site_actions')}}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm">
+                <a href="{{ route('blublog.admin.control', 0) }}" class="btn btn-outline-primary btn-block">{{__('panel.clear_cache')}}</a>
+              </div>
+            <div class="col-sm">
+                @if (!file_exists( public_path() . '/uploads/rss.xml'))
+                <span class="badge  btn-block badge-warning" style="margin-bottom:10px;">{{__('panel.no_rss')}}</span>
+                @endif
+            <a href="{{ route('blublog.admin.control', 1) }}" class="btn btn-outline-primary btn-block">{{__('panel.rss_generate')}}</a>
+            </div>
+          </div>
+          <br>
+          @if (file_exists( storage_path().'/framework/down'))
+          <a href="{{ route('blublog.admin.control', 2) }}" class="btn btn-outline-warning btn-block">{{__('panel.turn_off_maintenance')}}</a>
+          @else
+           <a href="{{ route('blublog.admin.control', 2) }}" class="btn btn-outline-danger btn-block">{{__('panel.turn_on_maintenance')}}</a>
+          @endif
+          @if (blublog_setting('under_attack'))
+          <a href="{{ route('blublog.admin.control', 3) }}" class="btn btn-outline-warning btn-block">{{__('panel.turn_off_under_attack')}}</a>
+          @else
+          <a href="{{ route('blublog.admin.control', 3) }}" class="btn btn-outline-danger btn-block">{{__('panel.turn_on_under_attack')}}</a>
+          @endif
+   </div>
+  </div>
 @endsection

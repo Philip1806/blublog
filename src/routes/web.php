@@ -64,6 +64,7 @@ Route::group(
                         'middleware' => 'BlublogAdmin',
                     ],
                     static function () {
+                        Route::get('/blublog/control/{setting}', 'BlublogSettingController@admin_control')->name('blublog.admin.control');
                         //Menu
                         Route::get('/menu/set-main/{id}', 'BlublogMenuController@set_main_menu')->name('menu.set_main_menu');
                         Route::get('/menu/menu_items/{id}', 'BlublogMenuController@menu_items')->name('menu.menu_items');

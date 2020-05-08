@@ -3,7 +3,6 @@
 namespace Philip1503\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class Ban extends Model
 {
@@ -24,28 +23,6 @@ class Ban extends Model
         }
         $ban->save();
         return true;
-    }
-    public static function get_from()
-    {
-        $now = Carbon::today();
-        $thisday = Carbon::parse($now)->format('d');
-        $hour = Carbon::parse($now)->format('h');
-        $thisyear = Carbon::parse($now)->format('Y');
-        $thismonth = Carbon::parse($now)->format('m');
-        $to = Carbon::create($thisyear, $thismonth, $thisday,$hour,59)->toDateTimeString();
-        return $to;
-    }
-    public static function get_to()
-    {
-        $now = Carbon::today();
-        $thisday = Carbon::parse($now)->format('d');
-        $hour = Carbon::parse($now)->format('h');
-        $thisyear = Carbon::parse($now)->format('Y');
-        $thismonth = Carbon::parse($now)->format('m');
-        $hour = $hour - 2;
-        $from = Carbon::create($thisyear, $thismonth, $thisday,$hour)->toDateTimeString();
-        return $from;
-
     }
     public static function is_banned($ip)
     {

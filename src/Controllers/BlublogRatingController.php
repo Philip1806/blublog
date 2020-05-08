@@ -12,7 +12,6 @@ class BlublogRatingController extends Controller
 {
     public function index()
     {
-        // NOT USED YET
         $ratings = Rate::latest()->paginate(10);
 
         if($ratings){

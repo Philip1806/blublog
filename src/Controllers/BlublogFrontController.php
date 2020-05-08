@@ -12,6 +12,7 @@ use Philip1503\Blublog\Models\Tag;
 use Philip1503\Blublog\Models\BlublogUser;
 use Philip1503\Blublog\Models\Ban;
 use Philip1503\Blublog\Models\Log;
+use Philip1503\Blublog\Models\PostsViews;
 use App\User;
 use Carbon\Carbon;
 use Session;
@@ -33,10 +34,21 @@ class BlublogFrontController extends Controller
     //Index page of the blog
     public function index()
     {
-        $posts = Post::get_public_posts(blublog_setting('index_posts_per_page'));
+        if(blublog_setting('front_page_posts_only')){
+            $posts = Post::for_front_page(blublog_setting('index_posts_per_page'));
+            $front_page_posts = null;
+        } else {
+            $posts = Post::get_public_posts(blublog_setting('index_posts_per_page'));
+            if(blublog_setting('add_front_page_posts')){
+                $front_page_posts = Post::for_front_page(blublog_setting('index_posts_per_page'));
+            } else{
+                $front_page_posts = null;
+            }
+        }
+        $posts->slider_posts = Post::slider();
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".index";
 
-        return view($path)->with('posts', $posts);
+        return view($path)->with('posts', $posts)->with('front_page_posts', $front_page_posts);
     }
     public function author($name)
     {
@@ -139,20 +151,22 @@ class BlublogFrontController extends Controller
     {
         $post = Post::where([
             ['slug', '=', $slug],
+            ['status', '=', "publish"],
         ])->first();
 
         if(!$post){
             abort(404);
         }
+        PostsViews::add($post->id);
         $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
         if($post->tag_id){
-            $post->maintag_id = $post->tag_id;
+            $maintag_posts = Tag::get_tag_posts($post->tag_id,$post->id);
         } else {
-            if(isset($post->tags[0]->id)){
-                $post->maintag_id = $post->tags[0]->id;
-            }
+            $maintag_posts = null;
         }
         $post = Post::get_posts_stars($post);
+        $post->similar_posts =  Post::processing(Post::public(Post::similar_posts($post->id)));
+        $post->total_views = $post->views->count();
         $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
         //TO DO get maintag with its 5 last posts
         if($post->comments){
@@ -166,9 +180,8 @@ class BlublogFrontController extends Controller
             //In case theme do no check if there is comments
             $comments = null;
         }
-
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".posts.show";
-        return view($path)->with('post', $post)->with('comments', $comments);
+        return view($path)->with('post', $post)->with('maintag_posts', $maintag_posts)->with('comments', $comments);
     }
     public function comment_store(Request $request)
     {

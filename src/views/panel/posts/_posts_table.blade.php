@@ -18,7 +18,7 @@
                 @else
                 <td></td>
                 @endif
-                <td><a href="{{ $post->slug }}" >{{ $post->title }}</a></td>
+                <td><a href="{{ route('blublog.front.post_show', $post->slug) }}" >{{ $post->title }}</a></td>
                 <td>{{ $post->user->name }}</td>
                 <td>
                     {{ $post->views->count() }}

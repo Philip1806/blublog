@@ -1,5 +1,6 @@
 @extends('blublog::blublog.main')
 @section('title') {{$post->seo_title}} @endsection
+
 @section('meta')
 <!-- Open Graph / Facebook -->
 <meta name="og:title" property="og:title" content="{{$post->seo_title}}">
@@ -17,7 +18,9 @@
 <meta name="og:locale" property="og:locale" content="en_EN" />
 <meta name="og:site_name" property="og:site_name" content="{!!blublog_setting('site_name')!!}" >
 <meta name="robots" content="index, follow">
+{!!blublog_setting('post_header_html')!!}
 @endsection
+
 @section('jumbotron')
 <style>
 .jumbotron {
@@ -41,16 +44,25 @@
     </div>
 </div>
 @endsection
+
+@section('similar_posts')<hr>
+<div class="text-center"><h2>You may like:</h2></div><hr>
+@include('blublog::blublog.parts._listposts', ['posts' => $post->similar_posts,'no_links'=>true])
+
+@endsection
+
 @section('content')
 
 <div class="col-lg-9">
     {!! $post->content !!}
     {!! $post->STARS_HTML !!}
-<br><small>Posted by <a href="{{$post->author_url}}"> {{ $post->user->name }}</a> on {{ $post->date }}</small>
+    <span class="badge badge-secondary">Posted by <a href="{{$post->author_url}}"> {{ $post->user->name }}</a> on {{ $post->date }}</span>   <span class="badge badge-secondary"><span class="oi oi-eye"> {{$post->total_views}}</span></span>
     @foreach ($post->tags as $tag)
         <a href="{{ route('blublog.front.tag_show', $tag->slug) }}"><span class="badge badge-pill badge-dark">{{$tag->title}}</span></a>
     @endforeach
         <hr>
+        @include('blublog::blublog.parts._maintagposts', ['maintag_posts' => $maintag_posts])
+        {!!blublog_setting('post_additional_html')!!}
     @if ($post->comments)
         @include('blublog::comments._comments')
     @else
@@ -64,10 +76,6 @@
 
 
 <script>
-function rating(){
-    let rating_info = document.getElementById("rating_info");
-rating_info.innerHTML = "Searching for ";
-}
 function clear_stars(){
     for (let i = 1; i<6; i++){
         let star = document.getElementById(i + "_star");
@@ -86,7 +94,6 @@ function set_ratingto(star_id){
             break;
         }
     }
-
 }
 function send_rating(selected_star){
     let rating_info = document.getElementById("rating_info");

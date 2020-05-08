@@ -146,7 +146,7 @@
 
 
 
-  <script src="{{ url('/') }}/blublog\js/jquery.min.js"></script>
+
   <script src="{{ url('/') }}\blublog/js/bootstrap.min.js"></script>
   <script src="{{ url('/') }}\blublog/js/custom.js"></script>
   </body>

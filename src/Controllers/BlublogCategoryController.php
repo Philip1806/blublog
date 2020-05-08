@@ -50,7 +50,11 @@ class BlublogCategoryController extends Controller
         $category->title = $request->title;
         $category->descr = $request->descr;
         $category->slug = $slug;
-        $category->colorcode = "rgb(". rand(1,255) . "," . rand(1,255) . "," . rand(1,255) . ");";
+        if($request->rgb){
+            $category->colorcode = $request->rgb . ";";
+        }else{
+            $category->colorcode = "rgb(". rand(1,255) . "," . rand(1,255) . "," . rand(1,255) . ");";
+        }
 
         if($request->file){
                     $size = File::get_file_size($request->file);
@@ -120,8 +124,11 @@ class BlublogCategoryController extends Controller
             $address = $category->img;
         }
 
-
-        $category->colorcode = $request->colorcode;
+        if($request->rgb){
+            $category->colorcode = $request->rgb . ";";
+        }else{
+            $category->colorcode = $request->colorcode;
+        }
         $category->title = $request->title;
         $category->descr = $request->descr;
         $category->slug = $request->slug;
