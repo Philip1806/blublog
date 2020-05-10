@@ -1,10 +1,10 @@
 <?php
 
-namespace Philip1503\Blublog\Models;
+namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\Log;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Log;
 
 class PostsViews extends Model
 {

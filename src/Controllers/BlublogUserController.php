@@ -1,11 +1,11 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\BlublogUser;
+use Blublog\Blublog\Models\BlublogUser;
 use App\User;
 use Session;
 use Auth;
@@ -88,13 +88,13 @@ class BlublogUserController extends Controller
                 ['user_id', '=', $id],
             ])->first();
             if($request->user()->id == $id){
-                Session::flash('warning', "You can not change your role. Other changes are saved.");
+                Session::flash('warning', __('blublog.cant_change_your_role'));
             } else {
                 $Blublog_User->role = $request->role;
                 $Blublog_User->save();
             }
         }
-        Session::flash('success', "User is edited.");
+        Session::flash('success', __('blublog.user_edited'));
 
         return redirect()->route('blublog.users.index');
     }
@@ -103,17 +103,17 @@ class BlublogUserController extends Controller
     {
         $Blublog_User = BlublogUser::find($id);
         if(!$Blublog_User){
-            Session::flash('error', __('panel.404'));
+            Session::flash('error', __('blublog.404'));
             return redirect()->route('blublog.users.index');
         }
         $user = User::find($Blublog_User->user_id);
         if(Auth::user()->id == $user->id){
-            Session::flash('warning', "Can't delete your profile.");
+            Session::flash('warning', __('blublog.cant_delete_your_profile'));
             return redirect()->route('blublog.users.index');
         }
         $Blublog_User->delete();
         $user->delete();
-        Session::flash('success', 'Профила е премахнат.');
+        Session::flash('success', __('blublog.contentdelete'));
         return redirect()->route('blublog.users.index');
     }
 }

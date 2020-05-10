@@ -3,7 +3,7 @@
 @section('content')
 <br>
 <div class="card border-primary ">
-    <div class="card-header text-white bg-primary">{{__('panel.logs')}}</div>
+    <div class="card-header text-white bg-primary">{{__('blublog.logs')}}</div>
     <div class="card-body text-primary">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">

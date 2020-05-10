@@ -1,13 +1,13 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Page;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\Log;
+use Blublog\Blublog\Models\Page;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Log;
 use Session;
 
 class BlublogPagesController extends Controller
@@ -67,8 +67,8 @@ class BlublogPagesController extends Controller
             $page->sidebar =false;
         }
         $page->save();
-        Session::flash('success', __('panel.page_added'));
-        Log::add($request, "info", __('panel.page_added') );
+        Session::flash('success', __('blublog.page_added'));
+        Log::add($request, "info", __('blublog.page_added') );
         return redirect()->route('blublog.pages.index');
     }
 
@@ -94,8 +94,8 @@ class BlublogPagesController extends Controller
 
         $page = Page::find($id);
         if(!$page){
-            Session::flash('error', __('panel.404'));
-            Log::add($request, "error", __('panel.404') );
+            Session::flash('error', __('blublog.404'));
+            Log::add($request, "error", __('blublog.404') );
             return redirect()->route('blublog.pages.index');
         }
         if($request->slug){
@@ -119,8 +119,8 @@ class BlublogPagesController extends Controller
             $page->sidebar =false;
         }
         $page->save();
-        Session::flash('success', __('panel.page_edited'));
-        Log::add($request, "info", __('panel.page_edited') );
+        Session::flash('success', __('blublog.page_edited'));
+        Log::add($request, "info", __('blublog.page_edited') );
         return redirect()->route('blublog.pages.index');
 
     }
@@ -130,14 +130,14 @@ class BlublogPagesController extends Controller
 
         $page = Page::find($id);
         if(!$page){
-            Session::flash('error', __('panel.404'));
-            Log::add('BlublogPagesController::destroy', "error", __('panel.404') );
+            Session::flash('error', __('blublog.404'));
+            Log::add('BlublogPagesController::destroy', "error", __('blublog.404') );
             return redirect()->route('blublog.pages.index');
         }
         $page->delete();
 
-        Session::flash('success', __('panel.page_deleted'));
-        Log::add('BlublogPagesController::destroy', "info", __('panel.page_deleted') );
+        Session::flash('success', __('blublog.page_deleted'));
+        Log::add('BlublogPagesController::destroy', "info", __('blublog.page_deleted') );
         return redirect()->route('blublog.pages.index');
 
     }

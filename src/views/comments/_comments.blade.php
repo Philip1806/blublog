@@ -1,17 +1,17 @@
 @if (!blublog_setting('disable_comments_modul'))
-<h4>{{__('panel.comments')}}</h4>
+<h4>{{__('blublog.comments')}}</h4>
 <hr>
 
 
 @if (isset($comments[0]->id))
 @include('blublog::comments._comment_replies', ['comments' => $comments, 'post_id' => $post->id])
 @else
-    <center> <b> {{__('panel.no_comments')}}</b> </center>
+    <center> <b> {{__('blublog.no_comments')}}</b> </center>
 @endif
 
 <hr />
 <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#show_comment_form" aria-expanded="false" aria-controls="collapseExample">
-    {{__('panel.add_comments')}}
+    {{__('blublog.add_comments')}}
 </button>
 <div class="collapse" id="show_comment_form"  style="margin-bottom: 20px;">
     <div class="card border-secondary">
@@ -20,7 +20,7 @@
                 @csrf
                 <div class="form-group">
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name">{{__('panel.name')}}</label>
+                            <label for="name">{{__('blublog.name')}}</label>
                             @if (!$errors->has('name'))
                     <input type="text" name="name" class="form-control" value="">
                             @endif
@@ -42,7 +42,7 @@
 
                     </div>
                     <div class="form-group{{ $errors->has('comment_body') ? ' has-error' : '' }}">
-                            <label for="commentt">{{__('panel.comment')}}</label>
+                            <label for="commentt">{{__('blublog.comment')}}</label>
                             @if (!$errors->has('comment_body'))
                             <textarea rows="3" type="text" name="comment_body" class="form-control" value="{{ old('comment_body')}}"></textarea>
                             @endif
@@ -55,7 +55,7 @@
                     <input type="hidden" name="post_id" value="{{ $post->id }}" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btn btn-secondary" value="{{__('panel.add_comments')}}" />
+                    <input type="submit" class="btn btn-secondary" value="{{__('blublog.add_comments')}}" />
                 </div>
             </form>
         </div>

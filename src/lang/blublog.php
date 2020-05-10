@@ -52,20 +52,39 @@ return [
     'security' => 'Security',
     'backtosite' => 'Back to site',
     'none' => 'None',
+    'site_actions' => 'Administrative Actions',
     'contentdelete' => 'Successfully deleted',
     'contentcreate' => 'Successfully created',
+    'contentupdate' => 'Successfully edited',
     'gd_not_installed' => 'PHP GD library is NOT installed. Yоu will not be able to create posts.',
+
+    //Administrative Actions
+    'cache_clear' => 'Cache cleared.',
+    'rss_generate' => 'Generate RSS',
+    'rss_generated' => 'RSS generated',
+    'no_rss' => 'There is no RSS (sitemap)',
+    'clear_cache' => 'Clear the whole cache',
+    'turn_off_maintenance' => 'Turn off maintenance mode',
+    'turn_on_maintenance' => 'Turn on maintenance mode',
+    'turn_on_under_attack' => 'Turn on under attack mode.',
+    'turn_off_under_attack' => 'Turn off under attack mode.',
+
     //Users
     'users' => 'Users',
     'username' => 'Username',
     'addinguser' => 'Adding user',
     'adduser' => 'Add user',
     'role' => 'Role',
+    'cant_change_your_role' => 'You can not change your role. Other changes are saved.',
+    'user_edited' => 'User is edited.',
+    'cant_delete_your_profile' => 'Cant delete your profile.',
+    'role' => 'Role',
 
     //categories
     'add_category' => 'Add category',
     'all_categories' => 'All categories',
     'categories_stats' => 'Categories statistics',
+    'colorcode' => 'Color',
     //tags
     'tags' => 'Tags',
     'add_tag' => 'Add Tag',
@@ -104,7 +123,13 @@ return [
     'slider' => 'In slider',
     'front_page' => 'In front page',
     'recommended' => 'Recommended',
-
+    'no_ratings' => 'No ratings',
+    'rating' => 'Rating',
+    'new_copy' => 'New Copy',
+    'copy' => 'Copy',
+    'star' => 'Stars',
+    'stars' => 'Stars',
+    'main_tag' => 'Main tag',
 
     'posted' => 'Posted by:',
     'on' => 'On',
@@ -154,6 +179,13 @@ return [
     'php_ini' => 'Change it in php.ini',
     'file_added' => 'File added',
     'post_image' => 'Image post ',
+    'delete_post_img' => 'File you try to delete is related to this post. Upload new image for this post to remove the current image.',
+    'delete_category_img' => 'File you try to delete is related to this category. Upload new image for this category to remove the current image.',
+    'error_removing' => 'File could not be removed. Check Laravel/Blublog filesystem cofiguration. ',
+    'error_uploading' => 'Could not upload file. Check Laravel/Blublog filesystem cofiguration.  ',
+    'no_results' => 'No files',
+
+
 
     //Menu
     'menu' => 'Menu',
@@ -170,10 +202,29 @@ return [
     'set_main_menu' => 'Set as main',
 
     //Search
-    'search' => 'search',
+    'search' => 'Search',
     'search_in_blog' => 'Search in blog...',
     'search_resuts' => 'Search results for:',
-    'on' => 'On',
+    'search_turnoff' => 'Searching is currently disabled.',
+    'search_post' => 'Search for post',
+    'search_tag' => 'Search for tag',
+    'search_comment' => 'Search for comments',
+    'search_comment_enter' => 'Enter name or IP address',
+    'search_comment_name' => 'Search by name',
+    'search_comment_ip' => 'Search by IP address',
+    'search_file' => 'Search for file',
+
+    //Ban
+    'ban' => 'Ban',
+    'unban' => 'Remove ban',
+    'bans' => 'All blocked users',
+    'no_bans' => 'No blocked users',
+    'banned_from_comments' => 'Banned from comments',
+    'banned_from_blog' => 'Banned from blog',
+    'ip' => 'IP address',
+    'ban_user' => 'Ban user',
+    'spam' => 'Too many attempts to add comment.',
+    'its_banned' => 'Already banned.',
 
 
     /*
@@ -189,7 +240,7 @@ return [
     'comment_from_author' => ' - Post author',
     'approved' => 'Comment approved.',
     'not_approved' => 'The comment is now hidden.',
-    'on' => 'On',
+    'on_this_topic' => 'More about this topic',
     'on' => 'On',
 
 

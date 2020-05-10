@@ -15,9 +15,9 @@ image_class_list: [
 @endif
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('panel.home') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ __('panel.posts') }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{__('panel.add_post')}}</li>
+        <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('blublog.home') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ __('blublog.posts') }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{__('blublog.add_post')}}</li>
     </ol>
 </nav>
 @endsection
@@ -30,13 +30,13 @@ image_class_list: [
       <div class="modal-content">
           <div class="form-group">
               <div class="card-body">
-                  <label for="exampleFormControlFile1">{{__('panel.file_input')}}</label>
+                  <label for="exampleFormControlFile1">{{__('blublog.file_input')}}</label>
                   <input type="file"  name="file"   id="file" class="form-control-file" id="exampleFormControlFile1">
                   <hr>
                   <input type="text" class="form-control" id="searchforfile" placeholder="Search for file here">
                   <br><input type="button" class="btn btn-info " onclick="searchforfile()" value="Search">
                   <hr>
-                  <p id="infopanel">{{__('panel.latest_img')}}</p>
+                  <p id="infopanel">{{__('blublog.latest_img')}}</p>
                   <div id="gallery" class="row text-center text-lg-left"></div>
               </div>
           </div>
@@ -45,7 +45,7 @@ image_class_list: [
 </div>
 
 <div class="card border-danger" style="margin-bottom:20px;">
-    <div class="card-header  text-white bg-danger">{{__('panel.title')}}</div>
+    <div class="card-header  text-white bg-danger">{{__('blublog.title')}}</div>
     <div class="card-body text-primary">
         {{ Form::text('title', null, ['class' => 'form-control']) }}
     </div>
@@ -57,7 +57,7 @@ image_class_list: [
             @include('blublog::panel.posts._content')
 
             <div class="card border-danger" style="margin-top:10px;">
-                <div class="card-header  text-white bg-danger">{{__('panel.categories')}}</div>
+                <div class="card-header  text-white bg-danger">{{__('blublog.categories')}}</div>
                 <div class="card-body text-primary">
                     <select  id="select2-multi" class="form-control select2-multi" name="categories[]" multiple="multiple" >
                         @foreach($categories as $category)
@@ -68,7 +68,7 @@ image_class_list: [
             </div>
 
             <div class="card border-primary" style="margin-top:10px;">
-                <div class="card-header  text-white bg-primary">{{__('panel.tags')}}</div>
+                <div class="card-header  text-white bg-primary">{{__('blublog.tags')}}</div>
                 <div class="card-body text-primary">
                     <select  id="select3-multi" class="form-control select2-multi" name="tags[]" multiple="multiple" >
                         @foreach($tags as $tag)
@@ -79,14 +79,14 @@ image_class_list: [
             </div>
         </div>
         <div class="col-xl-3">
-            @include('blublog::panel.posts._action', ['button_title' => __('panel.add_post')])
+            @include('blublog::panel.posts._action', ['button_title' => __('blublog.add_post')])
             <div class="card border-primary" style="margin-top:10px;">
-                <div class="card-header  text-white bg-primary">{{__('panel.settings')}}</div>
+                <div class="card-header  text-white bg-primary">{{__('blublog.settings')}}</div>
                 <div class="card-body text-primary">
-                    {{Form::checkbox('comments', null, true)}} {{__('panel.allow_comments')}}<br>
-                    {{Form::checkbox('slider', null)}} {{__('panel.slider')}}<br>
-                    {{Form::checkbox('front', null)}} {{__('panel.front_page')}}<br>
-                    {{Form::checkbox('recommended', null)}} {{__('panel.recommended')}}
+                    {{Form::checkbox('comments', null, true)}} {{__('blublog.allow_comments')}}<br>
+                    {{Form::checkbox('slider', null)}} {{__('blublog.slider')}}<br>
+                    {{Form::checkbox('front', null)}} {{__('blublog.front_page')}}<br>
+                    {{Form::checkbox('recommended', null)}} {{__('blublog.recommended')}}
                 </div>
             </div>
             @include('blublog::panel.partials._maintag')

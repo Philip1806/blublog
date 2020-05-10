@@ -1,10 +1,10 @@
 <?php
 
-namespace Philip1503\Blublog\Models;
+namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
-use Philip1503\Blublog\Models\Post;
+use Blublog\Blublog\Models\Post;
 use Session;
 use Carbon\Carbon;
 

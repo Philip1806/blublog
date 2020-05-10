@@ -1,10 +1,10 @@
 <?php
 
-namespace Philip1503\Blublog\Commands;
+namespace Blublog\Blublog\Commands;
 use Illuminate\Console\Command;
 use App\User;
-use Philip1503\Blublog\Models\BlublogUser;
-use Philip1503\Blublog\Models\Setting;
+use Blublog\Blublog\Models\BlublogUser;
+use Blublog\Blublog\Models\Setting;
 
 class BlublogSetUp extends Command
 {

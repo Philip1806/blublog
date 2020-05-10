@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="card border-primary">
-    <div class="card-header text-white bg-primary">{{__('panel.edit')}} {{__('panel.users')}}</div>
+    <div class="card-header text-white bg-primary">{{__('blublog.edit')}} {{__('blublog.users')}}</div>
     <div class="card-body text-primary">
 
         {{ Form::model($user, ['route' => ['blublog.users.update', $user->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
@@ -32,7 +32,7 @@
         {{ Form::text('updated_at', null, ['class' => 'form-control']) }}
         <br>
 
-        {{ Form::submit(__('panel.edit_post'), ['class' => 'btn btn-primary btn-block']) }}
+        {{ Form::submit(__('blublog.edit_post'), ['class' => 'btn btn-primary btn-block']) }}
         {!! Form::close() !!}
     </div>
 </div>

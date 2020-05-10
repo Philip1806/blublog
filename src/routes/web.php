@@ -2,7 +2,7 @@
 
 
 Route::group(
-    ['middleware' => ['web'], 'namespace' => 'Philip1503\Blublog\Controllers'],
+    ['middleware' => ['web'], 'namespace' => 'Blublog\Blublog\Controllers'],
     static function () {
         //Something like API
         Route::post('/blublog/uploadimg', 'BlublogPostsController@uploadimg')->name('blublog.posts.uploadimg')->middleware('auth');

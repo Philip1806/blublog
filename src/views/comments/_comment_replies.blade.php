@@ -7,20 +7,20 @@
                 <div class="card-header text-white bg-primary">
                         <b>{{ $comment->name }}</b>
                         @if ($comment->author)
-                        {{__('panel.comment_from_author')}}
+                        {{__('blublog.comment_from_author')}}
                         @endif
                             @auth
                             @if ($comment->public)
-                            <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-warning btn-sm" role="button">{{__('panel.hide')}}</a>
+                            <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-warning btn-sm" role="button">{{__('blublog.hide')}}</a>
                             @else
-                            <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-info btn-sm" role="button">{{__('panel.approve')}}</a>
+                            <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-info btn-sm" role="button">{{__('blublog.approve')}}</a>
                             @endif
                         @endauth
                 </div>
                 <div class="card-body">
     <p>{!! $comment->body !!}</p>
     <a class="btn btn-light " data-toggle="collapse" href="#collapseExample{{ $comment->id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
-            {{__('panel.reply')}}
+            {{__('blublog.reply')}}
           </a>
     <a href="" id="reply"></a>
         <div class="collapse" id="collapseExample{{ $comment->id }}">
@@ -29,7 +29,7 @@
                             @csrf
                             <div class="form-group">
                                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                                <label for="name">{{__('panel.name')}}</label>
+                                                <label for="name">{{__('blublog.name')}}</label>
                                                 @if (!$errors->has('name'))
                                         <input type="text" name="name" class="form-control" value="">
                                                 @endif
@@ -51,7 +51,7 @@
 
                                         </div><br>
                                         <div class="form-group{{ $errors->has('comment_body') ? ' has-error' : '' }}">
-                                                <label for="commentt">{{__('panel.comment')}}</label>
+                                                <label for="commentt">{{__('blublog.comment')}}</label>
                                                 @if (!$errors->has('comment_body'))
                                                 <textarea rows="3" type="text" name="comment_body" class="form-control" value="{{ old('comment_body')}}"></textarea>
                                                 @endif
@@ -65,7 +65,7 @@
                                 <input type="hidden" name="comment_id" value="{{ $comment->id }}" />
                             </div>
                             <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="{{__('panel.reply')}}" />
+                            <input type="submit" class="btn btn-primary" value="{{__('blublog.reply')}}" />
                             </div>
                 </form>
           </div>

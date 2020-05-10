@@ -2,8 +2,8 @@
 <table class="table table-sm table-striped">
         <thead class="thead-light">
         <tr>
-        <th scope="col">{{__('panel.message')}}</th>
-            <th scope="col">{{__('panel.date')}}</th>
+        <th scope="col">{{__('blublog.message')}}</th>
+            <th scope="col">{{__('blublog.date')}}</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -19,7 +19,7 @@
                 @endif
                 <td>{{$log->message}}</td>
                 <td>{{$log->created_at}}</td>
-                <td><a href="{{ route('blublog.logs.show', $log->id) }}"  role="button" class="btn btn-outline-info btn-block ">{{__('panel.view')}}</a></td>
+                <td><a href="{{ route('blublog.logs.show', $log->id) }}"  role="button" class="btn btn-outline-info btn-block ">{{__('blublog.view')}}</a></td>
                 <td><a  class="btn btn-outline-primary btn-block " href="{{ route('blublog.logs.destroy', $log->id) }}" >Delete</a></td>
                 </tr>
                 @endforeach
@@ -30,6 +30,6 @@
 
 @else
 <br>
-<center> <b>{{__('panel.no_logs')}}</b> </center>
+<center> <b>{{__('blublog.no_logs')}}</b> </center>
 <hr>
 @endif

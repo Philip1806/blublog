@@ -1,14 +1,14 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Setting;
-use Philip1503\Blublog\Models\Log;
-use Philip1503\Blublog\Models\Menu;
-use Philip1503\Blublog\Models\MenuItem;
+use Blublog\Blublog\Models\Setting;
+use Blublog\Blublog\Models\Log;
+use Blublog\Blublog\Models\Menu;
+use Blublog\Blublog\Models\MenuItem;
 use App\User;
 use Session;
 
@@ -72,10 +72,10 @@ class BlublogMenuController extends Controller
             $item->label =$request->label;
             $item->url = $request->url;
             $item->save();
-            Session::flash('success', __('panel.contentedit'));
+            Session::flash('success', __('blublog.contentedit'));
             return back();
         }
-        Session::flash('error', __('panel.404'));
+        Session::flash('error', __('blublog.404'));
         return back();
     }
     public function edit_menu_update(Request $request)
@@ -91,7 +91,7 @@ class BlublogMenuController extends Controller
         if($menu){
             $menu->name = $request->name;
             $menu->save();
-            Session::flash('success', __('panel.contentedit'));
+            Session::flash('success', __('blublog.contentedit'));
         }
 
         return back();
@@ -107,7 +107,7 @@ class BlublogMenuController extends Controller
         $menu->name = $request->title;
         $menu->save();
 
-        Session::flash('success', __('panel.contentcreate'));
+        Session::flash('success', __('blublog.contentcreate'));
         return back();
     }
     public function destroy_menu($id)
@@ -118,7 +118,7 @@ class BlublogMenuController extends Controller
                 $item->delete();
             }
             $menu->delete();
-            Session::flash('success', __('panel.contentdelete'));
+            Session::flash('success', __('blublog.contentdelete'));
             return back();
         }
         return back();
@@ -129,7 +129,7 @@ class BlublogMenuController extends Controller
         $item = MenuItem::find($id);
         if($item){
             $item->delete();
-            Session::flash('success', __('panel.contentdelete'));
+            Session::flash('success', __('blublog.contentdelete'));
             return back();
         }
         return back();
@@ -160,7 +160,7 @@ class BlublogMenuController extends Controller
             $item->parent =$request->parent_id;
             $item->menu = $request->menu_id;
             $item->save();
-            Session::flash('success', __('panel.contentcreate'));
+            Session::flash('success', __('blublog.contentcreate'));
             return back();
         }
         Session::flash('error', "Unvalid id data.");
@@ -186,7 +186,7 @@ class BlublogMenuController extends Controller
             $item->parent =0;
             $item->menu = $menu->id;
             $item->save();
-            Session::flash('success', __('panel.contentcreate'));
+            Session::flash('success', __('blublog.contentcreate'));
             return back();
         }
         Session::flash('error', "Menu id is wrong.");

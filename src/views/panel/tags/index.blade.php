@@ -6,7 +6,7 @@
     <div class="col-xl-6">
         <div class="card border-primary shadow">
             <div class="card-header text-white bg-primary">
-             {{ __('panel.search_tag') }}
+             {{ __('blublog.search_tag') }}
             </div><br>
             <div class="card-body">
                 <input type="text" class="form-control" id="searchfor">
@@ -21,11 +21,11 @@
     <div class="col-xl-6">
         <div class="card border-primary shadow">
             <div class="card-header text-white bg-primary">
-            {{ __('panel.add_tag') }}
+            {{ __('blublog.add_tag') }}
             </div>
             <div class="card-body">
                 {!! Form::open(['route' => 'blublog.tags.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-                @include('blublog::panel.tags._form', ['button_title' => __('panel.create')])
+                @include('blublog::panel.tags._form', ['button_title' => __('blublog.create')])
                 {!! Form::close() !!}
             </div>
         </div>
@@ -35,7 +35,7 @@
 
 <div class="card border-primary shadow" style="margin-top:20px;">
     <div class="card-header text-white bg-primary">
-     {{ __('panel.tags') }}
+     {{ __('blublog.tags') }}
     </div>
     <div class="card-body">
         @if (!empty($tags[0]->id))
@@ -44,11 +44,11 @@
                         @foreach ( $tags as $tag )
                         <tr>
                                 <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" >{{ $tag->title }}</a></td>
-                                <td><a href="{{ route('blublog.front.tag_show', $tag->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('panel.view')}}</a></td>
-                                <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" class="btn btn-outline-warning btn-block">{{__('panel.edit')}}</a></td>
+                                <td><a href="{{ route('blublog.front.tag_show', $tag->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('blublog.view')}}</a></td>
+                                <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" class="btn btn-outline-warning btn-block">{{__('blublog.edit')}}</a></td>
                                 <td>
                                 {!! Form::open(['route' => ['blublog.tags.destroy', $tag->id], 'method' => 'DELETE']) !!}
-                                {!! form::submit(__('panel.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
+                                {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
                                 {!! Form::close() !!}
                                 </td>
                         </tr>

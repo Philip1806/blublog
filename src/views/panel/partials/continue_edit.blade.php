@@ -4,7 +4,7 @@
     <div class="col-xl-6 col-lg-5">
         <div class="card border-warning shadow">
             <div class="card-header text-white bg-warning">
-            {{__('panel.draft_con')}}
+            {{__('blublog.draft_con')}}
             </div>
             <div class="card-body">
                 @include('blublog::panel.partials._continue_edit', ['items' => $draft_posts])
@@ -17,7 +17,7 @@
     <div class="col-xl-6 col-lg-5">
         <div class="card border-info shadow">
             <div class="card-header text-white bg-info">
-            {{__('panel.private_posts')}}
+            {{__('blublog.private_posts')}}
             </div>
             <div class="card-body">
                 @include('blublog::panel.partials._continue_edit', ['items' => $private_posts])

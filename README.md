@@ -17,7 +17,7 @@ composer require intervention/image
 ```
 1. Add package to laravel with:
 ```
-composer require philip1503/blublog
+composer require blublog/blublog
 ```
 2. In app.php from config folder add this in providers if it's not there:
 ```
@@ -26,7 +26,7 @@ Philip1503\Blublog\BlublogServiceProvider::class,
 3. login into your app without going to the blog. Run these one by one:
 ```
 php artisan migrate
-php artisan vendor:publish --provider="Philip1503\Blublog\BlublogServiceProvider"
+php artisan vendor:publish --provider="Blublog\Blublog\BlublogServiceProvider"
 php artisan blublog:setup
 ```
 4. Cool. Everything except uploading/deleting files should work.

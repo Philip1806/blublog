@@ -1,14 +1,14 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\File;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\Category;
-use Philip1503\Blublog\Models\Log;
+use Blublog\Blublog\Models\File;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Category;
+use Blublog\Blublog\Models\Log;
 use Session;
 
 class BlublogFileController extends Controller
@@ -66,8 +66,8 @@ class BlublogFileController extends Controller
         }
 
         if(!$saved){
-            Session::flash('error', __('panel.error_uploading'));
-            Log::add($request->all(), "error", __('panel.error_uploading') );
+            Session::flash('error', __('blublog.error_uploading'));
+            Log::add($request->all(), "error", __('blublog.error_uploading') );
             return redirect()->route('blublog.files.index');
         }
 
@@ -75,8 +75,8 @@ class BlublogFileController extends Controller
         $file->descr = $request->descr;
         $file->filename = 'files/' . $address;
         $file->save();
-        Log::add($request->all(), "info", __('panel.file_added') );
-        Session::flash('success', __('panel.file_added'));
+        Log::add($request->all(), "info", __('blublog.file_added') );
+        Session::flash('success', __('blublog.file_added'));
         return redirect()->route('blublog.files.index');
     }
 
@@ -94,13 +94,13 @@ class BlublogFileController extends Controller
         $post = Post::with_filename($filename);
         $category = Category::with_filename($filename);
         if($post){
-            Log::add($id, "alert", __('panel.delete_post_img') );
-            Session::flash('error', __('panel.delete_post_img'));
+            Log::add($id, "alert", __('blublog.delete_post_img') );
+            Session::flash('error', __('blublog.delete_post_img'));
             return redirect()->route('blublog.posts.show', $post->id);
         }
         if($category){
-            Log::add($id, "alert", __('panel.delete_category_img') );
-            Session::flash('error', __('panel.delete_category_img'));
+            Log::add($id, "alert", __('blublog.delete_category_img') );
+            Session::flash('error', __('blublog.delete_category_img'));
             return redirect()->route('blublog.categories.edit', $category->id);
         }
 
@@ -111,13 +111,13 @@ class BlublogFileController extends Controller
         }
 
         if($removed){
-            Log::add($file, "info", __('panel.contentdelete') );
+            Log::add($file, "info", __('blublog.contentdelete') );
             $file->delete();
-            Session::flash('success', __('panel.contentdelete'));
+            Session::flash('success', __('blublog.contentdelete'));
             return redirect()->route('blublog.files.index');
         }
-        Log::add($id, "error", __('panel.error_removing') );
-        Session::flash('error', __('panel.error_removing'));
+        Log::add($id, "error", __('blublog.error_removing') );
+        Session::flash('error', __('blublog.error_removing'));
         return redirect()->route('blublog.files.index');
     }
 

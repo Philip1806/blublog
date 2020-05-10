@@ -1,18 +1,19 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\Page;
-use Philip1503\Blublog\Models\Category;
-use Philip1503\Blublog\Models\Comment;
-use Philip1503\Blublog\Models\Tag;
-use Philip1503\Blublog\Models\BlublogUser;
-use Philip1503\Blublog\Models\Ban;
-use Philip1503\Blublog\Models\Log;
-use Philip1503\Blublog\Models\PostsViews;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Page;
+use Blublog\Blublog\Models\Category;
+use Blublog\Blublog\Models\Comment;
+use Blublog\Blublog\Models\Tag;
+use Blublog\Blublog\Models\BlublogUser;
+use Blublog\Blublog\Models\Ban;
+use Blublog\Blublog\Models\Log;
+use Blublog\Blublog\Models\PostsViews;
 use App\User;
 use Carbon\Carbon;
 use Session;
@@ -23,6 +24,12 @@ class BlublogFrontController extends Controller
 
     public function __construct()
     {
+        if (!Cache::has('blublog.categories')){
+            $categories = Category::get();
+            Cache::put('blublog.categories', $categories,  now()->addMinutes(config('blublog.setting_cache')));
+        } else {
+            $categories = Cache::get('blublog.categories');
+        }
         $categories = Category::get();
         View::share('categories', $categories );
         $ip = Post::getIp();
@@ -34,18 +41,27 @@ class BlublogFrontController extends Controller
     //Index page of the blog
     public function index()
     {
-        if(blublog_setting('front_page_posts_only')){
-            $posts = Post::for_front_page(blublog_setting('index_posts_per_page'));
-            $front_page_posts = null;
-        } else {
-            $posts = Post::get_public_posts(blublog_setting('index_posts_per_page'));
-            if(blublog_setting('add_front_page_posts')){
-                $front_page_posts = Post::for_front_page(blublog_setting('index_posts_per_page'));
-            } else{
+        $Page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if (!Cache::has('blublog.index_page.posts'. $Page)){
+            if(blublog_setting('front_page_posts_only')){
+                $posts = Post::for_front_page(blublog_setting('index_posts_per_page'));
                 $front_page_posts = null;
+            } else {
+                $posts = Post::get_public_posts(blublog_setting('index_posts_per_page'));
+                if(blublog_setting('add_front_page_posts')){
+                    $front_page_posts = Post::for_front_page(blublog_setting('index_posts_per_page'));
+                } else{
+                    $front_page_posts = null;
+                }
             }
+            $posts->slider_posts = Post::slider();
+            Cache::put('blublog.index_page.posts'. $Page, $posts,  now()->addMinutes(config('blublog.setting_cache')));
+            Cache::put('blublog.index_page.front_page_posts', $front_page_posts,  now()->addMinutes(config('blublog.setting_cache')));
+        } else {
+            $posts = Cache::get('blublog.index_page.posts'. $Page);
+            $front_page_posts = Cache::get('blublog.index_page.front_page_posts');
         }
-        $posts->slider_posts = Post::slider();
+
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".index";
 
         return view($path)->with('posts', $posts)->with('front_page_posts', $front_page_posts);
@@ -81,7 +97,7 @@ class BlublogFrontController extends Controller
     public function search(Request $request)
     {
         if(blublog_setting('disable_search_modul')){
-            Session::flash('error', __('panel.search_turnoff'));
+            Session::flash('error', __('blublog.search_turnoff'));
             return back();
         }
         $rules = [
@@ -125,8 +141,7 @@ class BlublogFrontController extends Controller
         if(!$category){
             abort(404);
         }
-        $posts = $category->posts()->latest()->paginate(blublog_setting('category_posts_per_page'));
-        $posts = Post::public($posts);
+        $posts = $category->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('category_posts_per_page'));
         $posts = Post::processing($posts);
 
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".categories.index";
@@ -140,8 +155,7 @@ class BlublogFrontController extends Controller
         if(!$tag){
             abort(404);
         }
-        $posts = $tag->posts()->latest()->paginate(blublog_setting('tags_posts_per_page'));
-        $posts = Post::public($posts);
+        $posts = $tag->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('tags_posts_per_page'));
         $posts = Post::processing($posts);
 
         $path = "blublog::" . config('blublog.theme', 'blublog') . ".tags.index";
@@ -221,17 +235,17 @@ class BlublogFrontController extends Controller
             $limit = blublog_setting('max_unaproved_comments');
             if($comments->count() > $limit){
                 if(Comment::limit_unapproved_comments_reached_soon()){
-                    Ban::ip($ip,__('panel.spam'), 1);
-                    Log::add($request, "alert", __('panel.spam') );
+                    Ban::ip($ip,__('blublog.spam'), 1);
+                    Log::add($request, "alert", __('blublog.spam') );
                     abort(403);
                 }
-                Log::add($request, "error", __('panel.max_unaproved_comments') );
-                Session::flash('error', __('panel.max_unaproved_comments'));
+                Log::add($request, "error", __('blublog.max_unaproved_comments') );
+                Session::flash('error', __('blublog.max_unaproved_comments'));
                 return back();
             }
             if($comments->count() == $limit){
-                Log::add($request, "alert", __('panel.warning_unaproved_comments') );
-                Session::flash('warning', __('panel.warning_unaproved_comments'));
+                Log::add($request, "alert", __('blublog.warning_unaproved_comments') );
+                Session::flash('warning', __('blublog.warning_unaproved_comments'));
             }
         }
 

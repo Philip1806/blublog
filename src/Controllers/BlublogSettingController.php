@@ -1,15 +1,13 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Hash;
+namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Setting;
-use Philip1503\Blublog\Models\Log;
-use Philip1503\Blublog\Models\Post;
-use App\User;
+use Blublog\Blublog\Models\Setting;
+use Blublog\Blublog\Models\Log;
+use Blublog\Blublog\Models\Post;
+use Illuminate\Support\Facades\Cache;
 use Session;
 
 class BlublogSettingController extends Controller
@@ -24,14 +22,14 @@ class BlublogSettingController extends Controller
     {
         if($setting == 0){
             Artisan::call('cache:clear');
-            Session::flash('success', __('panel.cache_clear'));
-            Log::add($setting, "info", __('panel.cache_clear') );
+            Session::flash('success', __('blublog.cache_clear'));
+            Log::add($setting, "info", __('blublog.cache_clear') );
             return redirect()->back();
         }
         if($setting == 1){
             Artisan::call('blublog:sitemap');
-            Session::flash('success', __('panel.rss_generated'));
-            Log::add($setting, "info", __('panel.rss_generated') );
+            Session::flash('success', __('blublog.rss_generated'));
+            Log::add($setting, "info", __('blublog.rss_generated') );
             return redirect()->back();
         }
         if($setting == 2){
@@ -39,10 +37,10 @@ class BlublogSettingController extends Controller
                 Artisan::call('down', [
                     '--allow' => Post::getIp(), '--message' => blublog_setting('maintenance_massage')
                 ]);
-                Log::add($setting, "info", __('panel.turn_on_maintenance') );
+                Log::add($setting, "info", __('blublog.turn_on_maintenance') );
             } else {
                 Artisan::call('up');
-                Log::add($setting, "info", __('panel.turn_off_maintenance') );
+                Log::add($setting, "info", __('blublog.turn_off_maintenance') );
             }
             return redirect()->back();
         }
@@ -112,7 +110,7 @@ class BlublogSettingController extends Controller
     public function store(Request $request)
     {
         // no validation...It's only for admins
-
+        Cache::flush();
         $keys = array_keys($request->all());
         $value = array_values($request->all());
 

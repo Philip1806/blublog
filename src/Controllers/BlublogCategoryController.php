@@ -1,14 +1,14 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Category;
-use Philip1503\Blublog\Models\File;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\Log;
+use Blublog\Blublog\Models\Category;
+use Blublog\Blublog\Models\File;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Log;
 use Session;
 
 class BlublogCategoryController extends Controller
@@ -74,8 +74,8 @@ class BlublogCategoryController extends Controller
 
         $category->save();
 
-        Session::flash('success', __('panel.contentcreate'));
-        Log::add($request, "info", __('panel.contentcreate') );
+        Session::flash('success', __('blublog.contentcreate'));
+        Log::add($request, "info", __('blublog.contentcreate') );
         return redirect()->route('blublog.categories.index');
     }
     public function edit($id)
@@ -135,7 +135,7 @@ class BlublogCategoryController extends Controller
         $category->img = $address;
         $category->save();
 
-        Log::add($request, "info", __('panel.contentupdate') );
+        Log::add($request, "info", __('blublog.contentupdate') );
         Session::flash('success', __('general.contentupdate'));
         return redirect()->back();
     }
@@ -161,10 +161,10 @@ class BlublogCategoryController extends Controller
             Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path);
         }
         $Category->posts()->detach();
-        Log::add($Category, "info", __('panel.contentdelete') );
+        Log::add($Category, "info", __('blublog.contentdelete') );
         $Category->delete();
 
-        Session::flash('success', __('panel.contentdelete'));
+        Session::flash('success', __('blublog.contentdelete'));
         return redirect()->route('blublog.categories.index');
     }
 }

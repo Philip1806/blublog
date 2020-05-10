@@ -1,9 +1,9 @@
 <?php
 
-namespace Philip1503\Blublog\Commands;
+namespace Blublog\Blublog\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use Philip1503\Blublog\Models\Post;
+use Blublog\Blublog\Models\Post;
 
 class BlublogSitemap extends Command
 {

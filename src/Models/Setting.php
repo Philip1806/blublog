@@ -1,6 +1,6 @@
 <?php
 
-namespace Philip1503\Blublog\Models;
+namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,7 +22,7 @@ class Setting extends Model
         }
 
         if(!extension_loaded('gd')){
-            array_push($errors, __('panel.gd_not_installed'));
+            array_push($errors, __('blublog.gd_not_installed'));
         }
         if(!extension_loaded('mbstring')){
             array_push($errors, 'Грешка. Липсва PHP разширението Multibyte String. | Error. PHP Multibyte String is NOT installed.');

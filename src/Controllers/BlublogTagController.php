@@ -1,13 +1,12 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Post;
-use Illuminate\Support\Facades\Storage;
-use Philip1503\Blublog\Models\File;
-use Philip1503\Blublog\Models\Tag;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Tag;
+use Blublog\Blublog\Models\Log;
 use Session;
 
 class BlublogTagController extends Controller
@@ -25,30 +24,23 @@ class BlublogTagController extends Controller
         ];
         $this->validate($request, $rules);
 
-            //Make slug from title
-            $numb = rand(0, 999);
-            $slug = $request->title;
-            $slug = str_replace( " ", "-", $slug);
-            $slug = preg_replace("/[^A-Za-z0-9\p{Cyrillic}-]/u","",$slug);
-            $slug = $slug . "-" . $numb ;
-
-
         $tag = new Tag;
+        if($request->slug){
+            $tag->slug = $request->slug;
+        } else {
+            $tag->slug = Post::makeslug($request->title);
+        }
         $tag->title = $request->title;
         $tag->descr = $request->descr;
-        $tag->slug = $slug;
-
-
         $tag->save();
-
-        Session::flash('success', 'Успешно добавено!');
+        Log::add($request, "info", __('blublog.contentcreate') );
+        Session::flash('success',  __('blublog.contentcreate'));
         return redirect()->route('blublog.tags.index');
     }
-        /**
-     * Show the form for editing the specified resource.
+    /**
+     * Show the form for editing tag.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
@@ -57,11 +49,10 @@ class BlublogTagController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update tag in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -77,8 +68,8 @@ class BlublogTagController extends Controller
         $tag->slug = $request->slug;
         $tag->descr = $request->descr;
         $tag->save();
-
-        Session::flash('success', 'Успешна редакция!');
+        Log::add($request, "info", __('blublog.contentedit') );
+        Session::flash('success', __('blublog.contentedit'));
         return redirect()->back();
     }
 
@@ -88,7 +79,8 @@ class BlublogTagController extends Controller
         if($tag){
             $tag->posts()->detach();
             $tag->delete();
-            Session::flash('success', __('panel.contentdelete'));
+            Session::flash('success', __('blublog.contentdelete'));
+            Log::add($id . "BlublogTagController::destroy", "info", __('blublog.contentdelete'));
         }
         return redirect()->back();
     }

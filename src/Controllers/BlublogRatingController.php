@@ -1,11 +1,11 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Rate;
-use Philip1503\Blublog\Models\Post;
+use Blublog\Blublog\Models\Rate;
+use Blublog\Blublog\Models\Post;
 use Session;
 
 class BlublogRatingController extends Controller
@@ -44,11 +44,11 @@ class BlublogRatingController extends Controller
         $rating = Rate::find($id);
         if($rating){
             $rating->delete();
-            Session::flash('success', __('panel.contentdelete'));
+            Session::flash('success', __('blublog.contentdelete'));
             return redirect()->back();
         }
 
-        Session::flash('error', __('panel.404'));
+        Session::flash('error', __('blublog.404'));
         return redirect()->back();
 
 

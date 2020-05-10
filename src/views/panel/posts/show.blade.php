@@ -3,8 +3,8 @@
 @section('navbar')
 <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('panel.home') }}</a></li>
-                  <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ __('panel.posts') }}</a></li>
+                  <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('blublog.home') }}</a></li>
+                  <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ __('blublog.posts') }}</a></li>
                   <li class="breadcrumb-item active" aria-current="page">{{ $post->title }}</li>
                 </ol>
 </nav>
@@ -14,25 +14,25 @@
 @if (blublog_can_edit_post( $post->id,Auth::user()->id))
 <div class="row">
         <div class="col-lg">
-        <a href="{{ route('blublog.posts.edit', $post->id) }}" class="btn btn-warning btn-block">{{__('panel.edit')}}</a>
+        <a href="{{ route('blublog.posts.edit', $post->id) }}" class="btn btn-warning btn-block">{{__('blublog.edit')}}</a>
         </div>
         <div class="col-lg">
                 {!! Form::open(['route' => ['blublog.posts.destroy', $post->id], 'method' => 'DELETE']) !!}
-                {!! form::submit(__('panel.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
+                {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
                 {!! Form::close() !!}
         </div>
         <div class="col-lg">
-        <a href="{{ route('blublog.front.post_show', $post->slug) }}" class="btn btn-success btn-block">{{__('panel.view_frontend')}}</a>
+        <a href="{{ route('blublog.front.post_show', $post->slug) }}" class="btn btn-success btn-block">{{__('blublog.view_frontend')}}</a>
         </div>
         <div class="col-lg">
             <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ModalLong">
-            {{__('panel.views')}}
+            {{__('blublog.views')}}
             </button>
             <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="ModalLongTitle">{{__('panel.views')}}</h5>
+                            <h5 class="modal-title" id="ModalLongTitle">{{__('blublog.views')}}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                             </button>
@@ -64,31 +64,31 @@
         <div class="card shadow">
             <div class="card-body">
                 <h3>{{ $post->title }}</h3>
-                <p><b>{{__('panel.posted')}}</b>: {{ $post->user->name }} <b>{{__('panel.type')}}</b>: {{$post->type}}</p>
-                <span class="badge badge-success">{{__('panel.on')}} {{ $post->created_at }}</span> <span class="badge badge-success">{{__('panel.lastedit')}} {{ $post->updated_at }}</span>
+                <p><b>{{__('blublog.posted')}}</b>: {{ $post->user->name }} <b>{{__('blublog.type')}}</b>: {{$post->type}}</p>
+                <span class="badge badge-success">{{__('blublog.on')}} {{ $post->created_at }}</span> <span class="badge badge-success">{{__('blublog.lastedit')}} {{ $post->updated_at }}</span>
 
                 @if ($post->status == "publish")
-                <span class="badge badge-success">{{__('panel.public')}}</span>
+                <span class="badge badge-success">{{__('blublog.public')}}</span>
                 @else
-                <span class="badge badge-warning">{{__('panel.private')}}</span>
+                <span class="badge badge-warning">{{__('blublog.private')}}</span>
                 @endif
 
                 @if ($post->front)
-                <span class="badge badge-success">{{__('panel.onfrontpage')}}</span>
+                <span class="badge badge-success">{{__('blublog.onfrontpage')}}</span>
                 @else
-                <span class="badge badge-warning">{{__('panel.notonfrontpage')}}</span>
+                <span class="badge badge-warning">{{__('blublog.notonfrontpage')}}</span>
                 @endif
 
                 @if ($post->slider)
-                <span class="badge badge-success">{{__('panel.inslider')}}</span>
+                <span class="badge badge-success">{{__('blublog.inslider')}}</span>
                 @else
-                <span class="badge badge-warning">{{__('panel.notinslider')}}</span>
+                <span class="badge badge-warning">{{__('blublog.notinslider')}}</span>
                 @endif
 
                 @if (!is_null($post->tag_id))
-                <span class="badge badge-success">{{__('panel.maintag')}}</span>
+                <span class="badge badge-success">{{__('blublog.maintag')}}</span>
                 @else
-                <span class="badge badge-warning">{{__('panel.nomaintag')}}</span>
+                <span class="badge badge-warning">{{__('blublog.nomaintag')}}</span>
                 @endif
 
                 @foreach ( $post->categories as  $category)

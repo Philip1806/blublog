@@ -51,7 +51,7 @@
     @if ($post->comments)
         @include('blublog::comments._comments')
     @else
-        <div class="text-center"><small>{{__('panel.comments_disabled')}}</small></div>
+        <div class="text-center"><small>{{__('blublog.comments_disabled')}}</small></div>
     @endif
 </div>
 

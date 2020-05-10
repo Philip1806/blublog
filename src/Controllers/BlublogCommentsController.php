@@ -1,15 +1,15 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Ban;
-use Philip1503\Blublog\Models\Comment;
+use Blublog\Blublog\Models\Ban;
+use Blublog\Blublog\Models\Comment;
 use Session;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\Log;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Log;
 
 
 class BlublogCommentsController extends Controller
@@ -40,7 +40,7 @@ class BlublogCommentsController extends Controller
     {
         $comment = Comment::find($id);
         if(!$comment){
-            Log::add($id . "|BlublogCommentsController::edit", "alert", __('panel.404') );
+            Log::add($id . "|BlublogCommentsController::edit", "alert", __('blublog.404') );
             abort(404);
         }
         return view('blublog::panel.comments.edit')->with('comment', $comment);
@@ -50,7 +50,7 @@ class BlublogCommentsController extends Controller
 
         $comment = Comment::find($id);
         if(!$comment){
-            Log::add($request, "alert", __('panel.404') );
+            Log::add($request, "alert", __('blublog.404') );
             abort(404);
         }
         if($request->public){
@@ -64,8 +64,8 @@ class BlublogCommentsController extends Controller
         $comment->ip = $request->ip;
         $comment->body = $request->body;
         $comment->save();
-        Session::flash('success', __('panel.comment_edited'));
-        Log::add($request, "info", __('panel.comment_edited') );
+        Session::flash('success', __('blublog.comment_edited'));
+        Log::add($request, "info", __('blublog.comment_edited') );
         return back();
     }
     public function approve($id)
@@ -75,29 +75,29 @@ class BlublogCommentsController extends Controller
         if($comment){
             if($comment->public){
                 $comment->public = false;
-                Session::flash('success', __('panel.not_approved'));
+                Session::flash('success', __('blublog.not_approved'));
             } else {
                 $comment->public = true;
-                Session::flash('success', __('panel.approved'));
+                Session::flash('success', __('blublog.approved'));
             }
-            Log::add($id . "|BlublogCommentsController::approve", "info", __('panel.approved') );
+            Log::add($id . "|BlublogCommentsController::approve", "info", __('blublog.approved') );
             $comment->save();
             return back();
         }
-        Session::flash('error', __('panel.404'));
-        Log::add($id . "|BlublogCommentsController::approve", "info", __('panel.404') );
+        Session::flash('error', __('blublog.404'));
+        Log::add($id . "|BlublogCommentsController::approve", "info", __('blublog.404') );
         return back();
     }
     public function destroy($id){
         $comment = Comment::find($id);
         if($comment){
             $comment->delete();
-            Log::add($id . "|BlublogCommentsController::destroy", "info", __('panel.comment_deleted') );
-            Session::flash('success', __('panel.comment_deleted'));
+            Log::add($id . "|BlublogCommentsController::destroy", "info", __('blublog.comment_deleted') );
+            Session::flash('success', __('blublog.comment_deleted'));
             return redirect()->back();
         } else {
-            Log::add($id . "|BlublogCommentsController::destroy", "alert", __('panel.404') );
-            Session::flash('error', __('panel.404'));
+            Log::add($id . "|BlublogCommentsController::destroy", "alert", __('blublog.404') );
+            Session::flash('error', __('blublog.404'));
             return redirect()->back();
         }
     }
@@ -105,17 +105,17 @@ class BlublogCommentsController extends Controller
         $comment = Comment::find($id);
         if($comment){
             if(!Ban::is_banned_from_comments($comment->ip)){
-                Ban::ip($comment->ip,__('panel.banned_from_comments'), 1);
-                Log::add($id . "|BlublogCommentsController::ban", "info", __('panel.banned_from_comments') );
-                Session::flash('success', __('panel.banned_from_comments'));
+                Ban::ip($comment->ip,__('blublog.banned_from_comments'), 1);
+                Log::add($id . "|BlublogCommentsController::ban", "info", __('blublog.banned_from_comments') );
+                Session::flash('success', __('blublog.banned_from_comments'));
                 return redirect()->back();
             } else {
-                Session::flash('success', __('panel.its_banned'));
+                Session::flash('success', __('blublog.its_banned'));
                 return redirect()->back();
             }
         } else {
-            Log::add($id . "|BlublogCommentsController::ban", "alert", __('panel.404') );
-            Session::flash('error', __('panel.404'));
+            Log::add($id . "|BlublogCommentsController::ban", "alert", __('blublog.404') );
+            Session::flash('error', __('blublog.404'));
             return redirect()->back();
         }
     }

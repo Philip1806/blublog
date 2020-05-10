@@ -4,11 +4,11 @@
                 @foreach ( $pages as $post )
                 <tr>
                         <td>{{ $post->title }}</td>
-                        <td><a href="{{ route('blublog.front.pages.show', $post->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('panel.view')}}</a></td>
-                        <td><a href="{{ route('blublog.pages.edit', $post->id) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('panel.edit')}}</a></td>
+                        <td><a href="{{ route('blublog.front.pages.show', $post->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('blublog.view')}}</a></td>
+                        <td><a href="{{ route('blublog.pages.edit', $post->id) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('blublog.edit')}}</a></td>
                         <td>
                         {!! Form::open(['route' => ['blublog.pages.destroy', $post->id], 'method' => 'DELETE']) !!}
-                        {!! form::submit(__('panel.delete'), ['class' => 'btn btn-outline-danger btn-block ','onsubmit' => 'return validate(this);' ]) !!}
+                        {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ','onsubmit' => 'return validate(this);' ]) !!}
                         {!! Form::close() !!}
                         </td>
                 </tr>
@@ -20,5 +20,5 @@
 
 @else
 <br>
-   <center> <b>{{__('panel.no_pages')}}.</b> </center><hr>
+   <center> <b>{{__('blublog.no_pages')}}.</b> </center><hr>
 @endif

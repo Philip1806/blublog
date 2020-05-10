@@ -11,6 +11,8 @@ return [
     'img_width_type' => "int",
     'img_quality' => 60,
     'img_quality_type' => "int",
+    'setting_cache' => 28800,
+    'setting_cache_type' => "int",
     'post_editor' => true,
     'post_editor_type' => "bool",
     'footer_html' => "Based on Bootstrap. Icons from Font Awesome. Web fonts from Google.<br>Blog made with <a href='https://blublog.info'>BLUblog</a>.",
@@ -61,4 +63,6 @@ return [
     'under_attack_type' => "bool",
     'maintenance_massage' => "Site is under maintenance.",
     'maintenance_massage_type' => "string",
+    'theme' => "blublog",
+    'theme_type' => "string",
 ];

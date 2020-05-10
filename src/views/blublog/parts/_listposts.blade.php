@@ -1,4 +1,4 @@
-@if (isset($posts[0]->id))
+@if ($posts)
 @foreach ($posts as $post)
 <div class="row">
     <div class="col-sm-4">
@@ -27,6 +27,6 @@
 @endif
 
 @else
-<center><b>{{__('panel.no_posts')}}</b></center>
+<center><b>{{__('blublog.no_posts')}}</b></center>
 @endif
 

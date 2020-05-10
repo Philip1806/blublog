@@ -4,17 +4,17 @@
         <tr>
             <th scope="col"></th>
             <th scope="col"></th>
-            <th scope="col">{{__('panel.title')}}</th>
-            <th scope="col">{{__('panel.author')}}</th>
-            <th scope="col">{{__('panel.views')}}</th>
+            <th scope="col">{{__('blublog.title')}}</th>
+            <th scope="col">{{__('blublog.author')}}</th>
+            <th scope="col">{{__('blublog.views')}}</th>
         </tr>
         </thead>
         <tbody>
                 @foreach ( $posts as $post )
                 <tr>
-                <td><a href="{{ route('blublog.posts.show', $post->id) }}"  role="button" class="btn btn-outline-info btn-block ">{{__('panel.view')}}</a></td>
+                <td><a href="{{ route('blublog.posts.show', $post->id) }}"  role="button" class="btn btn-outline-info btn-block ">{{__('blublog.view')}}</a></td>
                 @if (blublog_can_edit_post( $post->id,Auth::user()->id))
-                <td><a  class="btn btn-outline-primary btn-block " href="{{ route('blublog.posts.edit', $post->id) }}" >{{__('panel.edit')}}</a></td>
+                <td><a  class="btn btn-outline-primary btn-block " href="{{ route('blublog.posts.edit', $post->id) }}" >{{__('blublog.edit')}}</a></td>
                 @else
                 <td></td>
                 @endif
@@ -31,5 +31,5 @@
 {!! $posts->links(); !!}
 
 @else
-<center> <b>{{__('panel.no_posts')}}</b> </center><br>
+<center> <b>{{__('blublog.no_posts')}}</b> </center><br>
 @endif

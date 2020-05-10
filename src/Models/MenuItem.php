@@ -1,9 +1,9 @@
 <?php
 
-namespace Philip1503\Blublog\Models;
+namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Philip1503\Blublog\Models\Menu;
+use Blublog\Blublog\Models\Menu;
 
 class MenuItem extends Model
 {

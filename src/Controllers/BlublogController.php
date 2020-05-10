@@ -1,16 +1,16 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\File;
-use Philip1503\Blublog\Models\Comment;
-use Philip1503\Blublog\Models\Setting;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\File;
+use Blublog\Blublog\Models\Comment;
+use Blublog\Blublog\Models\Setting;
 use Auth;
-use Philip1503\Blublog\Models\Log;
+use Blublog\Blublog\Models\Log;
 
 class BlublogController extends Controller
 {

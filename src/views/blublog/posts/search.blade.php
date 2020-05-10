@@ -3,7 +3,7 @@
 @section('jumbotron')
 <div class="jumbotron">
     <div class="container">
-        <p>{{__('panel.search_resuts')}}</p>
+        <p>{{__('blublog.search_resuts')}}</p>
         <h2>"{{$search}}"</h2>
     </div>
 </div>

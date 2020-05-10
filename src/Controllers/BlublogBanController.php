@@ -1,11 +1,11 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Ban;
-use Philip1503\Blublog\Models\Log;
+use Blublog\Blublog\Models\Ban;
+use Blublog\Blublog\Models\Log;
 use Carbon\Carbon;
 use Session;
 
@@ -28,7 +28,7 @@ class BlublogBanController extends Controller
         ];
         $this->validate($request, $rules);
         Ban::ip($request->ip,$request->descr, $request->comments);
-        Session::flash('success', __('panel.contentcreate'));
+        Session::flash('success', __('blublog.contentcreate'));
         return back();
     }
     public function destroy($id)
@@ -38,7 +38,7 @@ class BlublogBanController extends Controller
             abort(404);
         }
         $ban->delete();
-        Session::flash('success', __('panel.contentdelete'));
+        Session::flash('success', __('blublog.contentdelete'));
         return back();
     }
 }

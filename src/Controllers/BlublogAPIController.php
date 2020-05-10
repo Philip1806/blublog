@@ -1,14 +1,14 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\File;
-use Philip1503\Blublog\Models\Comment;
-use Philip1503\Blublog\Models\Tag;
-use Philip1503\Blublog\Models\Rate;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\File;
+use Blublog\Blublog\Models\Comment;
+use Blublog\Blublog\Models\Tag;
+use Blublog\Blublog\Models\Rate;
 
 class BlublogAPIController extends Controller
 {
@@ -63,7 +63,6 @@ class BlublogAPIController extends Controller
 
     }
 
-    //TAGS POSTS COMMENTS
     public function search(Request $request)
     {
         if($request->type == "post"){

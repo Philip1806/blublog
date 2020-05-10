@@ -1,18 +1,18 @@
 <?php
 
-namespace   Philip1503\Blublog\Controllers;
+namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\Tag;
-use Philip1503\Blublog\Models\PostsViews;
-use Philip1503\Blublog\Models\Category;
-use Philip1503\Blublog\Models\File;
-use Philip1503\Blublog\Models\Log;
-use Philip1503\Blublog\Models\Rate;
-use Philip1503\Blublog\Models\Comment;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Tag;
+use Blublog\Blublog\Models\PostsViews;
+use Blublog\Blublog\Models\Category;
+use Blublog\Blublog\Models\File;
+use Blublog\Blublog\Models\Log;
+use Blublog\Blublog\Models\Rate;
+use Blublog\Blublog\Models\Comment;
 use Carbon\Carbon;
 use Session;
 use Auth;
@@ -22,7 +22,7 @@ class BlublogPostsController extends Controller
     /**
      * Display a listing of the posts.
      *
-     * @return Philip1503\Blublog\Models\Post
+     * @return Blublog\Blublog\Models\Post
      */
     public function index()
     {
@@ -71,7 +71,7 @@ class BlublogPostsController extends Controller
     public function create()
     {
         if(!extension_loaded('gd')){
-            Session::flash('error', __('panel.gd_not_installed'));
+            Session::flash('error', __('blublog.gd_not_installed'));
             return redirect()->back();
         }
         $tags = Tag::latest()->get();
@@ -85,7 +85,7 @@ class BlublogPostsController extends Controller
      * Display the specified post.
      *
      * @param  int  $id
-     * @return Philip1503\Blublog\Models\Post
+     * @return Blublog\Blublog\Models\Post
     */
     public function show($id)
     {
@@ -128,7 +128,7 @@ class BlublogPostsController extends Controller
 
                 $file = new File;
                 $file->size = $size;
-                $file->descr =  "'". $request->title . "'". __('panel.post_image');
+                $file->descr =  "'". $request->title . "'". __('blublog.post_image');
                 $file->filename = 'posts/' . $address;
                 $file->save();
 
@@ -196,7 +196,7 @@ class BlublogPostsController extends Controller
         $post->tags()->sync($request->tags, false);
         $post->categories()->sync($request->categories, false);
 
-        Session::flash('success', __('panel.contentcreate'));
+        Session::flash('success', __('blublog.contentcreate'));
         return redirect()->route('blublog.posts.show', $post->id);
     }
     public function update(Request $request, $id)
@@ -238,7 +238,7 @@ class BlublogPostsController extends Controller
 
             $file = new File;
             $file->size = $size;
-            $file->descr =  "'". $request->title . "'". __('panel.post_image');
+            $file->descr =  "'". $request->title . "'". __('blublog.post_image');
             $file->filename = 'posts/' . $address;
             $file->save();
 
@@ -312,7 +312,7 @@ class BlublogPostsController extends Controller
                $post->tags()->sync(array());
            }
 
-        Session::flash('success', __('panel.contentupdate'));
+        Session::flash('success', __('blublog.contentupdate'));
         return redirect()->route('blublog.posts.show', $post->id);
     }
     public function destroy($id){
@@ -362,7 +362,7 @@ class BlublogPostsController extends Controller
         }
         $post->delete();
 
-        Session::flash('success', __('panel.contentdelete'));
+        Session::flash('success', __('blublog.contentdelete'));
         return redirect()->route('blublog.posts.index');
 
     }

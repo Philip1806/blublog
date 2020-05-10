@@ -1,6 +1,6 @@
 @if ($maintag_posts)
 <div class="card text-white border-primary" style="margin-top: 20px;">
-    <div class="card-header bg-primary text-white">{{__('panel.on_this_topic')}}</div>
+    <div class="card-header bg-primary text-white">{{__('blublog.on_this_topic')}}</div>
     <div class="card-body">
         @foreach ($maintag_posts as $tag_post)
         <div class="row">

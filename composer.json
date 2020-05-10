@@ -22,7 +22,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Philip1503\\Blublog\\": "src"
+            "Blublog\\Blublog\\": "src"
         }
     },
     "require": {
@@ -34,7 +34,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Philip1503\\Blublog\\BlublogServiceProvider"
+                "Blublog\\Blublog\\BlublogServiceProvider"
             ]
         }
     }

@@ -3,7 +3,7 @@
 @section('content')
 <div class="card border-primary shadow">
         <div class="card-header text-white bg-primary">
-         {{ __('panel.settings') }}
+         {{ __('blublog.settings') }}
         </div>
         <div class="card-body">
             {{ Form::model( ['route' => ['blublog.settings.store' ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <br>
-            {{ Form::submit(__('panel.save'), ['class' => 'btn btn-info btn-block']) }}
+            {{ Form::submit(__('blublog.save'), ['class' => 'btn btn-info btn-block']) }}
             {!! Form::close() !!}
         </div>
 </div>

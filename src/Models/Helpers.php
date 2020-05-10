@@ -1,17 +1,25 @@
 <?php
 
-use Philip1503\Blublog\Models\Setting;
-use Philip1503\Blublog\Models\Post;
-use Philip1503\Blublog\Models\BlublogUser;
-use Philip1503\Blublog\Models\MenuItem;
-use Philip1503\Blublog\Models\Menu;
+use Blublog\Blublog\Models\Setting;
+use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\BlublogUser;
+use Blublog\Blublog\Models\MenuItem;
+use Illuminate\Support\Facades\Cache;
+use Blublog\Blublog\Models\Menu;
 
 if (! function_exists('blublog_setting')) {
     function blublog_setting($name)
     {
-        $setting = Setting::where([
-            ['name', '=', $name],
-        ])->first();
+        if (!Cache::has('blublog.settings.'. $name)){
+            $setting = Setting::where([
+                ['name', '=', $name],
+            ])->first();
+            if($setting){
+                Cache::put('blublog.settings.'. $name, $setting,  now()->addMinutes(config('blublog.setting_cache')));
+            }
+        } else {
+            $setting = Cache::get('blublog.settings.'. $name);
+        }
         if(isset($setting->val)){
             return unserialize($setting->val);
 
