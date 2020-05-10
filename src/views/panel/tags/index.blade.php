@@ -24,15 +24,9 @@
             {{ __('panel.add_tag') }}
             </div>
             <div class="card-body">
-                    {!! Form::open(['route' => 'blublog.tags.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-                                    {{ Form::label('title', __('panel.title')) }}
-                                    {{ Form::text('title', null, ['class' => 'form-control']) }}
-
-                                    {{ Form::label('descr', __('panel.descr')) }}
-                                    {{ Form::text('descr', null, ['class' => 'form-control']) }}
-        <p></p>
-                    {{ Form::submit(__('panel.create'), ['class' => 'btn btn-primary btn-block']) }}
-                    {!! Form::close() !!}
+                {!! Form::open(['route' => 'blublog.tags.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                @include('blublog::panel.tags._form', ['button_title' => __('panel.create')])
+                {!! Form::close() !!}
             </div>
         </div>
     </div>

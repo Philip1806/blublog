@@ -1,28 +1,21 @@
 @extends('blublog::panel.main')
 
-@section('navbar')
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-    </ol>
-</nav>
-@endsection
 @section('content')
 <div class="card border-primary" style="margin-bottom:20px;">
     <div class="card-header text-white bg-primary "> {{__('panel.add_menu')}}</div>
-        <div class="card-body">
-            {!! Form::open(['route' =>  ['menu.add_menu_store'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-            {{ Form::label('title', __('panel.title')) }}
-            {{ Form::text('title', null, ['class' => 'form-control']) }}
+    <div class="card-body">
+        {!! Form::open(['route' =>  ['menu.add_menu_store'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+        {{ Form::label('title', __('panel.title')) }}
+        {{ Form::text('title', null, ['class' => 'form-control']) }}
 
-            <p></p>
-            {{ Form::submit(__('panel.create'), ['class' => 'btn btn-primary btn-block']) }}
-            {!! Form::close() !!}
+        <p></p>
+        {{ Form::submit(__('panel.create'), ['class' => 'btn btn-primary btn-block']) }}
+        {!! Form::close() !!}
     </div>
 </div>
 
-
 <div class="card border-primary"">
-<div class="card-header text-white bg-primary ">{{__('panel.menu')}}</div>
+    <div class="card-header text-white bg-primary ">{{__('panel.menu')}}</div>
     <div class="card-body">
         @if (isset($menus[0]->id))
         <ul class="list-group">
@@ -58,13 +51,13 @@
                 <div class="collapse" id="editmenu-{{$menu->id}}">
                     <div class="card border-warning" style="margin-bottom:20px;">
                         <div class="card-header text-white bg-warning "> {{__('panel.edit')}} {{$menu->name}}</div>
-                            <div class="card-body">
-                                {{ Form::model($menu, ['route' => ['menu.edit_menu_update', $menu->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
-                                {{ Form::label('name', __('panel.title')) }}
-                                {{ Form::text('name', null, ['class' => 'form-control']) }}
-                                {{Form::hidden("menu_id",$menu->id)}}<br>
-                                {{ Form::submit(__('panel.edit'), ['class' => 'btn btn-warning btn-block']) }}
-                                {!! Form::close() !!}
+                        <div class="card-body">
+                            {{ Form::model($menu, ['route' => ['menu.edit_menu_update', $menu->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
+                            {{ Form::label('name', __('panel.title')) }}
+                            {{ Form::text('name', null, ['class' => 'form-control']) }}
+                            {{Form::hidden("menu_id",$menu->id)}}<br>
+                            {{ Form::submit(__('panel.edit'), ['class' => 'btn btn-warning btn-block']) }}
+                            {!! Form::close() !!}
                         </div>
                     </div>
                 </div>
@@ -76,25 +69,4 @@
         @endif
     </div>
 </div>
-
-
-
-<script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
 @endsection

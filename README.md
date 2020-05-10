@@ -94,19 +94,6 @@ By default you can access the blog from /blog and panel from /panel.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 - Maintenance mode.*
 
-## TO DO
-*With (!) are very important.*
-*With (-) are low priority and with (+) are high priority.*
-
-3. POSTS
-- Make slider.(-)
-
-4. ADMIN THINGS
-- (!) Cashing.(-)
-- Improve settings page.(-)
-- (!) Write better code...
-
-
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

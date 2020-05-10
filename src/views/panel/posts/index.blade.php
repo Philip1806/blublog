@@ -2,10 +2,10 @@
 
 @section('navbar')
 <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('panel.home') }}</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">{{ __('panel.posts') }}</li>
-                </ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('panel.home') }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ __('panel.posts') }}</li>
+    </ol>
 </nav>
 @endsection
 
@@ -32,12 +32,12 @@
     </div><br>
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-public-tab" data-toggle="tab" href="#nav-public" role="tab" aria-controls="nav-public" aria-selected="true">Public ({{$posts->total()}})</a>
-              <a class="nav-item nav-link" id="nav-private-tab" data-toggle="tab" href="#nav-private" role="tab" aria-controls="nav-private" aria-selected="false">Private ({{$private_posts->total()}})</a>
-              <a class="nav-item nav-link" id="nav-draft-tab" data-toggle="tab" href="#nav-draft" role="tab" aria-controls="nav-draft" aria-selected="false">Draft ({{$draft_posts->total()}})</a>
+                <a class="nav-item nav-link active" id="nav-public-tab" data-toggle="tab" href="#nav-public" role="tab" aria-controls="nav-public" aria-selected="true">Public ({{$posts->total()}})</a>
+                <a class="nav-item nav-link" id="nav-private-tab" data-toggle="tab" href="#nav-private" role="tab" aria-controls="nav-private" aria-selected="false">Private ({{$private_posts->total()}})</a>
+                <a class="nav-item nav-link" id="nav-draft-tab" data-toggle="tab" href="#nav-draft" role="tab" aria-controls="nav-draft" aria-selected="false">Draft ({{$draft_posts->total()}})</a>
             </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-public" role="tabpanel" aria-labelledby="nav-public-tab">
                 @include('blublog::panel.posts._posts_table', ['posts' => $posts])
             </div>
@@ -56,7 +56,6 @@
         </div>
 
 </div>
-
 
 @include('blublog::panel.partials._searchjs')
 <script>

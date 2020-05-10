@@ -14,21 +14,17 @@ image_class_list: [
 </script>
 @endif
 <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('panel.home') }}</a></li>
-                  <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ __('panel.posts') }}</a></li>
-                  <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ $post->title }}</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">{{__('panel.edit')}}</li>
-                </ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('panel.home') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ __('panel.posts') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ $post->title }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{__('panel.edit')}}</li>
+    </ol>
 </nav>
 @endsection
 
 @section('content')
 <div id = "alert_placeholder"></div>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
 {{ Form::model($post, ['route' => ['blublog.posts.update', $post->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
 <div class="modal fade bd-example-modal-lg"  id="imgModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -42,15 +38,12 @@ image_class_list: [
                   <br><input type="button" class="btn btn-info " onclick="searchforfile()" value="Search">
                   <hr>
                   <p id="infopanel">{{__('panel.latest_img')}}</p>
-                  <div id="gallery" class="row text-center text-lg-left">
-
-                  </div>
-
+                  <div id="gallery" class="row text-center text-lg-left"></div>
               </div>
           </div>
       </div>
     </div>
-  </div>
+</div>
 <div class="card border-danger" style="margin-bottom:20px;">
     <div class="card-header  text-white bg-danger">{{__('panel.title')}}</div>
     <div class="card-body text-primary">
@@ -59,71 +52,48 @@ image_class_list: [
 </div>
 
 <div class="row">
-        <div class="col-xl-9">
-            <div class="card border-danger">
-                <div class="card-header  text-white bg-danger">{{__('panel.content')}}</div>
-                <div class="card-body text-primary">
-                    {{ Form::textarea('content', null, ['class' => 'form-control', 'rows' => '15']) }}
-                </div>
-            </div>
+    <div class="col-xl-9">
+        @include('blublog::panel.posts._content')
 
-            <div class="card border-danger" style="margin-top:10px;">
-                <div class="card-header  text-white bg-danger">{{__('panel.categories')}}</div>
-                <div class="card-body text-primary">
-                    {{ Form::select('categories[]', $categories, null, ['class' => 'form-control select2-multi', 'multiple' => 'multiple']) }}
-                </div>
+        <div class="card border-danger" style="margin-top:10px;">
+            <div class="card-header  text-white bg-danger">{{__('panel.categories')}}</div>
+            <div class="card-body text-primary">
+                {{ Form::select('categories[]', $categories, null, ['class' => 'form-control select2-multi', 'multiple' => 'multiple']) }}
             </div>
-
-            <div class="card border-primary" style="margin-top:10px;">
-                <div class="card-header  text-white bg-primary">{{__('panel.tags')}}</div>
-                <div class="card-body text-primary">
-                    {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select3-multi', 'multiple' => 'multiple']) }}
-                </div>
-            </div>
-                    <script type="text/javascript">
-                        $(".select3-multi").select2().val({!! json_encode($post->tags()->allRelatedIds()) !!}).trigger('change');
-                        $(".select2-multi").select2().val({!! json_encode($post->categories()->allRelatedIds()) !!}).trigger('change');
-                    </script>
         </div>
-        <div class="col-xl-3">
-            <div class="card border-success" style="margin-bottom:10px;">
-                <div class="card-header  text-white bg-success">
-                    {{ Form::submit(__('panel.edit'), ['class' => 'btn btn-success btn-block', 'id'=>'submitBtn']) }}                </div>
-                <div class="card-body text-primary">
-                    {{Form::select('status', [ 'publish' => 'Public', 'draft' => 'Draft', 'private' => 'Private']) }}
-                    {{Form::select('type', [ 'posts' => 'Post', 'video' => 'Video']) }}
-                    {{ Form::text('new_date', null, ['class' => 'form-control', 'placeholder'=>$date,'id'=>'datepicker','style'=>'margin-top:20px;']) }}
-                </div>
+        <div class="card border-primary" style="margin-top:10px;">
+            <div class="card-header  text-white bg-primary">{{__('panel.tags')}}</div>
+            <div class="card-body text-primary">
+                {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select3-multi', 'multiple' => 'multiple']) }}
             </div>
-            <div id="pagepanel"></div><br>
-            <button type="button" class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target=".bd-example-modal-lg">Upload Post Image</button>
-           <hr>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        @include('blublog::panel.posts._action', ['button_title' => __('panel.edit')])
         <div class="card border-primary" style="margin-top:10px;">
             <div class="card-header  text-white bg-primary">{{__('panel.slug')}}</div>
             <div class="card-body text-primary">
                 {{ Form::text('slug', null, ['class' => 'form-control']) }}
             </div>
         </div>
-                <div class="card border-primary" style="margin-top:10px;">
-                <div class="card-header  text-white bg-primary">{{__('panel.settings')}}</div>
-                <div class="card-body text-primary">
-                        {{Form::checkbox('comments', null)}} {{__('panel.allow_comments')}}<br>
-                        {{Form::checkbox('slider', null)}} {{__('panel.slider')}}<br>
-                        {{Form::checkbox('front', null)}} {{__('panel.front_page')}}<br>
-                        {{Form::checkbox('recommended', null)}} {{__('panel.recommended')}}
-                    </div>
-                </div>
-                @include('blublog::panel.partials._maintag')
-           </div>
-      </div>
-
-      @include('blublog::panel.partials._seoanddescr')
-
-        {!! Form::close() !!}
+        <div class="card border-primary" style="margin-top:10px;">
+            <div class="card-header  text-white bg-primary">{{__('panel.settings')}}</div>
+            <div class="card-body text-primary">
+                {{Form::checkbox('comments', null)}} {{__('panel.allow_comments')}}<br>
+                {{Form::checkbox('slider', null)}} {{__('panel.slider')}}<br>
+                {{Form::checkbox('front', null)}} {{__('panel.front_page')}}<br>
+                {{Form::checkbox('recommended', null)}} {{__('panel.recommended')}}
+            </div>
         </div>
-
+        @include('blublog::panel.partials._maintag')
+    </div>
+</div>
+@include('blublog::panel.partials._seoanddescr')
+{!! Form::close() !!}
 @include('blublog::panel.partials._maintagjs')
 <script>
+$(".select3-multi").select2().val({!! json_encode($post->tags()->allRelatedIds()) !!}).trigger('change');
+$(".select2-multi").select2().val({!! json_encode($post->categories()->allRelatedIds()) !!}).trigger('change');
 function we_are_offline(){
     $('#alert_placeholder').html('<div class="alert alert-warning"><a class="close" data-dismiss="alert">×</a><span>'+'Warrning! Its posible that there is no internet connection.'+'</span></div>');
     $('button').prop('disabled', true);
@@ -263,9 +233,6 @@ function remove_all_child(element){
         element.removeChild(element.firstChild);
     }
 }
-
-
-
-    </script>
+</script>
 
 @endsection

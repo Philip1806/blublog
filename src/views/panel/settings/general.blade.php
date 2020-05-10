@@ -6,7 +6,6 @@
          {{ __('panel.settings') }}
         </div>
         <div class="card-body">
-
             {{ Form::model( ['route' => ['blublog.settings.store' ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
             <div class="container">
                 <div class="row">
@@ -36,16 +35,11 @@
                     @endif
                     @endforeach
                   </div>
-
                 </div>
             </div>
-
             <br>
-            {{ Form::submit('ЗАПИС', ['class' => 'btn btn-info btn-block']) }}
+            {{ Form::submit(__('panel.save'), ['class' => 'btn btn-info btn-block']) }}
             {!! Form::close() !!}
         </div>
 </div>
-
-
-
 @endsection

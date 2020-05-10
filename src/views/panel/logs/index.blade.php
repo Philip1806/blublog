@@ -1,12 +1,5 @@
 @extends('blublog::panel.main')
 
-@section('navbar')
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">{{ __('panel.Home') }}</li>
-    </ol>
-</nav>
-@endsection
 @section('content')
 <br>
 <div class="card border-primary ">
@@ -25,8 +18,8 @@
               <a class="nav-item nav-link" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="false">
                 Info ({{$info_logs->total()}})</a>
             </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-error" role="tabpanel" aria-labelledby="nav-error-tab">
                 @include('blublog::panel.logs._tablelog', ['logs' => $error_logs])
             </div>
@@ -43,8 +36,6 @@
                 @include('blublog::panel.logs._tablelog', ['logs' => $info_logs])
             </div>
         </div>
-
     </div>
 </div>
-
 @endsection

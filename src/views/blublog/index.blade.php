@@ -17,10 +17,10 @@
 @endsection
 
 @section('content')
-          <div class="col-lg-3">
-            @include('blublog::blublog.parts._sidebar')
-          </div>
-          <div class="col-lg-9">
-            @include('blublog::blublog.parts._listposts')
-          </div>
+<div class="col-lg-3">
+    @include('blublog::blublog.parts._sidebar')
+</div>
+<div class="col-lg-9">
+    @include('blublog::blublog.parts._listposts')
+</div>
 @endsection

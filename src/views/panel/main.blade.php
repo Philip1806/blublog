@@ -24,13 +24,12 @@
               <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                 <i class="fa fa-bars"></i>
               </button>
-    @yield('navbar')
-
-    <noscript>
-        <div class="alert alert-warning" role="alert">
-            Javascript not active.
-        </div>
-    </noscript>
+                @yield('navbar')
+                <noscript>
+                    <div class="alert alert-warning" role="alert">
+                        Javascript not active.
+                    </div>
+                </noscript>
               <!-- Topbar Navbar -->
               <ul class="navbar-nav ml-auto">
 
@@ -63,15 +62,6 @@
                   </a>
                   <!-- Dropdown - User Information -->
                   <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="{{ url('/panel/settings') }}">
-                      <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                      Settings
-                    </a>
-                    <a class="dropdown-item" href="{{ url('/panel/tracker') }}">
-                      <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                      Activity Log
-                    </a>
-                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}" data-toggle="modal" data-target="#logoutModal">
                       <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                       {{ __(' Излизане') }}

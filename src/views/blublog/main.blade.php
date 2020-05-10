@@ -32,15 +32,15 @@
         </div>
         @yield('similar_posts')
     </div>
-<div class="p-1 mb-2 bg-primary text-white " style="margin-top:50px;-webkit-box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);
--moz-box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);
-box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);" >
-    <footer id="footer">
-    <div class="container" >
-        @include('blublog::blublog.parts._footer')
+    <div class="p-1 mb-2 bg-primary text-white " style="margin-top:50px;-webkit-box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 77px -1px rgba(0,0,0,0.75);" >
+        <footer id="footer">
+        <div class="container" >
+            @include('blublog::blublog.parts._footer')
+        </div>
+        </footer>
     </div>
-    </footer>
-</div>
 
 
     <script src="{{ url('/blublog/js/jquery.min.js') }}"></script>

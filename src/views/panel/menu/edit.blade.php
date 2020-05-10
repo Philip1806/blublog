@@ -1,11 +1,5 @@
 @extends('blublog::panel.main')
 
-@section('navbar')
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-    </ol>
-</nav>
-@endsection
 @section('content')
 <div class="card border-primary">
     <div class="card-header text-white bg-primary">{{__('panel.edit')}} "{{$item->label}}"</div>
@@ -16,7 +10,6 @@
         {{ Form::label('url', __('panel.url')) }}
         {{ Form::text('url', null, ['class' => 'form-control']) }}
 
-
         {{Form::hidden("item_id",$item->id)}}
         <br>
         {{ Form::submit(__('panel.edit'), ['class' => 'btn btn-primary btn-block']) }}
@@ -24,6 +17,4 @@
 
     </div>
 </div>
-
-
 @endsection

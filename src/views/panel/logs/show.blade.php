@@ -1,12 +1,5 @@
 @extends('blublog::panel.main')
 
-@section('navbar')
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">{{ __('panel.Home') }}</li>
-    </ol>
-</nav>
-@endsection
 @section('content')
 <br>
 <div class="card">

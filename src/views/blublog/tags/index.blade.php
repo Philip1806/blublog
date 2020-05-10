@@ -1,5 +1,6 @@
 @extends('blublog::blublog.main')
 @section('title') Tag: {{$tag->title}} @endsection
+
 @section('meta')
 @if ($posts->previousPageUrl())
 <link rel="prev" href="{{$posts->previousPageUrl()}}" />
@@ -17,16 +18,16 @@
     </div>
 </div>
 @endsection
+
 @section('content')
+<div class="col-lg-9">
+    <h5>All posts with tag "{{$tag->title}}":</h5><hr>
+    @include('blublog::blublog.parts._listposts')
 
-    <div class="col-lg-9">
-        <h5>All posts with tag "{{$tag->title}}":</h5><hr>
-        @include('blublog::blublog.parts._listposts')
-
-    </div>
-    <div class="col-lg-3">
-        @include('blublog::blublog.parts._sidebar')
-    </div>
+</div>
+<div class="col-lg-3">
+    @include('blublog::blublog.parts._sidebar')
+</div>
 <style>
 .jumbotron {
     border-color: #2780E3;

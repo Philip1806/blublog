@@ -16,21 +16,6 @@
         </ul>
     </div>
 </div>
-@include('blublog::panel.partials._searchjs')
-<script>
-function show_files(files){
-    let panel = document.getElementById("results");
-    remove_all_child(panel);
-
-    for (let i =0; i<files.length ; i++){
-        let link = "{{ url('/'). "/". blublog_setting('panel_prefix') }}" + "/comments/" + files[i].id + "/edit";
-        let li = document.createElement("li");
-        li.innerHTML= '<a href="'  + link + '">' + files[i].name + '</a><br>' + files[i].body;
-        li.className="list-group-item";
-        panel.appendChild(li);
-    }
-}
-</script>
 <div class="card border-primary" style="margin-top:20px;">
     <div class="card-header text-white bg-primary">{{__('panel.comments')}}</div>
         @if (!empty($comments[0]->id))
@@ -62,7 +47,6 @@ function show_files(files){
                             @else
                             <span class="badge badge-danger">{{__('panel.its_hiden')}}</span>
                             @endif
-
                         </td>
                         <td><a href="{{ route('blublog.front.post_show', $file->post_slug) }}">{{$file->body }}</a></td>
                         <td>{{ $file->name }}</td>
@@ -86,5 +70,19 @@ function show_files(files){
         @endif
 </div>
 
+@include('blublog::panel.partials._searchjs')
+<script>
+function show_files(files){
+    let panel = document.getElementById("results");
+    remove_all_child(panel);
 
+    for (let i =0; i<files.length ; i++){
+        let link = "{{ url('/'). "/". blublog_setting('panel_prefix') }}" + "/comments/" + files[i].id + "/edit";
+        let li = document.createElement("li");
+        li.innerHTML= '<a href="'  + link + '">' + files[i].name + '</a><br>' + files[i].body;
+        li.className="list-group-item";
+        panel.appendChild(li);
+    }
+}
+</script>
 @endsection

@@ -22,20 +22,6 @@
 @endsection
 
 @section('jumbotron')
-<style>
-.jumbotron {
-  background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{{url('/uploads/posts/')}}/{{$post->img}}");
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-color: {{$post->categories[0]->colorcode}};
-  border-bottom-style: solid;
-  border-width: 5px;
-}
-.display-comment .display-comment {
-        margin-left: 40px
-}
-</style>
-
 <div class="jumbotron" style="max-height: 500px;padding:143px;">
     <div class="container-fluid text-white">
     <h2>{{$post->title}}</h2>
@@ -52,7 +38,6 @@
 @endsection
 
 @section('content')
-
 <div class="col-lg-9">
     {!! $post->content !!}
     {!! $post->STARS_HTML !!}
@@ -74,7 +59,19 @@
     @include('blublog::blublog.parts._sidebar')
 </div>
 
-
+<style>
+.jumbotron {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{{url('/uploads/posts/')}}/{{$post->img}}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-color: {{$post->categories[0]->colorcode}};
+    border-bottom-style: solid;
+    border-width: 5px;
+}
+.display-comment .display-comment {
+        margin-left: 40px
+}
+</style>
 <script>
 function clear_stars(){
     for (let i = 1; i<6; i++){

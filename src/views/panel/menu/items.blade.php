@@ -1,11 +1,5 @@
 @extends('blublog::panel.main')
 
-@section('navbar')
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-    </ol>
-</nav>
-@endsection
 @section('content')
 
 <div class="collapse" id="additem-{{$menu->id}}">
