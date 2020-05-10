@@ -1,5 +1,5 @@
 {
-    "name": "philip1503/blublog",
+    "name": "blublog/blublog",
     "keywords": [
         "laravel",
         "blog",
@@ -9,7 +9,7 @@
         "posts",
         "pages"
     ],
-    "description": "A simple laravel blog",
+    "description": "BLUblog is simple laravel blog package with admin panel.",
     "type": "library",
     "license": "MIT",
     "authors": [
