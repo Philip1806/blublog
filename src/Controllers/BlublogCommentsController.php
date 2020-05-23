@@ -80,6 +80,7 @@ class BlublogCommentsController extends Controller
                 $comment->public = true;
                 Session::flash('success', __('blublog.approved'));
             }
+            Post::remove_cache($comment->commentable_id);
             Log::add($id . "|BlublogCommentsController::approve", "info", __('blublog.approved') );
             $comment->save();
             return back();
@@ -90,6 +91,7 @@ class BlublogCommentsController extends Controller
     }
     public function destroy($id){
         $comment = Comment::find($id);
+        Post::remove_cache($comment->commentable_id);
         if($comment){
             $comment->delete();
             Log::add($id . "|BlublogCommentsController::destroy", "info", __('blublog.comment_deleted') );

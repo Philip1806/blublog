@@ -1,11 +1,11 @@
 @extends('blublog::blublog.main')
 @section('title') Category: {{$category->title}} @endsection
 @section('meta')
-@if ($posts->previousPageUrl())
-<link rel="prev" href="{{$posts->previousPageUrl()}}" />
+@if ($category->get_posts->previousPageUrl())
+<link rel="prev" href="{{$category->get_posts->previousPageUrl()}}" />
 @endif
-@if ($posts->nextPageUrl())
-<link rel="next" href="{{$posts->nextPageUrl()}}" />
+@if ($category->get_posts->nextPageUrl())
+<link rel="next" href="{{$category->get_posts->nextPageUrl()}}" />
 @endif
 
 <!-- Open Graph / Facebook -->
@@ -33,7 +33,7 @@
 
     <div class="col-lg-9">
         <h5>All posts from "{{$category->title}}":</h5><hr>
-        @include('blublog::blublog.parts._listposts')
+        @include('blublog::blublog.parts._listposts', ['posts'=>$category->get_posts])
 
     </div>
     <div class="col-lg-3">

@@ -12,11 +12,11 @@
                   <div class="col-lg-9">
                     @foreach ($settings as $setting)
                     @if ($setting->type == "text")
-                    {{ Form::label($setting->name, $setting->name) }}
+                    {{ Form::label($setting->name, $setting->label) }}
                     {{ Form::textarea($setting->name, unserialize($setting->val), ['class' => 'form-control','rows'=>'3']) }}
                     @endif
                     @if ($setting->type == "string")
-                    {{ Form::label($setting->name, $setting->name) }}
+                    {{ Form::label($setting->name, $setting->label) }}
                     {{ Form::text($setting->name, unserialize($setting->val), ['class' => 'form-control']) }}
                     @endif
                     @endforeach
@@ -25,11 +25,12 @@
                   <div class="col-lg-3">
                     @foreach ($settings as $setting)
                     @if ($setting->type == "int")
-                    {{ Form::label($setting->name, $setting->name) }}
+                    {{ Form::label($setting->name, $setting->label) }}
                     {{ Form::number($setting->name, unserialize($setting->val), ['class' => 'form-control']) }}
                     @endif
                     @if ($setting->type == "bool")
-                    {{ Form::label($setting->name, $setting->name) }}
+                    <br>
+                    {{ Form::label($setting->name, $setting->label) }}
                     {{Form::hidden($setting->name,0)}}
                     {{Form::checkbox($setting->name, null,unserialize($setting->val))}}
                     @endif

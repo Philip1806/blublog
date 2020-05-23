@@ -1,5 +1,5 @@
 @extends('blublog::blublog.main')
-@section('title')Posts by {{$user->name}} @endsection
+@section('title')Posts by {{$posts->author->name}} @endsection
 @section('meta')
 <meta name="og:url" property="og:url" content="{{ url('/') }}" />
 <meta name="og:locale" property="og:locale" content="en_EN" />
@@ -10,7 +10,7 @@
 <div class="jumbotron">
     <div class="container text-center">
         Posts by:
-        <h1>{{$user->name}}</h1>
+        <h1>{{$posts->author->name}}</h1>
     </div>
 </div>
 @endsection

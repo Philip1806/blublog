@@ -6,16 +6,16 @@
     </div>
 @endforeach
   <div class="row">
-    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_this'),'val'=>$this_month_posts,'color'=>"primary",'icon'=>"newspaper"])
-    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"success",'icon'=>"newspaper"])
-    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_total'),'val'=>$totalposts,'color'=>"info",'icon'=>"newspaper"])
-    @include('blublog::panel.partials.colums', ['title' => __('blublog.comments'),'val'=>$totalcomments,'color'=>"warning",'icon'=>"comments"])
+    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_this'),'val'=>$this_month_posts,'color'=>"primary",'icon'=>"list"])
+    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"success",'icon'=>"list"])
+    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_total'),'val'=>$totalposts,'color'=>"info",'icon'=>"list"])
+    @include('blublog::panel.partials.colums', ['title' => __('blublog.comments'),'val'=>$totalcomments,'color'=>"warning",'icon'=>"comment-square"])
   </div>
 
   <div class="row">
     @include('blublog::panel.partials.4_colums', ['title' => __('blublog.logs_this'),'val'=>$this_month_logs,'color'=>"warning",'icon'=>"code"])
-    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"warning",'icon'=>"newspaper"])
-    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.blublog_version'),'val'=>config('blublog.version'),'color'=>"warning",'icon'=>"cogs"])
+    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"warning",'icon'=>"list"])
+    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.blublog_version'),'val'=>config('blublog.version'),'color'=>"warning",'icon'=>"cog"])
   </div>
 
   @if ($notpubliccomments != 0)

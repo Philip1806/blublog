@@ -17,13 +17,13 @@
 
 <li class="nav-item active">
         <a class="nav-link" href="{{ url(config('blublog.blog_prefix')) }}">
-            <i class="fas fa-fw fa-backward"></i>
+            <i class="oi oi-arrow-thick-left"></i>
             <span>{{ __('blublog.backtosite') }}</span></a>
 </li>
 
 <li class="nav-item active">
   <a class="nav-link" href="{{ url('/panel') }}">
-    <i class="fas fa-fw fa-tachometer-alt"></i>
+    <i class="oi oi-home"></i>
     <span>{{ __('blublog.home') }}</span></a>
 </li>
 

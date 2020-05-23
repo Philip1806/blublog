@@ -79,6 +79,7 @@ class BlublogSettingController extends Controller
                     $setting->save();
                 }
             }
+            Artisan::call('cache:clear');
             return redirect()->back();
         }
     }

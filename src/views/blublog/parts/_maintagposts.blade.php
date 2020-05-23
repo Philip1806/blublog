@@ -1,8 +1,8 @@
-@if ($maintag_posts)
+@if ( $post->maintag_posts)
 <div class="card text-white border-primary" style="margin-top: 20px;">
     <div class="card-header bg-primary text-white">{{__('blublog.on_this_topic')}}</div>
     <div class="card-body">
-        @foreach ($maintag_posts as $tag_post)
+        @foreach ( $post->maintag_posts as $tag_post)
         <div class="row">
             <div class="col-sm-4">
                 <img class="img-fluid border-primary rounded shadow"  src="{{$tag_post->img_url}}" alt="{{$tag_post->title}} image">

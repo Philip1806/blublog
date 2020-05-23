@@ -46,7 +46,7 @@
         <a href="{{ route('blublog.front.tag_show', $tag->slug) }}"><span class="badge badge-pill badge-dark">{{$tag->title}}</span></a>
     @endforeach
         <hr>
-        @include('blublog::blublog.parts._maintagposts', ['maintag_posts' => $maintag_posts])
+        @include('blublog::blublog.parts._maintagposts')
         {!!blublog_setting('post_additional_html')!!}
     @if ($post->comments)
         @include('blublog::comments._comments')

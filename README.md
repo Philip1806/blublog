@@ -21,7 +21,7 @@ composer require blublog/blublog
 ```
 2. In app.php from config folder add this in providers if it's not there:
 ```
-Philip1503\Blublog\BlublogServiceProvider::class,
+Blublog\Blublog\BlublogServiceProvider::class,
 ```
 3. login into your app without going to the blog. Run these one by one:
 ```
@@ -41,44 +41,44 @@ You need to add this in filesystems.php from config folder:
 ```
 You can set up where all files from the package go. It's not stable for now, so don't change this above.
 By default you can access the blog from /blog and panel from /panel.
-## Done
-*With * are from last commit.*
+## Features
 
-1. Posts
-- Have multible categories.
-- Have multible tags.
+1. Posts (CRUD)
+- Multible categories.
+- Multible tags.
 - Open Graph.
 - TinyMCE - WYSIWYG HTML Editor.
 - Post image can be uploaded or choosen by pop-up modal from already uploaded images.
 - Custom SEO post title and description (It's auto generated if not specified).
 - Comments can be allowed or forbiden.
-- Post can be public, private or draft. Private can be seen only from post author. Drafts are seen by all users with access to the panel.
-- Have excerpt of content. Could be empty.
+- Post can be public, private or draft. Private posts are seen only from post author. Drafts are seen by all users with access to the panel.
+- Excerpt of content. Could be empty.
 - Basic search for posts.
 - Rating system with five stars.
-- Similar posts.*
-- Have views statistics.*
-- Auto generate sitemap (RSS).*
-- Could be added custom html in header, footer and posts comments.*
+- Similar posts.
+- Views statistics.
+- Auto generate sitemap (RSS).
+- Custom html in header, footer and posts comments.
 
 
-2. Comments
+2. Comments (CRUD)
 - Anti-spam modul.
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
 
-3. Categories
-- Can have background image.
-- Can have custom color code.
+3. Categories (CRUD)
+- Background image.
+- Description.
+- Color code.
 
-4. Pages
+4. Pages (CRUD)
 - TinyMCE - WYSIWYG HTML Editor.
 - Page could have sidebar or not.
-- Can have background image.
+- Background image.
 - Can be not public.
 
 5. Users
-- Use users from Laravel UI.
+- Import users from Laravel UI.
 - They are three roles - Administrator, Moderator and Author.
 - Authors can edit and delete only their own posts. Can create tags and upload files.
 - Moderator can edit and delete all posts, tags, comments and categories.
@@ -90,9 +90,17 @@ By default you can access the blog from /blog and panel from /panel.
 7. Admin
 - BAN option. You can ban users from the blog or from commenting.
 - Very basic settings page for now.
-- Very basic menu options. You can make link or dropdown.
+- Very basic menu options. You can make links and dropdowns.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
-- Maintenance mode.*
+- Maintenance mode.
+
+## Design Customization
+Creating your own desing/theme for BLUblog is easy. Look at the documentation. (still not made)
+Basically, you put your theme files (blade.php) in here: \resources\views\vendor\blublog\your_theme_name and from setting page change theme field from "blublog" to "your_theme_name".
+Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
+
+## Package Support
+I'm using it for my projects, so it's gonna be updated (probably not very often). If you decide to use it and find problems/bugs or you want some new functionality, add new issue on github.
 
 ## License
 

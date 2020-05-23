@@ -25,10 +25,14 @@ class BlublogAPIController extends Controller
         if($request->post and is_numeric($request->star) ){
             $post_id = preg_replace('/\D/', '', $request->post);
             $selected_stars = preg_replace('/\D/', '', $request->star);
+            if($selected_stars > 5 or $selected_stars < 1 or !Post::find($post_id) ){
+                return response()->json(false,400);
+            }
             $have_rating = Rate::where([
                 ['post_id', '=', $post_id],
                 ['ip', '=', $ip],
             ])->first();
+            Post::remove_cache($post_id);
             if($have_rating){
                 $have_rating->rating = $selected_stars;
                 $have_rating->save();
@@ -40,7 +44,6 @@ class BlublogAPIController extends Controller
                 $rating->ip = $ip;
                 $rating->save();
                 return response()->json("You rate this with ". $selected_stars ." stars.");
-
             }
         }
         return response()->json(false,400);

@@ -3,6 +3,7 @@
 namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Models\Post;
@@ -45,6 +46,12 @@ class Post extends Model
                 }
             }
         }
+    }
+    public static function remove_cache($post_id)
+    {
+        $post = Post::find($post_id);
+        Cache::forget('blublog.post.'.$post->slug);
+        Cache::forget('blublog.comments.'.$post->slug);
     }
     public static function recommended($limit= 20)
     {
@@ -247,6 +254,8 @@ class Post extends Model
             $post = Post::get_posts_stars($post,false);
             $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
             $post->total_views = $post->views->count();
+            $post->tags =$post->tags()->get() ;
+            $post->categories = $post->categories()->get() ;
         }
         if(!$posts->count() and $null == 1){
             $posts = null;

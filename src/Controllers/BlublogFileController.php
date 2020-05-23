@@ -86,7 +86,7 @@ class BlublogFileController extends Controller
 
         $file = File::find($id);
         if(!$file){
-            Session::flash('error', __('general.content_does_not_found'));
+            Session::flash('error', __('panel.content_does_not_found'));
             return redirect()->route('blublog.files.index');
         }
 

@@ -2,11 +2,11 @@
 @section('title') Tag: {{$tag->title}} @endsection
 
 @section('meta')
-@if ($posts->previousPageUrl())
-<link rel="prev" href="{{$posts->previousPageUrl()}}" />
+@if ($tag->get_posts->previousPageUrl())
+<link rel="prev" href="{{$tag->get_posts->previousPageUrl()}}" />
 @endif
-@if ($posts->nextPageUrl())
-<link rel="next" href="{{$posts->nextPageUrl()}}" />
+@if ($tag->get_posts->nextPageUrl())
+<link rel="next" href="{{$tag->get_posts->nextPageUrl()}}" />
 @endif
 @endsection
 
@@ -22,7 +22,7 @@
 @section('content')
 <div class="col-lg-9">
     <h5>All posts with tag "{{$tag->title}}":</h5><hr>
-    @include('blublog::blublog.parts._listposts')
+    @include('blublog::blublog.parts._listposts', ['posts'=>$tag->get_posts])
 
 </div>
 <div class="col-lg-3">

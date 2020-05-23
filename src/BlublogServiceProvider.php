@@ -27,6 +27,7 @@ class BlublogServiceProvider extends ServiceProvider
         );
         $this->publishes([
             __DIR__.'/public' => public_path('/'),
+            __DIR__.'/views/blublog' => base_path('resources/views/vendor/blublog/blublog'),
         ], 'public');
         $this->commands($this->commands);
         $file = __DIR__ . '/Models/Helpers.php';

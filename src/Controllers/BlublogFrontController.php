@@ -33,6 +33,9 @@ class BlublogFrontController extends Controller
         $categories = Category::get();
         View::share('categories', $categories );
         $ip = Post::getIp();
+        if($ip != blublog_setting('ignore_ip')){
+            Log::add('null', "visit");
+        }
         if(Ban::is_banned($ip)){
             abort(403);
         }
@@ -62,36 +65,48 @@ class BlublogFrontController extends Controller
             $front_page_posts = Cache::get('blublog.index_page.front_page_posts');
         }
 
-        $path = "blublog::" . config('blublog.theme', 'blublog') . ".index";
+        $path = "blublog::" . blublog_setting('theme') . ".index";
 
         return view($path)->with('posts', $posts)->with('front_page_posts', $front_page_posts);
     }
     public function author($name)
     {
-        $user = User::where([
-            ['name', '=', $name],
-        ])->first();
-        if($user){
+        if (!Cache::has('blublog.author'. $name)){
+            $user = User::where([
+                ['name', '=', $name],
+            ])->first();
+            if(!$user){
+                abort(404);
+            }
             $posts = Post::where([
                 ['user_id', '=', $user->id],
                 ['status', '=', "publish"],
             ])->latest()->paginate(10);
             $posts = Post::processing($posts);
+            $posts->author = $user;
+
+            Cache::put('blublog.author'. $name, $posts,  now()->addMinutes(config('blublog.setting_cache')));
+        } else {
+            $posts = Cache::get('blublog.author'. $name);
         }
-        $path = "blublog::" . config('blublog.theme', 'blublog') . ".author";
-        return view($path)->with('user', $user)->with('posts', $posts);
+        $path = "blublog::" . blublog_setting('theme') . ".author";
+        return view($path)->with('posts', $posts);
     }
     public function page($slug)
     {
-        $page = Page::where([
-            ['slug', '=', $slug],
-            ['public', '=', true],
-        ])->first();
-
-        if(!$page){
-            abort(404);
+        if (!Cache::has('blublog.page.'. $slug)){
+            $page = Page::where([
+                ['slug', '=', $slug],
+                ['public', '=', true],
+            ])->first();
+            if(!$page){
+                abort(404);
+            }
+            Cache::put('blublog.page.'. $slug, $page);
+        } else {
+            $page = Cache::get('blublog.page.'. $slug);
         }
-        $path = "blublog::" . config('blublog.theme', 'blublog') . ".pages.show";
+        $path = "blublog::" . blublog_setting('theme') . ".pages.show";
         return view($path)->with('page', $page);
     }
     public function search(Request $request)
@@ -130,72 +145,94 @@ class BlublogFrontController extends Controller
         $result = $result->unique('id')->take(30);
         $result = Post::processing($result);
 
-        $path = "blublog::" . config('blublog.theme', 'blublog') . ".posts.search";
+        $path = "blublog::" . blublog_setting('theme') . ".posts.search";
         return view($path)->with('posts', $result)->with('search', $search);
     }
     public function category_show($slug)
     {
-        $category = Category::where([
-            ['slug', '=', $slug],
-        ])->first();
-        if(!$category){
-            abort(404);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if (!Cache::has('blublog.category.'. $slug .'page'.$page)){
+            $category = Category::where([
+                ['slug', '=', $slug],
+            ])->first();
+            if(!$category){
+                abort(404);
+            }
+            $category->get_posts = $category->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('category_posts_per_page'));
+            $category->get_posts = Post::processing($category->get_posts);
+            Cache::put('blublog.category.'. $slug .'page'.$page, $category,  now()->addMinutes(config('blublog.setting_cache')));
+        } else {
+            $category = Cache::get('blublog.category.'. $slug .'page'.$page);
         }
-        $posts = $category->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('category_posts_per_page'));
-        $posts = Post::processing($posts);
-
-        $path = "blublog::" . config('blublog.theme', 'blublog') . ".categories.index";
-        return view($path)->with('category', $category)->with('posts', $posts);
+        $path = "blublog::" . blublog_setting('theme') . ".categories.index";
+        return view($path)->with('category', $category);
     }
     public function tag_show($slug)
     {
-        $tag = Tag::where([
-            ['slug', '=', $slug],
-        ])->first();
-        if(!$tag){
-            abort(404);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if (!Cache::has('blublog.tag.'. $slug. 'page'.$page)){
+            $tag = Tag::where([
+                ['slug', '=', $slug],
+            ])->first();
+            if(!$tag){
+                abort(404);
+            }
+            $tag->get_posts = $tag->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('tags_posts_per_page'));
+            $tag->get_posts = Post::processing($tag->get_posts);
+            Cache::put('blublog.tag.'. $slug. 'page'.$page, $tag,  now()->addMinutes(config('blublog.setting_cache')));
+        } else {
+            $tag = Cache::get('blublog.tag.'. $slug. 'page'.$page);
         }
-        $posts = $tag->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('tags_posts_per_page'));
-        $posts = Post::processing($posts);
 
-        $path = "blublog::" . config('blublog.theme', 'blublog') . ".tags.index";
-        return view($path)->with('tag', $tag)->with('posts', $posts);
+        $path = "blublog::" . blublog_setting('theme') . ".tags.index";
+        return view($path)->with('tag', $tag);
     }
     public function post_show($slug)
     {
-        $post = Post::where([
-            ['slug', '=', $slug],
-            ['status', '=', "publish"],
-        ])->first();
+        if (!Cache::has('blublog.post.'. $slug)){
+            $post = Post::where([
+                ['slug', '=', $slug],
+                ['status', '=', "publish"],
+            ])->first();
 
-        if(!$post){
-            abort(404);
-        }
-        PostsViews::add($post->id);
-        $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
-        if($post->tag_id){
-            $maintag_posts = Tag::get_tag_posts($post->tag_id,$post->id);
-        } else {
-            $maintag_posts = null;
-        }
-        $post = Post::get_posts_stars($post);
-        $post->similar_posts =  Post::processing(Post::public(Post::similar_posts($post->id)));
-        $post->total_views = $post->views->count();
-        $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
-        //TO DO get maintag with its 5 last posts
-        if($post->comments){
-            $comments = $post->allcomments;
-            foreach($comments as $comment){
-                if($comment->author){
-                    $comment->border = "border-primary";
-                }
+            if(!$post){
+                abort(404);
             }
+            PostsViews::add($post->id);
+            $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
+            if($post->tag_id){
+                $post->maintag_posts = Tag::get_tag_posts($post->tag_id,$post->id);
+            } else {
+                $post->maintag_posts = null;
+            }
+            $post = Post::get_posts_stars($post);
+            $post->similar_posts =  Post::processing(Post::public(Post::similar_posts($post->id)));
+            $post->total_views = $post->views->count();
+            $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
+            Cache::put('blublog.post.'. $slug, $post);
+
         } else {
-            //In case theme do no check if there is comments
-            $comments = null;
+            $post = Cache::get('blublog.post.'. $slug);
         }
-        $path = "blublog::" . config('blublog.theme', 'blublog') . ".posts.show";
-        return view($path)->with('post', $post)->with('maintag_posts', $maintag_posts)->with('comments', $comments);
+
+        if (!Cache::has('blublog.comments.'. $slug)){
+            if($post->comments){
+                $comments = $post->allcomments;
+                foreach($comments as $comment){
+                    if($comment->author){
+                        $comment->border = "border-primary";
+                    }
+                }
+            } else {
+                $comments = null;
+            }
+            Cache::put('blublog.comments.'. $slug, $comments,  now()->addMinutes(config('blublog.setting_cache')));
+        } else {
+            $comments = Cache::get('blublog.comments.'. $slug);
+        }
+
+        $path = "blublog::" . blublog_setting('theme') . ".posts.show";
+        return view($path)->with('post', $post)->with('comments', $comments);
     }
     public function comment_store(Request $request)
     {
@@ -221,6 +258,7 @@ class BlublogFrontController extends Controller
                 ['public', '=', true],
             ])->first();
             if($post){
+                Post::remove_cache($request->get('post_id'));
                 Comment::addcomment($request, $ip,0);
                 return back();
             }

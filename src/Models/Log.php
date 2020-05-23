@@ -12,33 +12,28 @@ class Log extends Model
 {
     protected $table = 'blublog_logs';
 
-//Types: Error, Alert, Visit, Info, bot
+    // Types: Error, Alert, Visit, Info, bot
     public static function add($data, $type, $message = "Visit")
     {
-        if(\Request::header('connection') and \Request::header('cache-control') and \Request::header('upgrade-insecure-requests') and \Request::header('accept') and \Request::header('accept-encoding') and \Request::header('cookie') ){
-            $data =  \Request::header('host') . \Request::header('connection') . \Request::header('cache-control') . \Request::header('upgrade-insecure-requests') .\Request::header('User-Agent') .\Request::header('accept') .\Request::header('referer').\Request::header('accept-encoding').\Request::header('cookie');
-        }
-        $request_url = \Request::header('host');
         $user_agent = \Request::header('User-Agent');
-        $referer = \Request::header('referer');
-        if(\Request::header('accept-language')){
-            $lang = \Request::header('accept-language');
-        } else{
+        if(strpos($user_agent, "bot") or !\Request::header('accept-language')){
+            if($type == "visit"){
+                $type = "bot";
+            }
             $lang = 'Error. It is bot...';
+        } else{
+            $lang = \Request::header('accept-language');
         }
-
-        $ip = Post::getIp();
 
         $track = new Log;
-        $track->ip = $ip;
+        $track->ip = Post::getIp();
         $track->user_agent = $user_agent;
-        $track->request_url = $request_url;
-        $track->referer = $referer;
+        $track->request_url = url()->full();
+        $track->referer = \Request::header('referer');
         $track->lang = $lang;
         $track->message = $message;
         $track->data = $data;
         $track->type = $type;
-
         $track->save();
 
         return true;

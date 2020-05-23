@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="{{ url('/blublog/css/bootstrap.min.css') }}" media="screen">
 <link rel="stylesheet" href="{{ url('/blublog/css/custom.min.css') }}">
 <link href="{{ url('/blublog/css/open-iconic-bootstrap.min.css') }}" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
 <!--
     ^_-
     App name: BLUblog
@@ -14,6 +13,7 @@
     Theme name: BLUblog
 -->
 <style>
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 .foo {
     float: left;
     width: 15px;

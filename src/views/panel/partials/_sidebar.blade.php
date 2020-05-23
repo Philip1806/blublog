@@ -5,47 +5,41 @@
 </div>
 <li class="nav-item">
     <a class="nav-link" href="{{ url('/panel/posts') }}">
-    <i class="fas fa-fw fa-newspaper"></i>
+    <i class="oi oi-list"></i>
     <span>{{ __('blublog.posts') }}</span></a>
 </li>
 
 @if (!blublog_setting('disable_comments_modul'))
 <li class="nav-item">
     <a class="nav-link" href="{{ url('/panel/comments') }}">
-    <i class="fas fa-comments"></i>
+    <i class="oi oi-comment-square"></i>
     <span>{{ __('blublog.comments') }}</span></a>
 </li>
 @endif
 <li class="nav-item">
     <a class="nav-link" href="{{ url('/panel/tags') }}">
-    <i class="fas fa-tags"></i>
+    <i class="oi oi-tags"></i>
     <span>{{ __('blublog.tags') }}</span></a>
 </li>
-<hr class="sidebar-divider">
 <li class="nav-item">
     <a class="nav-link" href="{{ url('/panel/files') }}">
-    <i class="fas fa-fw fa-file"></i>
+    <i class="oi oi-file"></i>
     <span>{{ __('blublog.files') }}</span></a>
 </li>
 <hr class="sidebar-divider">
     @if (blublog_is_mod())
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url('/panel/posts/rating') }}">
-        <i class="fas fa-star-half-alt"></i>
-        <span>{{ __('blublog.posts_rating') }}</span></a>
-    </li>
     <div class="sidebar-heading">
         {{ __('blublog.mod_panel') }}
     </div>
     <li class="nav-item">
-        <a class="nav-link" href="{{ url('/panel/categories') }}">
-        <i class="fas fa-columns"></i>
-        <span>{{ __('blublog.categories') }}</span></a>
+        <a class="nav-link" href="{{ url('/panel/posts/rating') }}">
+        <i class="oi oi-star"></i>
+        <span>{{ __('blublog.posts_rating') }}</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ url('/panel/pages') }}">
-        <i class="fas fa-fw fa-pager"></i>
-        <span>{{ __('blublog.pages') }}</span></a>
+        <a class="nav-link" href="{{ url('/panel/categories') }}">
+        <i class="oi oi-list-rich"></i>
+        <span>{{ __('blublog.categories') }}</span></a>
     </li>
     <hr class="sidebar-divider">
     @endif
@@ -57,7 +51,7 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-newspaper"></i>
+          <i class="oi oi-list"></i>
           <span>{{ __('blublog.posts') }}</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -74,18 +68,18 @@
       </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ url('/panel/files') }}">
-        <i class="fas fa-fw fa-file"></i>
+        <i class="oi oi-file"></i>
         <span>{{ __('blublog.files') }}</span></a>
     </li>
     <li class="nav-item">
             <a class="nav-link" href="{{ url('/panel/pages') }}">
-            <i class="fas fa-fw fa-pager"></i>
+            <i class="oi oi-align-left"></i>
             <span>{{ __('blublog.pages') }}</span></a>
     </li>
 
       <li class="nav-item">
         <a class="nav-link" href="{{ url('/panel/menu') }}">
-          <i class="fas fa-fw fa-ellipsis-h"></i>
+          <i class="oi oi-menu"></i>
           <span>{{ __('blublog.menu') }}</span></a>
       </li>
     <hr class="sidebar-divider">
@@ -95,13 +89,13 @@
     </div>
       <li class="nav-item">
         <a class="nav-link" href="{{ url('/panel/users') }}">
-          <i class="fas fa-fw fa-users"></i>
+          <i class="oi oi-people"></i>
           <span>{{ __('blublog.users') }}</span></a>
       </li>
 
     <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
+                <i class="oi oi-cog"></i>
                 <span>{{ __('blublog.settings') }}</span>
             </a>
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">

@@ -36,19 +36,6 @@ if (! function_exists('blublog_setting')) {
         }
     }
 }
-if (! function_exists('blublog_under_attack')) {
-    function blublog_under_attack($bool)
-    {
-        //TODO
-        /*
-            If true, stopps search, comments, rating,
-            API and all that requires resources for processing.
-            Visits logs are also disabled.
-
-        */
-        return false;
-    }
-}
 if (! function_exists('blublog_main_menu')) {
     function blublog_main_menu()
     {

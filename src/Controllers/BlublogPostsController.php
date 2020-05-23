@@ -40,30 +40,6 @@ class BlublogPostsController extends Controller
         return view("blublog::panel.posts.index")->with('draft_posts', $draft_posts)->with('posts', $posts)->with('private_posts', $private_posts);
     }
 
-    public function uploadimg(Request $request)
-    {
-        if($request->file){
-                $size = File::get_file_size($request->file);
-                $un_numb = Post::next_post_id();
-                $address = $un_numb . "-" . File::clear_filename($request->file->getClientOriginalName());
-
-                Storage::disk('blublog')->putFileAs('posts', $request->file, $address);
-
-                $file = new File;
-                $file->size = $size;
-                $file->descr = __('files.image_for_post') . $request->title;
-                $file->filename = 'posts/' . $address;
-                $file->save();
-
-                // thumbnail
-                $path = File::get_img_path("posts", "thumbnail", $request->file->getClientOriginalName(), $un_numb);
-                File::img_thumbnail($request->file('file'), $path);
-
-                $path = File::get_img_path("posts", "blur_thumbnail", $request->file->getClientOriginalName(), $un_numb);
-                File::img_blurthumbnail($request->file('file'), $path);
-        }
-        return $address;
-    }
     /**
      * Show the form for creating a new post.
      *
@@ -295,7 +271,7 @@ class BlublogPostsController extends Controller
         }
         $post->img = $address;
         $post->save();
-
+        Post::remove_cache($post->id);
         if (isset($request->categories)){
             $post->categories()->sync($request->categories);
         } else {
@@ -360,6 +336,7 @@ class BlublogPostsController extends Controller
         foreach($comments as $comments){
             $comments->delete();
         }
+        Post::remove_cache($post->id);
         $post->delete();
 
         Session::flash('success', __('blublog.contentdelete'));

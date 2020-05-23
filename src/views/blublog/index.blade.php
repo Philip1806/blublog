@@ -1,8 +1,11 @@
 @extends('blublog::blublog.main')
 @section('title') Blog of {{blublog_setting('site_name')}} @endsection
 @section('meta')
+<meta name="description" content="{{blublog_setting('site_descr')}}"/>
 <!-- Open Graph / Facebook -->
+<meta name="og:description" property="og:description" content="{{blublog_setting('site_descr')}}">
 <meta property="og:type" content="website" />
+<meta name="og:site_name" property="og:site_name" content="{{blublog_setting('site_name')}}" >
 <meta name="og:url" property="og:url" content="{{ url('/') }}" />
 <meta name="og:locale" property="og:locale" content="en_EN" />
 <meta name="robots" content="index, follow">
