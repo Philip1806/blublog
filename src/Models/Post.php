@@ -248,7 +248,7 @@ class Post extends Model
     public static function processing($posts, $null = 0)
     {
         foreach ($posts as $post){
-            $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
+            $post->date = Carbon::parse($post->created_at)->format(blublog_setting('date_format'));
             $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
             $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
             $post = Post::get_posts_stars($post,false);
@@ -374,7 +374,7 @@ class Post extends Model
                 $post = Post::get_posts_stars($post,false);
                 $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
                 $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
-                $post->date = Carbon::parse($post->created_at)->format('d.m.Y');
+                $post->date = Carbon::parse($post->created_at)->format(blublog_setting('date_format'));
                 $post->total_views = $post->count();
 
                 if($post->tag_id){

@@ -50,7 +50,7 @@ By default you can access the blog from /blog and panel from /panel.
 - TinyMCE - WYSIWYG HTML Editor.
 - Post image can be uploaded or choosen by pop-up modal from already uploaded images.
 - Custom SEO post title and description (It's auto generated if not specified).
-- Comments can be allowed or forbiden.
+- Comments can be allowed or forbidden.
 - Post can be public, private or draft. Private posts are seen only from post author. Drafts are seen by all users with access to the panel.
 - Excerpt of content. Could be empty.
 - Basic search for posts.
@@ -59,6 +59,7 @@ By default you can access the blog from /blog and panel from /panel.
 - Views statistics.
 - Auto generate sitemap (RSS).
 - Custom html in header, footer and posts comments.
+- Post types: Post, Video and custom.
 
 
 2. Comments (CRUD)
@@ -98,6 +99,21 @@ By default you can access the blog from /blog and panel from /panel.
 Creating your own desing/theme for BLUblog is easy. Look at the documentation. (still not made)
 Basically, you put your theme files (blade.php) in here: \resources\views\vendor\blublog\your_theme_name and from setting page change theme field from "blublog" to "your_theme_name".
 Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
+
+## TODO
+1. Features
+- Simple API for getting posts, categories, comments, tags and others. Will be a public API, so for actions requiring authorization, you will need to use the panel.
+- BLUblog Panel API. Will be used for connecting to blublog.info for information about new version, adding theme and extensions.  
+2. Planed extension/packages
+- Statistics - Learn whats most seen posts in different time period or/and category. Monitor Authors and Moderators actions. And many others.
+- Gallery - For all posts you can make multiple galleries.
+- Calendar - Add events and posts to calendar. 
+
+## ROADMAP
+- July 2020 - API
+- August 2020 - Fist beta of BLUblog.
+- September 2020 - Second BLUblog theme/design (package).
+- Till end of 2020 - First extension (Gallery or Statistics package for BLUblog).
 
 ## Package Support
 I'm using it for my projects, so it's gonna be updated (probably not very often). If you decide to use it and find problems/bugs or you want some new functionality, add new issue on github.

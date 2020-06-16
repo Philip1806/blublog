@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ url('/blublog/css/bootstrap.min.css') }}" media="screen">
 <link rel="stylesheet" href="{{ url('/blublog/css/custom.min.css') }}">
 <link href="{{ url('/blublog/css/open-iconic-bootstrap.min.css') }}" rel="stylesheet">
+<meta name="generator" content="Blublog" />
 <!--
     ^_-
     App name: BLUblog

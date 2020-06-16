@@ -23,7 +23,6 @@ class BlublogController extends Controller
     public function panel()
     {
         $php_errors = Setting::PhpCheck();
-
         // geting this month
         $thismonth = Post::thismonth();
         // geting last month
@@ -46,12 +45,6 @@ class BlublogController extends Controller
         $numbcomments = Comment::all()->count();
         $numbfiles = File::all()->count();
 
-
-
-        $moduls = array();
-        /*if(\Route::has('blublog.panel')){
-            array_push($moduls, "Calendar");
-        }*/
         $this_month_posts = Post::where([
             ['created_at', '>', $thismonth],
             ['created_at', '<', $nextmonth],
@@ -66,9 +59,9 @@ class BlublogController extends Controller
                 ['created_at', '>', $thismonth],
                 ['created_at', '<', $nextmonth],
             ])->get()->count();
-            return view("blublog::panel.index")->with('this_month_logs', $this_month_logs)->with('php_errors', $php_errors)->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts)->with('moduls', $moduls);
+            return view("blublog::panel.index")->with('this_month_logs', $this_month_logs)->with('php_errors', $php_errors)->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
         }elseif(blublog_is_mod()){
-            return view("blublog::panel.index_mod")->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts)->with('moduls', $moduls);
+            return view("blublog::panel.index_mod")->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
         }
         //Get posts in this time range
         $this_month_posts = Post::where([

@@ -39,6 +39,10 @@ class BlublogFrontController extends Controller
         if(Ban::is_banned($ip)){
             abort(403);
         }
+        $codedir = resource_path('views/vendor/blublog/' . blublog_setting('theme') . '/code.php');
+        if(file_exists ($codedir)){
+            include_once $codedir;
+        }
     }
 
     //Index page of the blog
@@ -143,10 +147,37 @@ class BlublogFrontController extends Controller
         }
 
         $result = $result->unique('id')->take(30);
-        $result = Post::processing($result);
 
+        $tags = Tag::get();
+        $similar_tags = collect(new Tag);
+        foreach($tags as $tag){
+            similar_text($tag->title, $search, $percent);
+            if($percent > 20.0){
+                $similar_tags->push($tag);
+            }
+        }
+        if(!isset($result[0])){
+            $allposts = Cache::remember('blublog.all-posts', now()->addMinutes(config('blublog.setting_cache')), function() {
+                return Post::all();
+            });
+            $result = $allposts->filter(function ($value, $key)use ($search){
+                similar_text($value->title, $search, $percent);
+                if($percent > 35.0){
+                    return $value;
+                }
+
+                $words = explode(" ", $search);
+                foreach($words as $word){
+                    if (strpos($value->title, $word) !== false) {
+                        return $value;
+                        break;
+                    }
+                }
+            });
+        }
+        $result = Post::processing($result);
         $path = "blublog::" . blublog_setting('theme') . ".posts.search";
-        return view($path)->with('posts', $result)->with('search', $search);
+        return view($path)->with('posts', $result)->with('search', $search)->with('similar_tags', $similar_tags->take(20));
     }
     public function category_show($slug)
     {

@@ -66,6 +66,17 @@ class BlublogAPIController extends Controller
 
     }
 
+    public function api()
+    {
+        $codedir = resource_path('views/vendor/blublog/' . blublog_setting('theme') . '/api.php');
+        if(file_exists ($codedir)){
+            include_once $codedir;
+        }
+
+        return response()->json(false);
+
+    }
+
     public function search(Request $request)
     {
         if($request->type == "post"){

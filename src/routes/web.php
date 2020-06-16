@@ -10,6 +10,8 @@ Route::group(
         Route::post('/blublog/search', 'BlublogAPIController@search')->name('blublog.api.searchfile')->middleware('auth');
         Route::post('/blublog/set_rating', 'BlublogAPIController@set_rating')->name('blublog.api.set_rating')->middleware('throttle:30,1');;
 
+        Route::get('/blublog/categories', 'BlublogAPIController@categories')->name('blublog.api.categories')->middleware('throttle:30,1');;
+        Route::get('/blublog/post/{slug}', 'BlublogAPIController@post')->name('blublog.api.post')->middleware('throttle:30,1');;
 
         //Blog front end group
         Route::group(

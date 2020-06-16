@@ -103,6 +103,7 @@ class CreateBlublogTables extends Migration
 
         Schema::create('blublog_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('user_id')->default(0);
             $table->string('ip', 250)->nullable();
             $table->string('type', 150);
             $table->text('user_agent')->nullable();

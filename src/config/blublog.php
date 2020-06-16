@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.0 ALPHA",
+    'version' => "0.9.1 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -40,6 +40,8 @@ return [
     'theme_type' => "string",
     'ignore_ip' => "",
     'ignore_ip_type' => "string",
+    'date_format' => "d.m.Y",
+    'date_format_type' => "string",
 
     // Text Settings
     'footer_html' => "Based on Bootstrap. Icons from Font Awesome. Web fonts from Google.<br>Blog made with <a href='https://blublog.info'>BLUblog</a>.",

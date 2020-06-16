@@ -5,13 +5,15 @@
     <div class="container">
         <p>{{__('blublog.search_resuts')}}</p>
         <h2>"{{$search}}"</h2>
+        @foreach ($similar_tags as $tag)
+        <a href="{{ route('blublog.front.tag_show', $tag->slug) }}"><span class="badge badge-pill badge-dark">{{$tag->title}}</span></a>
+        @endforeach
     </div>
 </div>
 @endsection
 
 @section('content')
     <div class="col-lg-9">
-    @if (isset($posts[0]->id))
     @foreach ($posts as $post)
     <div class="row">
         <div class="col-sm-4">
@@ -35,7 +37,6 @@
     </div>
     <hr>
     @endforeach
-    @endif
     </div>
     <div class="col-lg-3">
         @include('blublog::blublog.parts._sidebar')
