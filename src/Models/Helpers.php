@@ -2,6 +2,7 @@
 
 use Blublog\Blublog\Models\Setting;
 use Blublog\Blublog\Models\Post;
+use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Models\MenuItem;
 use Illuminate\Support\Facades\Cache;
@@ -36,6 +37,12 @@ if (! function_exists('blublog_setting')) {
         }
     }
 }
+if (! function_exists('blublog_get_upload_url')) {
+    function blublog_get_upload_url()
+    {
+        return Storage::disk(config('blublog.files_disk', 'blublog'))->url('');
+    }
+}
 if (! function_exists('blublog_main_menu')) {
     function blublog_main_menu()
     {
@@ -45,52 +52,54 @@ if (! function_exists('blublog_main_menu')) {
 if (! function_exists('blublog_draw_menu')) {
     function blublog_draw_menu($menu_name)
     {
-        $get_menu = Menu::where([
-            ['name', '=', $menu_name],
-        ])->first();
-        //
-        if($get_menu){
-        $menu = MenuItem::where([
-            ['parent', '=', "0"],
-            ['menu', '=', $get_menu->id],
-        ])->get();
-        }
-        if($get_menu){
-            foreach($menu as $item){
-                $sublinks = MenuItem::where([
-                    ['parent', '=', $item->id],
-                    ['menu', '=', $get_menu->id],
-                ])->get();
-                if($sublinks){
-                    $item->sublinks = $sublinks;
-                } else{
-                    $item->sublinks = null;
-                }
-
+        if (!Cache::has('blublog.menu.'. $menu_name)){
+            $get_menu = Menu::where([
+                ['name', '=', $menu_name],
+            ])->first();
+            //
+            if($get_menu){
+            $menu = MenuItem::where([
+                ['parent', '=', "0"],
+                ['menu', '=', $get_menu->id],
+            ])->get();
             }
-
-            $HTML = "";
-
-            foreach($menu as $item){
-                if($item->sublinks->count() > 1){
-                    $HTML = $HTML . '<li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="' .$item->url. '" id="navbarDropdown"
-                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.
-                    $item->label. '</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">';
-                    foreach($item->sublinks as $link){
-                        $HTML = $HTML . '<a class="dropdown-item" href="' . $link->url . '"> '. $link->label . '</a>';
+            if($get_menu){
+                foreach($menu as $item){
+                    $sublinks = MenuItem::where([
+                        ['parent', '=', $item->id],
+                        ['menu', '=', $get_menu->id],
+                    ])->get();
+                    if($sublinks){
+                        $item->sublinks = $sublinks;
+                    } else{
+                        $item->sublinks = null;
                     }
-                    $HTML = $HTML . '</div></li>';
-                } else {
-                    $HTML = $HTML . '<li class="nav-item">';
-                    $HTML = $HTML . '<a class="nav-link" href="' .$item->url . '">' .  $item->label . '</a></li>';
                 }
+                $HTML = "";
 
+                foreach($menu as $item){
+                    if($item->sublinks->count() >= 1){
+                        $template =  Menu::get_html(blublog_setting('menu_dropdown_template'),$item->url,$item->label);
+
+                        $SUBLINKS ='';
+                        foreach($item->sublinks as $link){
+                            $SUBLINKS = $SUBLINKS . Menu::get_html(blublog_setting('menu_dropdown_link_template'),$link->url,$link->label);
+                        }
+
+                        $template = str_replace("((SUBLINKS))", $SUBLINKS, $template);
+                        $HTML = $HTML . $template;
+                    } else {
+                        $HTML = $HTML . Menu::get_html(blublog_setting('menu_link_template'),$item->url,$item->label);
+                    }
+                }
+                Cache::put('blublog.menu.'. $menu_name, $HTML);
+                return $HTML;
             }
-            return $HTML;
+            return false;
+        } else {
+            return Cache::get('blublog.menu.'. $menu_name);
         }
-        return false;
+
 
     }
 }

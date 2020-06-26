@@ -3,10 +3,7 @@
 namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Intervention\Image\ImageManagerStatic as Image;
 use Blublog\Blublog\Models\Post;
-use Session;
-use Carbon\Carbon;
 
 class Log extends Model
 {
@@ -24,7 +21,6 @@ class Log extends Model
         } else{
             $lang = \Request::header('accept-language');
         }
-
         $track = new Log;
         $track->ip = Post::getIp();
         $track->user_agent = $user_agent;
@@ -34,6 +30,9 @@ class Log extends Model
         $track->message = $message;
         $track->data = $data;
         $track->type = $type;
+        if($type != "visit" and \Auth::check()){
+            $track->user_id = \Auth::user()->id;
+        }
         $track->save();
 
         return true;

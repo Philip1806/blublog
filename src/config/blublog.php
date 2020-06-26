@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.1 ALPHA",
+    'version' => "0.9.2 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -43,6 +43,11 @@ return [
     'date_format' => "d.m.Y",
     'date_format_type' => "string",
 
+    'comment_spam_question' => "",
+    'comment_spam_question_type' => "string",
+    'comment_spam_question_answer' => "",
+    'comment_spam_question_answer_type' => "string",
+
     // Text Settings
     'footer_html' => "Based on Bootstrap. Icons from Font Awesome. Web fonts from Google.<br>Blog made with <a href='https://blublog.info'>BLUblog</a>.",
     'footer_html_type' => "text",
@@ -62,6 +67,17 @@ return [
     'author_message_html_type' => "text",
     'moderator_message_html' => "",
     'moderator_message_html_type' => "text",
+    'menu_link_template' => '<li class="nav-item"><a class="nav-link" href="((LINK))">((LABEL))</a></li>',
+    'menu_link_template_type' => "text",
+    'menu_dropdown_template' => '<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="((LINK))" id="navbarDropdown"
+    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">((LABEL))</a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    ((SUBLINKS))
+    </div></li>',
+    'menu_dropdown_template_type' => "text",
+    'menu_dropdown_link_template' => '<a class="dropdown-item" href="((LINK))">((LABEL))</a>',
+    'menu_dropdown_link_template_type' => "text",
 
     // Bool Settings
     'post_editor' => true,
@@ -82,4 +98,6 @@ return [
     'add_front_page_posts_type' => "bool",
     'under_attack' => false,
     'under_attack_type' => "bool",
+    'comment_ask_question' => false,
+    'comment_ask_question_type' => "bool",
 ];

@@ -60,6 +60,7 @@ class BlublogAPIController extends Controller
         $files = File::where([
             ['filename', 'LIKE', '%'."posts".'%'],
         ])->latest()->paginate(10);
+        File::get_url($files);
         $images = File::only_img($files);
 
         return response()->json($images);
@@ -95,6 +96,7 @@ class BlublogAPIController extends Controller
                 ['filename', 'LIKE', '%'.$request->slug.'%'],
             ])->latest()->get();
             if($files->count() > 0){
+                File::get_url($files);
                 return response()->json($files);
             } else {
                 return response()->json(false);

@@ -1,22 +1,29 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
-    | Blublog Admin Panel Language Lines
+    | Blublog Language Lines
     |--------------------------------------------------------------------------
     | You are free to change them to anything
     | you want to customize your views to better match your application.
-    |categories
+    |--------------------------------------------------------------------------
+    | General
+    |--------------------------------------------------------------------------
     */
-    //general
     'blublog_version' => 'Version of BLUblog',
     'general' => 'General',
     'admin' => 'Admin',
     '404' => 'The element for this action is not found. 404',
     'admin_panel' => 'Administration',
     'welcome' => 'Welcome!',
+
+    'update_info' => 'Update info',
+    'cant_get_update_info' => 'Unable to get update information.',
+    'no_updates' => 'There is no new verison of BLUblog for now.',
+    'update_now' => 'Click update button for auto updating BLUblog. Backup data before that.',
+    'cant_update' => 'Sorry, you will need to update BLUblog manuly.',
+
     'mod_panel' => 'Moderation',
     'user_panel' => 'Author panel',
     'home' => 'Home',
@@ -52,24 +59,33 @@ return [
     'security' => 'Security',
     'backtosite' => 'Back to site',
     'none' => 'None',
-    'site_actions' => 'Administrative Actions',
     'contentdelete' => 'Successfully deleted',
     'contentcreate' => 'Successfully created',
     'contentupdate' => 'Successfully edited',
     'gd_not_installed' => 'PHP GD library is NOT installed. Yоu will not be able to create posts.',
+    'message_authors' => 'Message for all authors',
+    'message_mod' => 'Message for all moderators',
 
-    //Administrative Actions
+    /*
+    |--------------------------------------------------------------------------
+    | Administrative Actions
+    |--------------------------------------------------------------------------
+    */
+    'site_actions' => 'Administrative Actions',
     'cache_clear' => 'Cache cleared.',
     'rss_generate' => 'Generate RSS',
     'rss_generated' => 'RSS generated',
     'no_rss' => 'There is no RSS (sitemap)',
-    'clear_cache' => 'Clear the whole cache',
+    'clear_cache' => 'Clear all cache',
     'turn_off_maintenance' => 'Turn off maintenance mode',
     'turn_on_maintenance' => 'Turn on maintenance mode',
     'turn_on_under_attack' => 'Turn on under attack mode.',
     'turn_off_under_attack' => 'Turn off under attack mode.',
-
-    //Users
+    /*
+    |--------------------------------------------------------------------------
+    | Users
+    |--------------------------------------------------------------------------
+    */
     'users' => 'Users',
     'username' => 'Username',
     'addinguser' => 'Adding user',
@@ -79,16 +95,28 @@ return [
     'user_edited' => 'User is edited.',
     'cant_delete_your_profile' => 'Cant delete your profile.',
     'role' => 'Role',
-
-    //categories
+    /*
+    |--------------------------------------------------------------------------
+    | Categories
+    |--------------------------------------------------------------------------
+    */
     'add_category' => 'Add category',
     'all_categories' => 'All categories',
     'categories_stats' => 'Categories statistics',
     'colorcode' => 'Color',
-    //tags
+    'no_categories' => 'There are no categories.',
+    /*
+    |--------------------------------------------------------------------------
+    | Tags
+    |--------------------------------------------------------------------------
+    */
     'tags' => 'Tags',
     'add_tag' => 'Add Tag',
-    //Index
+    /*
+    |--------------------------------------------------------------------------
+    | Index
+    |--------------------------------------------------------------------------
+    */
     'posts_this' => 'Posts this month',
     'posts_last' => 'Posts last month',
     'my_posts_this' => 'My posts this month',
@@ -99,8 +127,11 @@ return [
     'private_posts' => 'Your private posts',
     'comments' => 'Comments',
     'comments_waiting' => 'Comments are waiting for approval.',
-
-    //Logs
+    /*
+    |--------------------------------------------------------------------------
+    | Logs
+    |--------------------------------------------------------------------------
+    */
     'logs' => 'Logs',
     'message' => 'Message',
     'date' => 'Date',
@@ -110,9 +141,11 @@ return [
     'show_all_data' => 'Show all data',
     'can_be_empty' => 'Can be empty',
     'logs_this' => 'Logs/Events this month',
-
-
-    //posts
+    /*
+    |--------------------------------------------------------------------------
+    | Posts
+    |--------------------------------------------------------------------------
+    */
     'posts_rating' => 'Posts ratings',
     'public' => 'Public',
     'draft' => 'Draft',
@@ -130,7 +163,6 @@ return [
     'star' => 'Stars',
     'stars' => 'Stars',
     'main_tag' => 'Main tag',
-
     'posted' => 'Posted by:',
     'on' => 'On',
     'lastedit' => 'Last edit on',
@@ -140,7 +172,11 @@ return [
     'seotitle' => 'Seo title',
     'seodescr' => 'Seo description',
     'autogen' => 'Its auto generated.',
-    //Pages
+    /*
+    |--------------------------------------------------------------------------
+    | Pages
+    |--------------------------------------------------------------------------
+    */
     'addpage' => 'Add page',
     'address' => 'Address',
     'no_pages' => 'No pages',
@@ -152,8 +188,11 @@ return [
     'back_img' => 'Background image',
     'slug' => 'URL address',
     'page' => 'Page',
-
-    //comments
+    /*
+    |--------------------------------------------------------------------------
+    | Comments
+    |--------------------------------------------------------------------------
+    */
     'comments_not_allowed' => 'CAN NOT add comment for a post that do not allow commenting!',
     'comments_disabled' => 'Comments for this post are not allowed.',
     'status' => 'Status',
@@ -166,9 +205,12 @@ return [
     'warning_unaproved_comments' => 'You can not post more comments. Wait to be approved.',
     'comment_added_wait' => 'Comment added. When it is approved it will show.',
     'comment_added' => 'Comment added.',
-
-    //Files
-
+    'wrong_answer' => 'Wrong answer.',
+    /*
+    |--------------------------------------------------------------------------
+    | Files
+    |--------------------------------------------------------------------------
+    */
     'files' => 'Files',
     'file' => 'file',
     'add' => 'Add',
@@ -184,10 +226,11 @@ return [
     'error_removing' => 'File could not be removed. Check Laravel/Blublog filesystem cofiguration. ',
     'error_uploading' => 'Could not upload file. Check Laravel/Blublog filesystem cofiguration.  ',
     'no_results' => 'No files',
-
-
-
-    //Menu
+    /*
+    |--------------------------------------------------------------------------
+    | Menu
+    |--------------------------------------------------------------------------
+    */
     'menu' => 'Menu',
     'add_menu' => 'Add Menu',
     'show_items' => 'Show items',
@@ -200,8 +243,12 @@ return [
     'url' => 'URL',
     'contentedit' => 'Successfully edited',
     'set_main_menu' => 'Set as main',
-
-    //Search
+    'items_of_menu' => 'Items of',
+    /*
+    |--------------------------------------------------------------------------
+    | Search
+    |--------------------------------------------------------------------------
+    */
     'search' => 'Search',
     'search_in_blog' => 'Search in blog...',
     'search_resuts' => 'Search results for:',
@@ -213,8 +260,11 @@ return [
     'search_comment_name' => 'Search by name',
     'search_comment_ip' => 'Search by IP address',
     'search_file' => 'Search for file',
-
-    //Ban
+    /*
+    |--------------------------------------------------------------------------
+    | Ban
+    |--------------------------------------------------------------------------
+    */
     'ban' => 'Ban',
     'unban' => 'Remove ban',
     'bans' => 'All blocked users',
@@ -225,8 +275,6 @@ return [
     'ban_user' => 'Ban user',
     'spam' => 'Too many attempts to add comment.',
     'its_banned' => 'Already banned.',
-
-
     /*
         FRONT
     */
@@ -235,14 +283,11 @@ return [
     'replys' => 'Replys',
     'no_comments' => 'No comments',
     'add_comments' => 'Add comment',
+    'check_this_field' => 'There is a error here',
     'comment' => 'Comment',
     'name' => 'Name',
     'comment_from_author' => ' - Post author',
     'approved' => 'Comment approved.',
     'not_approved' => 'The comment is now hidden.',
     'on_this_topic' => 'More about this topic',
-    'on' => 'On',
-
-
-
 ];

@@ -84,7 +84,7 @@ $(".select3-multi").select2().val({!! json_encode($post->tags()->allRelatedIds()
 $(".select2-multi").select2().val({!! json_encode($post->categories()->allRelatedIds()) !!}).trigger('change');
 
 let img = document.createElement("IMG");
-img.src= "{{ url('/uploads/posts/') }}"+ "/" + "{{$post->img}}";
+img.src= "{{$post->img_url}}";
 img.className="img-fluid  img-thumbnail";
 pagepanel.appendChild(img);
 let panel = document.getElementById("pagepanel");

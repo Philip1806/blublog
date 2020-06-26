@@ -4,7 +4,7 @@
 <div class="card border-primary">
     <div class="card-header text-white bg-primary">{{__('blublog.edit')}} "{{$item->label}}"</div>
     <div class="card-body text-primary">
-        {{ Form::model($item, ['route' => ['menu.edit_item_update', $item->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
+        {{ Form::model($item, ['route' => ['blublog.menu.edit_item_update', $item->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
         {{ Form::label('label', __('blublog.title')) }}
         {{ Form::text('label', null, ['class' => 'form-control']) }}
         {{ Form::label('url', __('blublog.url')) }}

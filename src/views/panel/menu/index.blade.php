@@ -4,7 +4,7 @@
 <div class="card border-primary" style="margin-bottom:20px;">
     <div class="card-header text-white bg-primary "> {{__('blublog.add_menu')}}</div>
     <div class="card-body">
-        {!! Form::open(['route' =>  ['menu.add_menu_store'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+        {!! Form::open(['route' =>  ['blublog.menu.add_menu_store'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         {{ Form::label('title', __('blublog.title')) }}
         {{ Form::text('title', null, ['class' => 'form-control']) }}
 
@@ -20,21 +20,26 @@
         @if (isset($menus[0]->id))
         <ul class="list-group">
             @foreach ($menus as $menu)
-            <li class="list-group-item">{{$menu->name}}
-                {!! Form::open(['route' => ['menu.destroy_menu', $menu->id], 'method' => 'DELETE']) !!}
+            @if ($menu->name == blublog_setting('main_menu_name'))
+            <li class="list-group-item bg-secondary text-white">
+            @else
+            <li class="list-group-item">
+            @endif
+            {{$menu->name}}
+                {!! Form::open(['route' => ['blublog.menu.destroy_menu', $menu->id], 'method' => 'DELETE']) !!}
                 {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-sm' ]) !!}
                 {!! Form::close() !!}
-                <a href="{{ route('menu.menu_items', $menu->id) }}" class="badge badge-primary">{{__('blublog.show_links')}}</a>
+                <a href="{{ route('blublog.menu.menu_items', $menu->id) }}" class="badge badge-primary">{{__('blublog.show_links')}}</a>
                 <a  data-toggle="collapse" href="#addparent-{{$menu->id}}" role="button" aria-expanded="false" aria-controls="addparent-{{$menu->id}}"class="badge badge-dark">{{__('blublog.add_link')}}</a>
                 <a class="badge badge-warning" data-toggle="collapse" href="#editmenu-{{$menu->id}}" role="button" aria-expanded="false" aria-controls="#editmenu-{{$menu->id}}">{{__('blublog.edit')}}</a>
-                <a href="{{ route('menu.set_main_menu', $menu->id) }}" class="badge badge-info">{{__('blublog.set_main_menu')}}</a>
+                <a href="{{ route('blublog.menu.set_main_menu', $menu->id) }}" class="badge badge-info">{{__('blublog.set_main_menu')}}</a>
             </li>
             <li class="list-group-item">
                 <div class="collapse" id="addparent-{{$menu->id}}">
                     <div class="card border-dark" style="margin-bottom:20px;">
                         <div class="card-header text-white bg-dark">{{__('blublog.add_link_to')}} "{{$menu->name}}"</div>
                         <div class="card-body">
-                            {!! Form::open(['route' =>  ['menu.add_parent_store'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                            {!! Form::open(['route' =>  ['blublog.menu.add_parent_store'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
                             {{ Form::label('title', __('blublog.title')) }}
                             {{ Form::text('title', null, ['class' => 'form-control']) }}
 
@@ -52,7 +57,7 @@
                     <div class="card border-warning" style="margin-bottom:20px;">
                         <div class="card-header text-white bg-warning "> {{__('blublog.edit')}} {{$menu->name}}</div>
                         <div class="card-body">
-                            {{ Form::model($menu, ['route' => ['menu.edit_menu_update', $menu->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
+                            {{ Form::model($menu, ['route' => ['blublog.menu.edit_menu_update', $menu->id ], 'method' => "PUT", 'enctype' => 'multipart/form-data']) }}
                             {{ Form::label('name', __('blublog.title')) }}
                             {{ Form::text('name', null, ['class' => 'form-control']) }}
                             {{Form::hidden("menu_id",$menu->id)}}<br>

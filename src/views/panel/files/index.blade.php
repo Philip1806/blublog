@@ -37,7 +37,7 @@
             <tr>
             <td>
                 @if ($file->public)
-                <a href="/uploads/{{ $file->filename }}" > {{ $file->descr }} </a>
+                <a href="{{ $file->url }}" > {{ $file->descr }} </a>
                 @else
                 {{ $file->descr }}
                 @endif

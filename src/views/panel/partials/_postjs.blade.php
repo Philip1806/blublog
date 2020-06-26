@@ -95,7 +95,7 @@ function show_files(files){
         divcol.className = "col-lg-3 col-md-4 col-6";
 
         let img = document.createElement("IMG");
-        img.src= "{{ url('/uploads') }}" + "/" + files[i].filename;
+        img.src= files[i].url;
         img.className="img-fluid  img-thumbnail";
         img.id=files[i].filename.substring(6);
 
@@ -130,7 +130,7 @@ function customfilename(element){
     let pagepanel = document.getElementById("pagepanel");
     remove_all_child(pagepanel);
     let img = document.createElement("IMG");
-    img.src= "{{ url('/uploads/posts/') }}"+ "/" + element.id;
+    img.src= "{{ blublog_get_upload_url() }}"+ "posts/" + element.id;
     img.className="img-fluid  img-thumbnail";
     pagepanel.appendChild(img);
     closemodal();

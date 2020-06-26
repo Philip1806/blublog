@@ -237,6 +237,7 @@ class BlublogFrontController extends Controller
                 $post->maintag_posts = null;
             }
             $post = Post::get_posts_stars($post);
+            $post->img_url = Post::get_img_url($post->img);
             $post->similar_posts =  Post::processing(Post::public(Post::similar_posts($post->id)));
             $post->total_views = $post->views->count();
             $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
@@ -274,6 +275,12 @@ class BlublogFrontController extends Controller
         if(Ban::is_banned_from_comments($ip)){
             abort(403);
         }
+        if(blublog_setting('comment_ask_question')){
+            if($request->get('question_answer') != blublog_setting('comment_spam_question_answer')){
+                Session::flash('error', __('blublog.wrong_answer'));
+                return back();
+            }
+        }
 
         $rules = [
             'name' => 'required|max:50',
@@ -284,11 +291,11 @@ class BlublogFrontController extends Controller
         $ip = Post::getIp();
 
         if(blublog_setting('approve_comments_from_users_with_approved_comments')){
-            $post = Comment::where([
+            $comments = Comment::where([
                 ['ip', '=', $ip],
                 ['public', '=', true],
             ])->first();
-            if($post){
+            if($comments){
                 Post::remove_cache($request->get('post_id'));
                 Comment::addcomment($request, $ip,0);
                 return back();

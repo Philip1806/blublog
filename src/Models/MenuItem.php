@@ -8,9 +8,9 @@ use Blublog\Blublog\Models\Menu;
 class MenuItem extends Model
 {
     protected $table = 'blublog_menu_items';
-    public function post()
+    public function from_menu()
     {
-        return $this->belongsTo(Menu::class);
+        return $this->belongsTo(Menu::class,'menu');
     }
 
 }

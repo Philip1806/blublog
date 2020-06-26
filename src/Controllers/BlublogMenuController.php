@@ -3,6 +3,7 @@
 namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Setting;
@@ -39,6 +40,7 @@ class BlublogMenuController extends Controller
             $setting->val = serialize($menu->name);
             $setting->save();
         }
+        Cache::forget('blublog.settings.main_menu_name');
         return back();
     }
     public function menu_items($id)
@@ -73,6 +75,7 @@ class BlublogMenuController extends Controller
             $item->url = $request->url;
             $item->save();
             Session::flash('success', __('blublog.contentedit'));
+            Cache::forget('blublog.menu.'.$item->from_menu->name);
             return back();
         }
         Session::flash('error', __('blublog.404'));
@@ -91,6 +94,7 @@ class BlublogMenuController extends Controller
         if($menu){
             $menu->name = $request->name;
             $menu->save();
+            Cache::forget('blublog.menu.'.$menu->name);
             Session::flash('success', __('blublog.contentedit'));
         }
 
@@ -117,6 +121,7 @@ class BlublogMenuController extends Controller
             foreach($menu->items as $item){
                 $item->delete();
             }
+            Cache::forget('blublog.menu.'.$menu->name);
             $menu->delete();
             Session::flash('success', __('blublog.contentdelete'));
             return back();
@@ -128,6 +133,7 @@ class BlublogMenuController extends Controller
     {
         $item = MenuItem::find($id);
         if($item){
+            Cache::forget('blublog.menu.'.$item->from_menu->name);
             $item->delete();
             Session::flash('success', __('blublog.contentdelete'));
             return back();
@@ -147,7 +153,7 @@ class BlublogMenuController extends Controller
 
         $menu = Menu::find($request->menu_id);
         $parent = MenuItem::find($request->parent_id);
-
+        Cache::forget('blublog.menu.'.$menu->name);
         if($parent->parent == 1){
             Session::flash('error', "That nesting is not supported.");
             return back();
@@ -178,7 +184,7 @@ class BlublogMenuController extends Controller
         $this->validate($request, $rules);
 
         $menu = Menu::find($request->menu_id);
-
+        Cache::forget('blublog.menu.'.$menu->name);
         if($menu){
             $item = new MenuItem;
             $item->label =$request->title;

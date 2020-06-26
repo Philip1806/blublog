@@ -66,7 +66,6 @@ class BlublogPostsController extends Controller
     public function show($id)
     {
         $post = Post::getpost($id,Auth::user()->id);
-
         return view('blublog::panel.posts.show')->with('post', $post);
 
     }
@@ -79,7 +78,7 @@ class BlublogPostsController extends Controller
         foreach ($tags as $tag){
             $tags2[$tag->id] = $tag->title;
         }
-
+        $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
         $categories = Category::all();
         $categories2 = array();
         foreach ($categories as $category){
@@ -98,23 +97,7 @@ class BlublogPostsController extends Controller
         ];
         $this->validate($request, $rules);
         if($request->file){
-                $size = File::get_file_size($request->file);
-                $address = Post::next_post_id() . "-" . File::clear_filename($request->file->getClientOriginalName());
-                $main_file = Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('posts', $request->file, $address);
-
-                $file = new File;
-                $file->size = $size;
-                $file->descr =  "'". $request->title . "'". __('blublog.post_image');
-                $file->filename = 'posts/' . $address;
-                $file->save();
-
-                // thumbnail
-                $path = File::get_img_path("posts", "thumbnail", $request->file->getClientOriginalName(), $un_numb);
-                $thumbnail_file =File::img_thumbnail($request->file('file'), $path);
-
-                $path = File::get_img_path("posts", "blur_thumbnail", $request->file->getClientOriginalName(), $un_numb);
-                $blur_thumbnail_file =File::img_blurthumbnail($request->file('file'), $path);
-                Post::check_if_files_uploaded($main_file,$thumbnail_file,$blur_thumbnail_file);
+            $address = File::handle_img_upload($request);
         } elseif($request->customimg != "") {
             $address = $request->customimg;
         } else {
@@ -185,16 +168,8 @@ class BlublogPostsController extends Controller
             'slug' => 'max:200',
         ];
         $this->validate($request, $rules);
-
-        Log::add($request, "info", "Post edited" );
-
         $post = Post::find($id);
         if($request->file){
-            $size = File::get_file_size($request->file);
-            //New image uploaded.
-            $path = 'posts/' . $post->img;
-            $thumbnail = 'posts/thumbnail_' . $post->img;
-            $blurthumbnail = 'posts/blur_thumbnail_' . $post->img;
             if($post->img != "no-img.png"){
                 //The post had a image before. Delete the old ones.
                 $file = File::where([
@@ -203,27 +178,9 @@ class BlublogPostsController extends Controller
                 if($file){
                     $file->delete();
                 }
-                Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path);
-                Storage::disk(config('blublog.files_disk', 'blublog'))->delete($thumbnail);
-                Storage::disk(config('blublog.files_disk', 'blublog'))->delete($blurthumbnail);
+                Post::delete_post_imgs($post->img);
             }
-            $un_numb = Post::next_post_id();
-
-            $address = $un_numb . "-" . File::clear_filename($request->file->getClientOriginalName());
-            Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('posts', $request->file, $address);
-
-            $file = new File;
-            $file->size = $size;
-            $file->descr =  "'". $request->title . "'". __('blublog.post_image');
-            $file->filename = 'posts/' . $address;
-            $file->save();
-
-            // thumbnail
-            $path = File::get_img_path("posts", "thumbnail", $request->file->getClientOriginalName(), $un_numb);
-            File::img_thumbnail($request->file('file'), $path);
-
-            $path = File::get_img_path("posts", "blur_thumbnail", $request->file->getClientOriginalName(), $un_numb);
-            File::img_blurthumbnail($request->file('file'), $path);
+            $address = File::handle_img_upload($request);
         }  elseif($request->customimg != "") {
             $address = $request->customimg;
         }else {
@@ -272,15 +229,14 @@ class BlublogPostsController extends Controller
         $post->img = $address;
         $post->save();
         Post::remove_cache($post->id);
+        if($post->status != "private"){
+            Log::add($request, "info", "Post edited" );
+        }
         if (isset($request->categories)){
             $post->categories()->sync($request->categories);
         } else {
             $post->categories()->sync(array());
         }
-
-
-
-
         if (isset($request->tags)){
             $post->tags()->sync($request->tags);
 
@@ -306,26 +262,19 @@ class BlublogPostsController extends Controller
             return redirect()->back();
 
         }
-
         if(!Post::img_used_by_other_post($id)){
-            //Main img
-            $path = 'posts/' . $post->img;
-            $file = File::where([
-                ['filename', '=', $path],
-            ])->first();
-            if($file){
-                $file = File::find($file->id);
-                $file->delete();
-            }
-
-            //thumbnail
-
             if($post->img != "no-img.png"){
-                Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path);
-                $path2 = 'posts/' . "thumbnail_" . $post->img;
-                Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path2);
-                $path3 = 'posts/' . "blur_thumbnail_" . $post->img;
-                Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path3);
+                $path = 'posts/' . $post->img;
+                $file = File::where([
+                    ['filename', '=', $path],
+                ])->first();
+                if($file){
+                    $file->delete();
+                }
+
+                if(!Post::delete_post_imgs($post->img)){
+                    Session::flash('error', __('blublog.error_removing'));
+                }
             }
         }
         $post->categories()->detach();

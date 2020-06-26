@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\BlublogUser;
+use Blublog\Blublog\Models\Log;
 use App\User;
 use Session;
 use Auth;
@@ -67,7 +68,11 @@ class BlublogUserController extends Controller
             ['user_id', '=', $id],
         ])->first();
         $user->role = $Blublog_User->role;
-
+        $actions = Log::where([
+            ['user_id', '=', $user->id],
+            ['type', '!=', "visit"],
+        ])->limit(10)->latest()->get();
+        $user->latest_actions = $actions;
         return view('blublog::panel.users.edit')->with('user', $user);
     }
     public function update(Request $request, $id)

@@ -61,7 +61,7 @@
 
 <style>
 .jumbotron {
-    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{{url('/uploads/posts/')}}/{{$post->img}}");
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{{$post->img_url}}");
     background-size: cover;
     background-repeat: no-repeat;
     border-color: {{$post->categories[0]->colorcode}};

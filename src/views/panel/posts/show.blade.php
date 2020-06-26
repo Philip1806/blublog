@@ -26,7 +26,7 @@
         </div>
         <div class="col-lg">
             <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ModalLong">
-            {{__('blublog.views')}}
+            {{__('blublog.views')}} ({{$post->views()->count()}})
             </button>
             <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -57,7 +57,7 @@
 <div class="row">
     <div class="col-xl-5 col-lg-6">
         <div class="card shadow">
-            <img class="card-img-top" src="{{url('/uploads/posts/')}}/thumbnail_{{ $post->img }}"  alt="Card image cap">
+            <img class="card-img-top" src="{{$post->img_thumb_url}}"  alt="Card image cap">
         </div>
     </div>
     <div class="col-xl-7 col-lg-6">

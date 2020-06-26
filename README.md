@@ -34,12 +34,12 @@ You need to add this in filesystems.php from config folder:
 ```
 'blublog' => [
     'driver' => 'local',
-    'root' => public_path('/uploads'),
-    'url' => env('APP_URL').'/public',
+    'root' => public_path('/blublog-uploads'),
+    'url' => env('APP_URL').'/blublog-uploads/',
     'visibility' => 'public',
 ],
 ```
-You can set up where all files from the package go. It's not stable for now, so don't change this above.
+You can set up where all files from the package go.
 By default you can access the blog from /blog and panel from /panel.
 ## Features
 
@@ -48,7 +48,7 @@ By default you can access the blog from /blog and panel from /panel.
 - Multible tags.
 - Open Graph.
 - TinyMCE - WYSIWYG HTML Editor.
-- Post image can be uploaded or choosen by pop-up modal from already uploaded images.
+- Post image can be uploaded or choosen by pop-up modal from already uploaded images. You can define the image dimensions and quality.
 - Custom SEO post title and description (It's auto generated if not specified).
 - Comments can be allowed or forbidden.
 - Post can be public, private or draft. Private posts are seen only from post author. Drafts are seen by all users with access to the panel.
@@ -91,7 +91,7 @@ By default you can access the blog from /blog and panel from /panel.
 7. Admin
 - BAN option. You can ban users from the blog or from commenting.
 - Very basic settings page for now.
-- Very basic menu options. You can make links and dropdowns.
+- Very basic menu options. You can make links and dropdowns. There are html templates for the links and dropdowns, so that you can change it if your theme do not use bootstrap.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 - Maintenance mode.
 

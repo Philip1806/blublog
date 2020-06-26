@@ -4,6 +4,7 @@ namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Models\Post;
@@ -250,7 +251,8 @@ class Post extends Model
         foreach ($posts as $post){
             $post->date = Carbon::parse($post->created_at)->format(blublog_setting('date_format'));
             $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
-            $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
+            $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
+            $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
             $post = Post::get_posts_stars($post,false);
             $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
             $post->total_views = $post->views->count();
@@ -316,9 +318,11 @@ class Post extends Model
 
         @return mixed
     */
-    public static function getpost($post_id, $user_id)
+    public static function getpost($post_id, $user_id = false)
     {
         $post = Post::find($post_id);
+        $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
+        $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
         if(!$post){
             return abort(404);
         }
@@ -373,7 +377,8 @@ class Post extends Model
             foreach ($posts as $post){
                 $post = Post::get_posts_stars($post,false);
                 $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
-                $post->img_url = url('/uploads/posts/') . "/thumbnail_". $post->img;
+                $post->img_url = Post::get_img_url($post->img);
+                $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
                 $post->date = Carbon::parse($post->created_at)->format(blublog_setting('date_format'));
                 $post->total_views = $post->count();
 
@@ -387,6 +392,10 @@ class Post extends Model
             return $posts;
         }
         return null;
+    }
+    public static function get_img_url($img)
+    {
+        return Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $img);;
     }
 
     public static function check_if_files_uploaded($mainfile,$thumbnail_file,$blur_thumbnail_file)
@@ -408,6 +417,18 @@ class Post extends Model
         }
         return true;
 
+    }
+    public static function delete_post_imgs($img)
+    {
+        $img_status = Storage::disk(config('blublog.files_disk', 'blublog'))->delete("posts/". $img);
+        $path2 = 'posts/' . "thumbnail_" . $img;
+        $thumbnail_img_status =Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path2);
+        $path3 = 'posts/' . "blur_thumbnail_" . $img;
+        $blur_img_status =Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path3);
+        if($img_status and $thumbnail_img_status and $blur_img_status){
+            return true;
+        }
+        return false;
     }
 
     public static function thismonth()

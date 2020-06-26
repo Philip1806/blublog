@@ -66,7 +66,7 @@
 </div>
 @else
 <hr>
-<center> <b>Няма добавени категории</b> </center>
+<center><b>{{__('blublog.no_categories')}}</b></center>
 @endif
 <script src="{{ url('/') }}\blublog/js/jscolor.js"></script>
 <script>

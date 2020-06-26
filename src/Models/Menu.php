@@ -12,7 +12,9 @@ class Menu extends Model
     {
         return $this->hasMany(MenuItem::class, 'menu');
     }
-    public static function set_main_menu(){
-
+    public static function get_html($template,$url,$label){
+        $template = str_replace("((LINK))", $url, $template);
+        $template = str_replace("((LABEL))", $label, $template);
+        return $template;
     }
 }

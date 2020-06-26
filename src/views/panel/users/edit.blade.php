@@ -34,6 +34,14 @@
 
         {{ Form::submit(__('blublog.edit_post'), ['class' => 'btn btn-primary btn-block']) }}
         {!! Form::close() !!}
+
+        <hr>
+        @foreach ($user->latest_actions as $action)
+        <div class="alert alert-info" role="alert">
+            {{$action->message}} ({{$action->request_url}}) ({{$action->ip}})
+        </div>
+        @endforeach
+
     </div>
 </div>
 @endsection

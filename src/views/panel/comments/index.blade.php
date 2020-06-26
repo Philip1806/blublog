@@ -36,9 +36,9 @@
                         <tr>
                         <td>
                         @if ($file->public)
-                        <a href="{{ route('comments.approve', $file->id) }}" class="btn btn-outline-dark btn-block" role="button">{{__('blublog.hide')}}</a>
+                        <a href="{{ route('blublog.comments.approve', $file->id) }}" class="btn btn-outline-dark btn-block" role="button">{{__('blublog.hide')}}</a>
                         @else
-                        <a href="{{ route('comments.approve', $file->id) }}" class="btn btn-outline-primary btn-block" role="button">{{__('blublog.approve')}}</a>
+                        <a href="{{ route('blublog.comments.approve', $file->id) }}" class="btn btn-outline-primary btn-block" role="button">{{__('blublog.approve')}}</a>
                         @endif
                         </td>
                         <td>
@@ -66,7 +66,7 @@
         <hr>
         @else
         <hr>
-        <center> <b>Няма добавени.</b> </center>
+    <center> <b>{{__('blublog.no_comments')}}</b> </center>
         @endif
 </div>
 

@@ -11,9 +11,9 @@
                         @endif
                             @auth
                             @if ($comment->public)
-                            <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-warning btn-sm" role="button">{{__('blublog.hide')}}</a>
+                            <a href="{{ route('blublog.comments.approve', $comment->id) }}" class="btn btn-warning btn-sm" role="button">{{__('blublog.hide')}}</a>
                             @else
-                            <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-info btn-sm" role="button">{{__('blublog.approve')}}</a>
+                            <a href="{{ route('blublog.comments.approve', $comment->id) }}" class="btn btn-info btn-sm" role="button">{{__('blublog.approve')}}</a>
                             @endif
                         @endauth
                 </div>
@@ -35,7 +35,7 @@
                                                 @endif
                                                 @if ($errors->has('name'))
                                                 <input type="text" name="name" class="form-control is-invalid" value="{{ old('name')}}">
-                                                <small class="text-danger">Съдържанието в горното поле липсва или е невалидно (твърде дълго)</small>
+                                                <small class="text-danger">{{__('blublog.check_this_field')}}</small>
                                                 @endif
 
                                         </div>
@@ -46,7 +46,7 @@
                                                 @endif
                                                 @if ($errors->has('email'))
                                                 <input type="text" name="email" class="form-control is-invalid" value="{{ old('email')}}">
-                                                <small class="text-danger">Съдържанието в горното поле липсва или е невалидно (твърде дълго)</small>
+                                                <small class="text-danger">{{__('blublog.check_this_field')}}</small>
                                                 @endif
 
                                         </div><br>
@@ -57,7 +57,7 @@
                                                 @endif
                                                 @if ($errors->has('comment_body'))
                                         <textarea rows="3" type="text" name="comment_body" class="form-control is-invalid" value="{{ old('comment_body')}}"></textarea>
-                                                <small class="text-danger">Съдържанието в горното поле липсва или е невалидно (твърде дълго)</small>
+                                                <small class="text-danger">{{__('blublog.check_this_field')}}</small>
                                                 @endif
 
                                         </div>

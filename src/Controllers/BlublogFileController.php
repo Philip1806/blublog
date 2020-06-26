@@ -33,7 +33,9 @@ class BlublogFileController extends Controller
     public function index()
     {
         $files = File::latest()->paginate(10);
-
+        foreach($files as $file){
+            $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url( $file->filename);
+        }
         return view('blublog::panel.files.index')->with('files', $files);
     }
 

@@ -5,7 +5,7 @@
         @foreach ( $post->maintag_posts as $tag_post)
         <div class="row">
             <div class="col-sm-4">
-                <img class="img-fluid border-primary rounded shadow"  src="{{$tag_post->img_url}}" alt="{{$tag_post->title}} image">
+                <img class="img-fluid border-primary rounded shadow"  src="{{$tag_post->img_thumb_url}}" alt="{{$tag_post->title}} image">
             </div>
             <div class="col-sm-8">
                 <h5 class="mt-0"><a href="{{$tag_post->slug_url}}">{{$tag_post->title}}</a></h5>

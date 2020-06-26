@@ -4,6 +4,7 @@ namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\Post;
 use Session;
 
@@ -22,24 +23,12 @@ class File extends Model
         return substr($dir_and_filename, strpos($dir_and_filename, "/") + 1);
     }
 
-    public static function get_img_path($dir, $type, $filename, $id = 0)
+    public static function get_url($files)
     {
-        if($id == 0){
-            $numb = rand(10, 99);
-            $numb2 = rand(100, 999);
-            $numb = $numb . $numb2;
-        } else {
-            $numb = $id;
+        foreach($files as $file){
+            $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url( $file->filename);
         }
-
-        $ext = pathinfo($filename);
-        $filename = File::clear_filename($ext['filename']);
-
-
-        $address = $numb. "-" . $filename  . "." . $ext['extension'];
-        $path = "uploads/". $dir . "/" . $type . "_" . $address;
-
-        return $path;
+        return $files;
     }
 
     public static function img_thumbnail($file, $path)
@@ -49,7 +38,7 @@ class File extends Model
         $img->fit(blublog_setting('img_height'), blublog_setting('img_width'), function ($constraint) {
             $constraint->upsize();
         })->interlace();
-        $img->save(public_path($path), blublog_setting('img_quality'));
+        $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $path, blublog_setting('img_quality'));
         return true;
     }
 
@@ -60,24 +49,30 @@ class File extends Model
         $img->fit(100, 56, function ($constraint) {
             $constraint->upsize();
         })->blur(1)->interlace();
-        $img->save(public_path($path), blublog_setting('img_quality'));
-
+        $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $path, blublog_setting('img_quality'));
         return true;
     }
-    public static function upload_file($dir, $file, $filename, $descr = 'Uploaded file')
+
+    public static function handle_img_upload($request)
     {
-        $numb = rand(0, 99);
-        $numb2 = rand(99, 9999);
-        $numb = $numb . $numb2;
-        $address = $numb . $request->file->getClientOriginalName();
-        Storage::disk('public')->putFileAs('posts', $request->file, $address);
+        $size = File::get_file_size($request->file);
+        $address = Post::next_post_id() . "-" . File::clear_filename($request->file->getClientOriginalName());
+        $main_file = Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('posts', $request->file, $address);
+
         $file = new File;
-        $file->slug = $numb2;
         $file->size = $size;
-        $file->descr =  "'". $post->title . "'". __('blublog.post_image');
+        $file->descr =  "'". $request->title . "'". __('blublog.post_image');
         $file->filename = 'posts/' . $address;
         $file->save();
 
+        // thumbnail
+        $path = "/posts/thumbnail_". $address;
+        $thumbnail_file =File::img_thumbnail($request->file('file'), $path);
+
+        $path = "/posts/blur_thumbnail_". $address;
+        $blur_thumbnail_file =File::img_blurthumbnail($request->file('file'), $path);
+        Post::check_if_files_uploaded($main_file,$thumbnail_file,$blur_thumbnail_file);
+        return $address;
     }
 
     public static function only_img($files)
@@ -89,7 +84,7 @@ class File extends Model
             //Make collection
             $images = collect(new Post);
 
-            //Add only files with image extension to the collection
+            //Add only files with extension from the collection
             foreach ($files as $file) {
                 $ext = pathinfo($file->filename, PATHINFO_EXTENSION);
                 if(in_array($ext, $img_extensions)){

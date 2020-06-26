@@ -1,14 +1,8 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Blublog\Blublog\Models\Setting;
 use Blublog\Blublog\Models\Log;
-use App\User;
-use Session;
 
 class BlublogLogController extends Controller
 {
