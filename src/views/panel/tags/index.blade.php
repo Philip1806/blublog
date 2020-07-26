@@ -59,8 +59,7 @@
         {!! $tags->links(); !!}
         <hr>
         @else
-        <hr>
-        <center> <b>Няма добавени категории</b> </center>
+        <center> <b>{{ __('blublog.no_results')}}</b> </center>
         @endif
     </div>
 </div>

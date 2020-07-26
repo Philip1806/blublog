@@ -27,8 +27,10 @@
                     <th scope="col">{{ __('blublog.comment') }}</th>
                     <th scope="col">{{ __('blublog.author') }}</th>
                     <th scope="col"></th>
+                    @if (blublog_is_admin() or blublog_is_mod())
                     <th scope="col"></th>
                     <th scope="col"></th>
+                    @endif
                   </tr>
                 </thead>
                 <tbody>
@@ -51,13 +53,17 @@
                         <td><a href="{{ route('blublog.front.post_show', $file->post_slug) }}">{{$file->body }}</a></td>
                         <td>{{ $file->name }}</td>
                         <td><a href="{{ route('blublog.comments.edit', $file->id) }}" class="btn btn-outline-primary btn-block" role="button">{{__('blublog.edit')}}</a></td>
+
+                        @if (blublog_is_admin() or blublog_is_mod())
                         <td>
-                        {!! Form::open(['route' => ['blublog.comments.destroy', $file->id], 'method' => 'DELETE']) !!}
-                        {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
-                        {!! Form::close() !!}
-                        </td>
-                        <td><a href="{{ route('blublog.comments.ban', $file->id) }}" class="btn btn-outline-danger btn-block" role="button">{{__('blublog.ban')}} {{__('blublog.ip')}}</a></td>
+                            {!! Form::open(['route' => ['blublog.comments.destroy', $file->id], 'method' => 'DELETE']) !!}
+                            {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
+                            {!! Form::close() !!}
+                            </td>
+                            <td><a href="{{ route('blublog.comments.ban', $file->id) }}" class="btn btn-outline-danger btn-block" role="button">{{__('blublog.ban')}} {{__('blublog.ip')}}</a></td>
+                        @endif
                         </tr>
+
                         @endforeach
 
                 </tbody>

@@ -9,9 +9,13 @@ Route::group(
         Route::get('/blublog/listimg', 'BlublogAPIController@listimg')->name('blublog.posts.listimg')->middleware('auth');
         Route::post('/blublog/search', 'BlublogAPIController@search')->name('blublog.api.searchfile')->middleware('auth');
         Route::post('/blublog/set_rating', 'BlublogAPIController@set_rating')->name('blublog.api.set_rating')->middleware('throttle:30,1');;
-
         Route::get('/blublog/categories', 'BlublogAPIController@categories')->name('blublog.api.categories')->middleware('throttle:30,1');;
         Route::get('/blublog/post/{slug}', 'BlublogAPIController@post')->name('blublog.api.post')->middleware('throttle:30,1');;
+        Route::get('/blublog/post/{slug}/similar-posts', 'BlublogAPIController@similar_posts')->name('blublog.api.similar_posts')->middleware('throttle:30,1');;
+        Route::get('/blublog/category/{slug}', 'BlublogAPIController@category')->name('blublog.api.category')->middleware('throttle:30,1');;
+        Route::get('/blublog/tag/{slug}', 'BlublogAPIController@tag')->name('blublog.api.tag')->middleware('throttle:30,1');;
+        Route::get('/blublog/post/{slug}/comments', 'BlublogAPIController@comments')->name('blublog.api.comments')->middleware('throttle:30,1');;
+        Route::any('/blublog/custom/', 'BlublogAPIController@api')->name('blublog.api.api')->middleware('throttle:10,1');;
 
         //Blog front end group
         Route::group(

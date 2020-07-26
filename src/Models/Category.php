@@ -4,6 +4,7 @@ namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Category;
 
 class Category extends Model
 {
@@ -17,5 +18,17 @@ class Category extends Model
     public static function with_filename($filename)
     {
         return Category::where('img', 'LIKE', '%' . $filename . '%')->first();
+    }
+    public static function by_slug($slug)
+    {
+        $category = Category::where([
+            ['slug', '=', $slug],
+        ])->first();
+        if(!$category){
+            return false;
+        }
+        $category->get_posts = $category->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('category_posts_per_page'));
+        $category->get_posts = Post::processing($category->get_posts);
+        return $category;
     }
 }

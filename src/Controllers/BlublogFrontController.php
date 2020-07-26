@@ -183,14 +183,10 @@ class BlublogFrontController extends Controller
     {
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         if (!Cache::has('blublog.category.'. $slug .'page'.$page)){
-            $category = Category::where([
-                ['slug', '=', $slug],
-            ])->first();
+            $category = Category::by_slug($slug);
             if(!$category){
                 abort(404);
             }
-            $category->get_posts = $category->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('category_posts_per_page'));
-            $category->get_posts = Post::processing($category->get_posts);
             Cache::put('blublog.category.'. $slug .'page'.$page, $category,  now()->addMinutes(config('blublog.setting_cache')));
         } else {
             $category = Cache::get('blublog.category.'. $slug .'page'.$page);
@@ -202,30 +198,21 @@ class BlublogFrontController extends Controller
     {
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         if (!Cache::has('blublog.tag.'. $slug. 'page'.$page)){
-            $tag = Tag::where([
-                ['slug', '=', $slug],
-            ])->first();
+            $tag = Tag::by_slug($slug);
             if(!$tag){
                 abort(404);
             }
-            $tag->get_posts = $tag->posts()->where("status",'=','publish')->latest()->paginate(blublog_setting('tags_posts_per_page'));
-            $tag->get_posts = Post::processing($tag->get_posts);
             Cache::put('blublog.tag.'. $slug. 'page'.$page, $tag,  now()->addMinutes(config('blublog.setting_cache')));
         } else {
             $tag = Cache::get('blublog.tag.'. $slug. 'page'.$page);
         }
-
         $path = "blublog::" . blublog_setting('theme') . ".tags.index";
         return view($path)->with('tag', $tag);
     }
     public function post_show($slug)
     {
         if (!Cache::has('blublog.post.'. $slug)){
-            $post = Post::where([
-                ['slug', '=', $slug],
-                ['status', '=', "publish"],
-            ])->first();
-
+            $post = Post::by_slug($slug);
             if(!$post){
                 abort(404);
             }

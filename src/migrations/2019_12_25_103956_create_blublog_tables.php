@@ -65,6 +65,7 @@ class CreateBlublogTables extends Migration
         });
         Schema::create('blublog_files', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('size', 250)->nullable();
             $table->string('descr', 250);
             $table->string('filename', 250);

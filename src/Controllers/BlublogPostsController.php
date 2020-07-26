@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
-use Blublog\Blublog\Models\PostsViews;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\File;
 use Blublog\Blublog\Models\Log;
@@ -169,11 +168,14 @@ class BlublogPostsController extends Controller
         ];
         $this->validate($request, $rules);
         $post = Post::find($id);
+        if(!blublog_can_edit_post( $post->id,Auth::user()->id)){
+            abort(403);
+        }
         if($request->file){
             if($post->img != "no-img.png"){
                 //The post had a image before. Delete the old ones.
                 $file = File::where([
-                    ['filename', '=', $path],
+                    ['filename', '=', "posts/". $post->img],
                 ])->first();
                 if($file){
                     $file->delete();
@@ -248,8 +250,10 @@ class BlublogPostsController extends Controller
         return redirect()->route('blublog.posts.show', $post->id);
     }
     public function destroy($id){
-
         $post =Post::find($id);
+        if(!blublog_can_edit_post( $post->id,Auth::user()->id)){
+            abort(403);
+        }
         $views = Rate::where([
         ['post_id', '=', $post->id],
         ])->get();
@@ -288,6 +292,7 @@ class BlublogPostsController extends Controller
         Post::remove_cache($post->id);
         $post->delete();
 
+        Log::add($post, "info", "Post deleted" );
         Session::flash('success', __('blublog.contentdelete'));
         return redirect()->route('blublog.posts.index');
 

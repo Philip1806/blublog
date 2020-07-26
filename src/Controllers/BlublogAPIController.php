@@ -2,8 +2,14 @@
 
 namespace   Blublog\Blublog\Controllers;
 
+use Blublog\Blublog\Resources\Post as PostResource;
+use Blublog\Blublog\Resources\Category as CategoryResource;
+use Blublog\Blublog\Resources\Tag as TagResource;
+use Blublog\Blublog\Resources\Comment as CommentResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\File;
 use Blublog\Blublog\Models\Comment;
@@ -73,9 +79,101 @@ class BlublogAPIController extends Controller
         if(file_exists ($codedir)){
             include_once $codedir;
         }
+        return response()->json(null,204);
+    }
+    public function post($slug)
+    {
+        if (!Cache::has('blublog.api.post.'. $slug)){
+            $post = Post::by_slug($slug);
+            if(!$post){
+                return response()->json(null,404);
+            }
+            if($post->tag_id){
+                $post->on_this_topic = Tag::get_tag_posts($post->tag_id,$post->id);
+            }
+            $post = Post::get_numb_of_posts_in_tags($post);
+            $response = new PostResource($post);
+            Cache::put('blublog.api.post.'. $slug, $response);
 
-        return response()->json(false);
+        } else {
+            $response = Cache::get('blublog.api.post.'. $slug);
+        }
 
+        return $response;
+    }
+    public function similar_posts($slug)
+    {
+        if (!Cache::has('blublog.api.post.'. $slug.'.similar_posts')){
+            $post = Post::by_slug($slug);
+            if(!$post){
+                return response()->json(null,404);
+            }
+            $posts =  Post::processing(Post::public(Post::similar_posts($post->id)));
+            if(!$posts){
+                return response()->json(null,204);
+            }
+            $response =  PostResource::collection($posts);
+            Cache::put('blublog.api.post.'. $slug.'.similar_posts', $response);
+
+        } else {
+            $response = Cache::get('blublog.api.post.'. $slug.'.similar_posts');
+        }
+
+        return $response;
+    }
+    public function comments($slug)
+    {
+        if (!Cache::has('blublog.api.post.'. $slug.'.comments')){
+            $post = Post::by_slug($slug);
+            if(!$post){
+                return response()->json(null,404);
+            }
+            $comments = $post->allcomments->where("public",'=',true);
+            if(!isset($comments[0]->id)){
+                return response()->json(null,204);
+            }
+            $response =  CommentResource::collection($comments);
+            Cache::put('blublog.api.post.'. $slug.'.comments', $response);
+
+        } else {
+            $response = Cache::get('blublog.api.post.'. $slug.'.comments');
+        }
+
+        return $response;
+    }
+
+    public function category($slug)
+    {
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if (!Cache::has('blublog.api.category.'. $slug.'.page'. $page )){
+            $category = Category::by_slug($slug);
+            if(!$category){
+                return response()->json(null,404);
+            }
+            $category->get_posts =  PostResource::collection($category->get_posts);
+            $response =  new CategoryResource($category);
+            Cache::put('blublog.api.category.'. $slug.'.page'. $page, $response);
+
+        } else {
+            $response = Cache::get('blublog.api.category.'. $slug.'.page'. $page);
+        }
+        return $response;
+    }
+    public function tag($slug)
+    {
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if (!Cache::has('blublog.api.tag.'. $slug.'.page'. $page )){
+            $tag = Tag::by_slug($slug);
+            if(!$tag){
+                return response()->json(null,404);
+            }
+            $tag->get_posts =  PostResource::collection($tag->get_posts);
+            $response =  new TagResource($tag);
+            Cache::put('blublog.api.tag.'. $slug.'.page'. $page, $response);
+        } else {
+            $response = Cache::get('blublog.api.tag.'. $slug.'.page'. $page);
+        }
+        return $response;
     }
 
     public function search(Request $request)

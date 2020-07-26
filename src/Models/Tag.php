@@ -27,4 +27,17 @@ class Tag extends Model
         $posts = Post::processing($posts);
         return $posts;
     }
+    public static function by_slug($slug){
+        $tag = Tag::where([
+            ['slug', '=', $slug],
+        ])->first();
+        if(!$tag){
+            return false;
+        }
+        $posts = $tag->posts()->where("status",'=','publish')->latest();
+        $tag->number_of_posts = $posts->count();
+        $tag->get_posts = $posts->paginate(blublog_setting('tags_posts_per_page'));
+        $tag->get_posts = Post::processing($tag->get_posts);
+        return $tag;
+    }
 }

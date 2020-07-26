@@ -2,8 +2,6 @@
 
 namespace   Blublog\Blublog\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\File;
@@ -78,6 +76,6 @@ class BlublogController extends Controller
             ['user_id', '=', Auth::user()->id],
         ])->get()->count();
 
-        return view("blublog::panel.index_author")->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('moduls', $moduls)->with('totalposts', $totalposts)->with('myposts', $myposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
+        return view("blublog::panel.index_author")->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalposts', $totalposts)->with('myposts', $myposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
     }
 }

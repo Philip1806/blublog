@@ -300,7 +300,7 @@ class Post extends Model
             }
         }
         if($show_avg){
-            $STARS_HTML = $STARS_HTML . " (". $avg_stars . ")" . '<p id="rating_info">Click on stars to rate this post.</p><hr>';
+            $STARS_HTML = $STARS_HTML . " (". round($avg_stars, 2) . ")" . '<p id="rating_info">Click on stars to rate this post.</p><hr>';
         } else {
             $STARS_HTML = $STARS_HTML . "";
         }
@@ -392,6 +392,21 @@ class Post extends Model
             return $posts;
         }
         return null;
+    }
+    public static function by_slug($slug)
+    {
+        $post = Post::where([
+            ['slug', '=', $slug],
+            ['status', '=', "publish"],
+        ])->first();
+        return $post;
+    }
+    public static function get_numb_of_posts_in_tags($post)
+    {
+        foreach($post->tags as $tag){
+            $tag->number_of_posts = $tag->posts()->where("status",'=','publish')->count();
+        }
+        return $post;
     }
     public static function get_img_url($img)
     {
