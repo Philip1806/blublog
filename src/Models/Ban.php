@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Ban extends Model
 {
     protected $table = 'blublog_ban';
-    protected $fillable = [
-        'ip','comments','descr',
-    ];
 
     public static function ip($ip,$reason, $only_from_comments = 0)
     {

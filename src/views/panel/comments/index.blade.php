@@ -27,41 +27,60 @@
                     <th scope="col">{{ __('blublog.comment') }}</th>
                     <th scope="col">{{ __('blublog.author') }}</th>
                     <th scope="col"></th>
-                    @if (blublog_is_admin() or blublog_is_mod())
                     <th scope="col"></th>
                     <th scope="col"></th>
-                    @endif
+
                   </tr>
                 </thead>
                 <tbody>
-                        @foreach ( $comments as $file )
+                        @foreach ( $comments as $comment )
                         <tr>
+
+                            @can('approve', $comment)
+                            <td>
+                                @if ($comment->public)
+                                <a href="{{ route('blublog.comments.approve', $comment->id) }}" class="btn btn-outline-dark btn-block" role="button">{{__('blublog.hide')}}</a>
+                                @else
+                                <a href="{{ route('blublog.comments.approve', $comment->id) }}" class="btn btn-outline-primary btn-block" role="button">{{__('blublog.approve')}}</a>
+                                @endif
+                            </td>
+                            @else
+                            <td></td>
+                            @endcan
+
+
+
                         <td>
-                        @if ($file->public)
-                        <a href="{{ route('blublog.comments.approve', $file->id) }}" class="btn btn-outline-dark btn-block" role="button">{{__('blublog.hide')}}</a>
-                        @else
-                        <a href="{{ route('blublog.comments.approve', $file->id) }}" class="btn btn-outline-primary btn-block" role="button">{{__('blublog.approve')}}</a>
-                        @endif
-                        </td>
-                        <td>
-                            @if ($file->public)
+                            @if ($comment->public)
                             <span class="badge badge-success">{{__('blublog.its_approved')}}</span>
                             @else
                             <span class="badge badge-danger">{{__('blublog.its_hiden')}}</span>
                             @endif
                         </td>
-                        <td><a href="{{ route('blublog.front.post_show', $file->post_slug) }}">{{$file->body }}</a></td>
-                        <td>{{ $file->name }}</td>
-                        <td><a href="{{ route('blublog.comments.edit', $file->id) }}" class="btn btn-outline-primary btn-block" role="button">{{__('blublog.edit')}}</a></td>
+                        <td><a href="{{ route('blublog.front.post_show', $comment->post_slug) }}">{{$comment->body }}</a></td>
+                        <td>{{ $comment->name }}</td>
 
-                        @if (blublog_is_admin() or blublog_is_mod())
+                        @can('update', $comment)
+                        <td><a href="{{ route('blublog.comments.edit', $comment->id) }}" class="btn btn-outline-primary btn-block" role="button">{{__('blublog.edit')}}</a></td>
+                        @else
+                        <td></td>
+                        @endcan
+
+                        @can('delete', $comment)
                         <td>
-                            {!! Form::open(['route' => ['blublog.comments.destroy', $file->id], 'method' => 'DELETE']) !!}
+                            {!! Form::open(['route' => ['blublog.comments.destroy', $comment->id], 'method' => 'DELETE']) !!}
                             {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
                             {!! Form::close() !!}
-                            </td>
-                            <td><a href="{{ route('blublog.comments.ban', $file->id) }}" class="btn btn-outline-danger btn-block" role="button">{{__('blublog.ban')}} {{__('blublog.ip')}}</a></td>
-                        @endif
+                        </td>
+                        @else
+                        <td></td>
+                        @endcan
+
+                        @can('ban', $comment)
+                        <td><a href="{{ route('blublog.comments.ban', $comment->id) }}" class="btn btn-outline-danger btn-block" role="button">{{__('blublog.ban')}} {{__('blublog.ip')}}</a></td>
+                        @else
+                        <td></td>
+                        @endcan
                         </tr>
 
                         @endforeach
@@ -78,14 +97,14 @@
 
 @include('blublog::panel.partials._searchjs')
 <script>
-function show_files(files){
+function show_comments(comments){
     let panel = document.getElementById("results");
     remove_all_child(panel);
 
-    for (let i =0; i<files.length ; i++){
-        let link = "{{ url('/'). "/". blublog_setting('panel_prefix') }}" + "/comments/" + files[i].id + "/edit";
+    for (let i =0; i<comments.length ; i++){
+        let link = "{{ url('/'). "/". blublog_setting('panel_prefix') }}" + "/comments/" + comments[i].id + "/edit";
         let li = document.createElement("li");
-        li.innerHTML= '<a href="'  + link + '">' + files[i].name + '</a><br>' + files[i].body;
+        li.innerHTML= '<a href="'  + link + '">' + comments[i].name + '</a><br>' + comments[i].body;
         li.className="list-group-item";
         panel.appendChild(li);
     }

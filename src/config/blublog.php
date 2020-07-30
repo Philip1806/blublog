@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.3 ALPHA",
+    'version' => "0.9.4 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",

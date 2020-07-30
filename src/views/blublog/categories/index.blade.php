@@ -11,13 +11,13 @@
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 @if (isset($category->img))
-<meta name="og:image" property="og:image" content="{{url('/uploads/categories/')}}/{{$category->img}}" />
+<meta name="og:image" property="og:image" content="{{$category->img_url}}" />
 @endif
 <meta name="og:title" property="og:title" content="Category: {{ $category->title }}">
 <meta name="og:description" property="og:description" content="{{ $category->descr }}">
 <meta name="og:site_name" property="og:site_name" content="{!!blublog_setting('site_name')!!}" >
 <meta name="og:url" property="og:url" content="{{ url('/') }}/categories/{{ $category->slug }}" />
-<meta name="og:locale" property="og:locale" content="bg_BG" />
+<meta name="og:locale" property="og:locale" content="en_EN" />
 <meta name="robots" content="index, follow">
 @endsection
 
@@ -41,7 +41,7 @@
     </div>
 <style>
 .jumbotron {
-    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{{url('/uploads/categories/')}}/{{$category->img}}");
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{{$category->img_url}}");
     background-size: cover;
     background-repeat: no-repeat;
     border-color: {{$category->colorcode}};

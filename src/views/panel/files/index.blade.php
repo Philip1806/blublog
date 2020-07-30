@@ -54,9 +54,9 @@
             <td>{{ $file->filename }}</td>
             <td><a href="{{ route('blublog.files.download', $file->id) }}" class="btn btn-primary btn-block" role="button">{{__('blublog.download')}}</a></td>
             <td>
-            {!! Form::open(['route' => ['blublog.files.destroy', $file->id], 'method' => 'DELETE']) !!}
-            {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
-            {!! Form::close() !!}
+                {!! Form::open(['route' => ['blublog.files.destroy', $file->id], 'method' => 'DELETE']) !!}
+                {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
+                {!! Form::close() !!}
             </td>
             </tr>
             @endforeach
@@ -65,7 +65,7 @@
     {!! $files->links(); !!}
     <hr>
     @else
-    <center> <b>{{ __('blublog.no_results')}}</b> </center>
+    <div class="mb-5 mt-5 text-center"><h1>{{ __('blublog.no_results')}}</h1> </div>
     @endif
 </div>
 @include('blublog::panel.partials._searchjs')

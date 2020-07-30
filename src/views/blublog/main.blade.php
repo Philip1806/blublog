@@ -27,7 +27,7 @@
          {{ Session::get('error') }}
         </div>
         @endif
-        <div class="row">
+        <div class="mb-4 row">
             @yield('content')
         </div>
         @yield('similar_posts')

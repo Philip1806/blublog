@@ -12,8 +12,8 @@
                 {{ Form::text('name', null, ['class' => 'form-control']) }}
                 {{ Form::label('email', 'E-Mail Address*') }}
                 {{ Form::text('email', null, ['class' => 'form-control', 'rows' => '10']) }}
-                {{ Form::label('role', __('blublog.role')) }}
-                {{ Form::select('role', ['Author' => 'Author', 'Moderator' => 'Moderator', 'Administrator' => 'Administrator'], null ,['class' => 'form-control']) }}
+                {{ Form::label('role_id', __('blublog.role')) }}
+                {{ Form::select('role_id', $roles, null ,['class' => 'form-control']) }}
                 {{ Form::label('password', 'Password*') }}
                 {{ Form::password('password', ['class' => 'form-control']) }}
 

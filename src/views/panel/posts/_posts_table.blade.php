@@ -13,11 +13,11 @@
                 @foreach ( $posts as $post )
                 <tr>
                 <td><a href="{{ route('blublog.posts.show', $post->id) }}"  role="button" class="btn btn-outline-info btn-block ">{{__('blublog.view')}}</a></td>
-                @if (blublog_can_edit_post( $post->id,Auth::user()->id))
+                @can('update', $post)
                 <td><a  class="btn btn-outline-primary btn-block " href="{{ route('blublog.posts.edit', $post->id) }}" >{{__('blublog.edit')}}</a></td>
                 @else
                 <td></td>
-                @endif
+                @endcan
                 <td><a href="{{ route('blublog.front.post_show', $post->slug) }}" >{{ $post->title }}</a></td>
                 <td>{{ $post->user->name }}</td>
                 <td>

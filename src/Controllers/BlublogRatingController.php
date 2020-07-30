@@ -1,8 +1,7 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
-use Illuminate\Support\Facades\View;
-use Illuminate\Http\Request;
+use Blublog\Blublog\Models\BlublogUser;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Rate;
 use Blublog\Blublog\Models\Post;
@@ -12,6 +11,7 @@ class BlublogRatingController extends Controller
 {
     public function index()
     {
+        BlublogUser::check_access('rating', Post::class);
         $ratings = Rate::latest()->paginate(10);
 
         if($ratings){
@@ -26,6 +26,7 @@ class BlublogRatingController extends Controller
 
     public function duplicate($id)
     {
+        BlublogUser::check_access('rating', Post::class);
         $current = Rate::find($id);
         if($current){
             $rating = new Rate;
@@ -41,6 +42,7 @@ class BlublogRatingController extends Controller
 
     public function destroy($id)
     {
+        BlublogUser::check_access('rating', Post::class);
         $rating = Rate::find($id);
         if($rating){
             $rating->delete();

@@ -7,6 +7,7 @@ use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Log;
 use Session;
 use Carbon\Carbon;
+use Auth;
 
 class Comment extends Model
 {
@@ -19,9 +20,9 @@ class Comment extends Model
     {
         return $this->hasMany(Comment::class, 'parent_id');
     }
-    public function posts()
+    public function post()
     {
-        return $this->morphedByMany(Post::class, 'commentable');
+        return $this->belongsTo(Post::class, 'commentable_id');
     }
     public static function addcomment($request, $ip, $notpublic = 1)
     {
@@ -51,6 +52,9 @@ class Comment extends Model
                 } else {
                     Session::flash('success',  __('blublog.comment_added'));
                 }
+            }
+            if(Auth::check()){
+                $comment->author_id = Auth::user()->id;
             }
             $comment->body = $request->get('comment_body');
             $comment->parent_id = $request->get('comment_id');

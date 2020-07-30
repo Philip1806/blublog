@@ -3,7 +3,9 @@ namespace Blublog\Blublog;
 
 use Closure;
 use Blublog\Blublog\Models\BlublogUser;
-class BlublogMod
+use Auth;
+
+class BlublogUseMenu
 {
     /**
      * Handle an incoming request.
@@ -15,16 +17,15 @@ class BlublogMod
     public function handle($request, Closure $next)
     {
 
-        $user = BlublogUser::where([
-            ['user_id', '=', $request->user()->id],
+        $Blublog_User = BlublogUser::where([
+            ['user_id', '=', Auth::user()->id],
         ])->first();
-
-        if(isset($user->role)){
-            if($user->role === "Administrator" or $user->role === "Moderator" ){
-                return $next($request);
-            }
+        if(!$Blublog_User){
+            abort(403);
         }
-
+        if($Blublog_User->user_role->use_menu){
+            return $next($request);
+        }
         return abort(403);
     }
 }

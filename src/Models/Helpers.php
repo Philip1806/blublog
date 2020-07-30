@@ -43,6 +43,20 @@ if (! function_exists('blublog_get_upload_url')) {
         return Storage::disk(config('blublog.files_disk', 'blublog'))->url('');
     }
 }
+if (! function_exists('blublog_get_view_path')) {
+    function blublog_get_view_path($viewname)
+    {
+        $path = "blublog::" . blublog_setting('theme') . "." . $viewname;
+        $def_path = "blublog::blublog." . $viewname;
+        if(view()->exists($path)){
+            return $path;
+        } elseif (view()->exists($def_path)) {
+            return $def_path;
+        } else {
+            abort(403, "View ". $viewname ." not found.");
+        }
+    }
+}
 if (! function_exists('blublog_main_menu')) {
     function blublog_main_menu()
     {
@@ -103,37 +117,12 @@ if (! function_exists('blublog_draw_menu')) {
 
     }
 }
-if (! function_exists('blublog_can_edit_post')) {
-    function blublog_can_edit_post($post_id, $user_id)
-    {
-        $post = Post::find($post_id);
-        $Blublog_User = BlublogUser::where([
-            ['user_id', '=', $user_id],
-        ])->first();
-        if(!$Blublog_User){
-            return false;
-        }
-        if($Blublog_User->role == "Administrator" or $Blublog_User->role == "Moderator"){
-            return true;
-        }
-        if($user_id == $post->user_id){
-            return true;
-        }
-        return false;
-
-    }
-}
 if (! function_exists('blublog_is_admin')) {
     function blublog_is_admin()
     {
         if(auth()->check()){
-            $Blublog_User = BlublogUser::where([
-                ['user_id', '=', Auth::user()->id],
-            ])->first();
-            if(!$Blublog_User){
-                return false;
-            }
-            if( $Blublog_User->role == "Administrator"){
+            $Blublog_User = BlublogUser::get_user(Auth::user());
+            if($Blublog_User->user_role->is_admin){
                 return true;
             }
             return false;
@@ -147,13 +136,8 @@ if (! function_exists('blublog_is_mod')) {
     function blublog_is_mod()
     {
         if(auth()->check()){
-            $Blublog_User = BlublogUser::where([
-                ['user_id', '=', Auth::user()->id],
-            ])->first();
-            if(!$Blublog_User){
-                return false;
-            }
-            if( $Blublog_User->role == "Administrator" or $Blublog_User->role == "Moderator"){
+            $Blublog_User = BlublogUser::get_user(Auth::user());
+            if( $Blublog_User->user_role->is_mod  or $Blublog_User->user_role->is_admin){
                 return true;
             }
             return false;

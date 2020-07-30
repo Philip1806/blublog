@@ -52,6 +52,7 @@ class CreateBlublogTables extends Migration
             $table->boolean('public')->default(0);
             $table->boolean('pinned')->default(0);
             $table->boolean('author')->default(0);
+            $table->integer('author_id')->nullable();
             $table->timestamps();
         });
         Schema::create('blublog_categories', function (Blueprint $table) {

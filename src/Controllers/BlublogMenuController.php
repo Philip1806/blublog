@@ -1,16 +1,13 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Setting;
-use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Menu;
 use Blublog\Blublog\Models\MenuItem;
-use App\User;
+use Illuminate\Support\Facades\Gate;
 use Session;
 
 class BlublogMenuController extends Controller

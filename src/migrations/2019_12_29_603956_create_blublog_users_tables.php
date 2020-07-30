@@ -18,7 +18,7 @@ class CreateBlublogUsersTables extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('full_name', 150)->nullable();
             $table->string('descr', 250)->nullable();
-            $table->string('role', 100);
+            $table->unsignedBigInteger('role_id');
             $table->timestamps();
             //$table->foreign('user_id')->references('id')->on('users');
         });

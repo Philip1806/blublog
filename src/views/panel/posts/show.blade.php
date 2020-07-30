@@ -11,48 +11,55 @@
 @endsection
 
 @section('content')
-@if (blublog_can_edit_post( $post->id,Auth::user()->id))
+@can('update', $post)
 <div class="row">
-        <div class="col-lg">
-        <a href="{{ route('blublog.posts.edit', $post->id) }}" class="btn btn-warning btn-block">{{__('blublog.edit')}}</a>
-        </div>
-        <div class="col-lg">
-                {!! Form::open(['route' => ['blublog.posts.destroy', $post->id], 'method' => 'DELETE']) !!}
-                {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
-                {!! Form::close() !!}
-        </div>
-        <div class="col-lg">
-        <a href="{{ route('blublog.front.post_show', $post->slug) }}" class="btn btn-success btn-block">{{__('blublog.view_frontend')}}</a>
-        </div>
-        <div class="col-lg">
-            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ModalLong">
-            {{__('blublog.views')}} ({{$post->views()->count()}})
-            </button>
-            <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="ModalLongTitle">{{__('blublog.views')}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                            </button>
+    <div class="col-lg">
+    <a href="{{ route('blublog.posts.edit', $post->id) }}" class="btn btn-warning btn-block">{{__('blublog.edit')}}</a>
+    </div>
+    @can('delete', $post)
+    <div class="col-lg">
+            {!! Form::open(['route' => ['blublog.posts.destroy', $post->id], 'method' => 'DELETE']) !!}
+            {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
+            {!! Form::close() !!}
+    </div>
+    @endcan
+    <div class="col-lg">
+    <a href="{{ route('blublog.front.post_show', $post->slug) }}" class="btn btn-success btn-block">{{__('blublog.view_frontend')}}</a>
+    </div>
+    @can('view_stats', $post)
+    <div class="col-lg">
+        <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ModalLong">
+        {{__('blublog.views')}} ({{$post->views()->count()}})
+        </button>
+        <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLongTitle">{{__('blublog.views')}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @foreach ($post->views()->latest()->get() as $view)
+                        <div class="alert alert-info" role="alert">
+                        {{$view->ip}} | <i>{{$view->agent}}</i> | <b> {{$view->created_at}}</b>
                         </div>
-                        <div class="modal-body">
-                            @foreach ($post->views()->latest()->get() as $view)
-                            <div class="alert alert-info" role="alert">
-                            {{$view->ip}} | <i>{{$view->agent}}</i> | <b> {{$view->created_at}}</b>
-                            </div>
-                            @endforeach
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
+                        @endforeach
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    @endcan
 </div>
-@endif
+@endcan
+
+
+
 <br>
 <div class="row">
     <div class="col-xl-5 col-lg-6">

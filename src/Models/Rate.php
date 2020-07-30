@@ -8,5 +8,4 @@ class Rate extends Model
 {
     protected $table = 'blublog_posts_ratings';
 
-
 }

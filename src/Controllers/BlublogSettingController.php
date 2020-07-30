@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Setting;
 use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\Role;
 use Illuminate\Support\Facades\Cache;
 use Session;
 
@@ -102,6 +103,55 @@ class BlublogSettingController extends Controller
             ['type', '=', 'bot'],
         ])->latest()->paginate(15);
         return view('blublog::panel.logs.index')->with('error_logs', $error_logs)->with('visit_logs', $visit_logs)->with('info_logs', $info_logs)->with('bot_logs', $bot_logs)->with('alert_logs', $alert_logs);
+    }
+    public function roles()
+    {
+        $posts = array(
+            'create_posts','update_own_posts','delete_own_posts','view_stats_own_posts',
+            'update_all_posts','delete_all_posts','view_stats_all_posts','posts_wait_for_approve','control_post_rating',
+        );
+        $comments = array(
+            'create_comments','moderate_comments_from_own_posts','moderate_own_comments','update_all_comments',
+            'delete_all_comments','approve_comments_from_own_posts','approve_all_comments','ban_user_from_commenting',
+        );
+        $tags_cat_pages = array(
+            'create_tags','moderate_tags_created_within_set_time','update_all_tags','delete_all_tags',
+            'view_categories','create_categories','update_categories','delete_categories','view_pages',
+            'create_pages','update_pages','delete_pages'
+            );
+        $others = array(
+            'create_users','update_own_user','update_all_users',
+            'delete_users','change_settings','upload_files','delete_own_files','delete_all_files','use_menu',
+            'is_mod', 'is_admin'
+            );
+        $roles = Role::get();
+        foreach($roles as $role){
+            $role->posts = $posts;
+            $role->comments = $comments;
+            $role->tags_cat_pages = $tags_cat_pages;
+            $role->others = $others;
+        }
+        return view('blublog::panel.settings.roles')->with('roles', $roles);
+    }
+    public function role(Request $request)
+    {
+        if($request->role_id == 'new'){
+            Role::add_new($request->all());
+            Session::flash('success', __('blublog.contentcreate'));
+        }
+        $role = Role::find($request->role_id);
+        if($role){
+            if($role->id == 1){
+                Session::flash('error', __('blublog.role_admin_change'));
+                return redirect()->back();
+            }
+            Role::edit($role, $request->all());
+            Session::flash('success', __('blublog.contentupdate'));
+            return redirect()->back();
+        }
+        Log::add($request, "alert", __('blublog.404') );
+        Session::flash('error', __('blublog.404'));
+        return redirect()->back();
     }
     public function general_settings()
     {

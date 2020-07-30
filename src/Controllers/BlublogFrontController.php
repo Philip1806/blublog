@@ -30,7 +30,6 @@ class BlublogFrontController extends Controller
         } else {
             $categories = Cache::get('blublog.categories');
         }
-        $categories = Category::get();
         View::share('categories', $categories );
         $ip = Post::getIp();
         if($ip != blublog_setting('ignore_ip')){
@@ -71,7 +70,7 @@ class BlublogFrontController extends Controller
 
         $path = "blublog::" . blublog_setting('theme') . ".index";
 
-        return view($path)->with('posts', $posts)->with('front_page_posts', $front_page_posts);
+        return view(blublog_get_view_path("index"))->with('posts', $posts)->with('front_page_posts', $front_page_posts);
     }
     public function author($name)
     {
@@ -93,8 +92,7 @@ class BlublogFrontController extends Controller
         } else {
             $posts = Cache::get('blublog.author'. $name);
         }
-        $path = "blublog::" . blublog_setting('theme') . ".author";
-        return view($path)->with('posts', $posts);
+        return view(blublog_get_view_path("author"))->with('posts', $posts);
     }
     public function page($slug)
     {
@@ -110,8 +108,7 @@ class BlublogFrontController extends Controller
         } else {
             $page = Cache::get('blublog.page.'. $slug);
         }
-        $path = "blublog::" . blublog_setting('theme') . ".pages.show";
-        return view($path)->with('page', $page);
+        return view(blublog_get_view_path("pages.show"))->with('page', $page);
     }
     public function search(Request $request)
     {
@@ -187,12 +184,12 @@ class BlublogFrontController extends Controller
             if(!$category){
                 abort(404);
             }
+            $category->img_url = Category::get_img_url($category->img);
             Cache::put('blublog.category.'. $slug .'page'.$page, $category,  now()->addMinutes(config('blublog.setting_cache')));
         } else {
             $category = Cache::get('blublog.category.'. $slug .'page'.$page);
         }
-        $path = "blublog::" . blublog_setting('theme') . ".categories.index";
-        return view($path)->with('category', $category);
+        return view(blublog_get_view_path("categories.index"))->with('category', $category);
     }
     public function tag_show($slug)
     {
@@ -206,8 +203,7 @@ class BlublogFrontController extends Controller
         } else {
             $tag = Cache::get('blublog.tag.'. $slug. 'page'.$page);
         }
-        $path = "blublog::" . blublog_setting('theme') . ".tags.index";
-        return view($path)->with('tag', $tag);
+        return view(blublog_get_view_path("tags.index"))->with('tag', $tag);
     }
     public function post_show($slug)
     {
@@ -250,8 +246,7 @@ class BlublogFrontController extends Controller
             $comments = Cache::get('blublog.comments.'. $slug);
         }
 
-        $path = "blublog::" . blublog_setting('theme') . ".posts.show";
-        return view($path)->with('post', $post)->with('comments', $comments);
+        return view(blublog_get_view_path("posts.show"))->with('post', $post)->with('comments', $comments);
     }
     public function comment_store(Request $request)
     {

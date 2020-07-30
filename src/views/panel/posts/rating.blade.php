@@ -11,7 +11,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">{{ __('blublog.rating') }}</th>
-                <th scope="col">{{ __('blublog.Post') }}</th>
+                <th scope="col">{{ __('blublog.post') }}</th>
                 <th scope="col">{{ __('blublog.date') }}</th>
                 <th scope="col">{{ __('blublog.ip') }}</th>
                 <th scope="col">{{ __('blublog.new_copy') }}</th>

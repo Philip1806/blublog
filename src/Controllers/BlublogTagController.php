@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Models\Log;
+use Blublog\Blublog\Models\BlublogUser;
 use Session;
 
 class BlublogTagController extends Controller
@@ -19,6 +20,7 @@ class BlublogTagController extends Controller
     }
     public function store(Request $request)
     {
+        BlublogUser::check_access('create', Tag::class);
         $rules = [
             'title' => 'required|max:200',
         ];
@@ -44,6 +46,7 @@ class BlublogTagController extends Controller
      */
     public function edit($id)
     {
+        BlublogUser::check_access('update', Tag::class);
         $tag = Tag::find($id);
         return view('blublog::panel.tags.edit')->with('tag', $tag);
     }
@@ -56,6 +59,7 @@ class BlublogTagController extends Controller
      */
     public function update(Request $request, $id)
     {
+        BlublogUser::check_access('update', Tag::class);
         $rules = [
             'title' => 'required|max:255',
             'slug' => 'required|max:255',
@@ -63,7 +67,6 @@ class BlublogTagController extends Controller
         $this->validate($request, $rules);
 
         $tag = Tag::find($id);
-
         $tag->title = $request->title;
         $tag->slug = $request->slug;
         $tag->descr = $request->descr;
@@ -75,6 +78,7 @@ class BlublogTagController extends Controller
 
     public function destroy ($id)
     {
+        BlublogUser::check_access('delete', Tag::class);
         $tag = Tag::find($id);
         if($tag){
             $tag->posts()->detach();

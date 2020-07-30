@@ -5,6 +5,7 @@ namespace   Blublog\Blublog\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Models\Category;
@@ -12,6 +13,7 @@ use Blublog\Blublog\Models\File;
 use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Rate;
 use Blublog\Blublog\Models\Comment;
+use Blublog\Blublog\Models\BlublogUser;
 use Carbon\Carbon;
 use Session;
 use Auth;
@@ -49,6 +51,7 @@ class BlublogPostsController extends Controller
             Session::flash('error', __('blublog.gd_not_installed'));
             return redirect()->back();
         }
+        BlublogUser::check_access('create', Post::class);
         $tags = Tag::latest()->get();
         $categories = Category::latest()->get();
         $date =  Carbon::now()->format('d/m/Y');
@@ -64,13 +67,16 @@ class BlublogPostsController extends Controller
     */
     public function show($id)
     {
-        $post = Post::getpost($id,Auth::user()->id);
+        $post = Post::getpost($id);
+        BlublogUser::check_access('view', $post);
+
         return view('blublog::panel.posts.show')->with('post', $post);
 
     }
     public function edit($id)
     {
-        $post = Post::getpost($id,Auth::user()->id);
+        $post = Post::getpost($id);
+        BlublogUser::check_access('update', $post);
         $date =  Carbon::now()->format('d/m/Y');
         $tags = Tag::all();
         $tags2 = array();
@@ -88,6 +94,7 @@ class BlublogPostsController extends Controller
     }
     public function store(Request $request)
     {
+        BlublogUser::check_access('create',Post::class);
         $rules = [
             'title' => 'required|max:250',
             'categories' => 'required',
@@ -153,7 +160,9 @@ class BlublogPostsController extends Controller
         $post->save();
         $post->tags()->sync($request->tags, false);
         $post->categories()->sync($request->categories, false);
-
+        if($post->status == "publish"){
+            Cache::flush();
+        }
         Session::flash('success', __('blublog.contentcreate'));
         return redirect()->route('blublog.posts.show', $post->id);
     }
@@ -168,9 +177,7 @@ class BlublogPostsController extends Controller
         ];
         $this->validate($request, $rules);
         $post = Post::find($id);
-        if(!blublog_can_edit_post( $post->id,Auth::user()->id)){
-            abort(403);
-        }
+        BlublogUser::check_access('update', $post);
         if($request->file){
             if($post->img != "no-img.png"){
                 //The post had a image before. Delete the old ones.
@@ -250,10 +257,8 @@ class BlublogPostsController extends Controller
         return redirect()->route('blublog.posts.show', $post->id);
     }
     public function destroy($id){
-        $post =Post::find($id);
-        if(!blublog_can_edit_post( $post->id,Auth::user()->id)){
-            abort(403);
-        }
+        $post = Post::find($id);
+        BlublogUser::check_access('delete', $post);
         $views = Rate::where([
         ['post_id', '=', $post->id],
         ])->get();

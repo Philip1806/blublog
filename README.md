@@ -7,6 +7,11 @@ URL address of the panel and blog can be changed in config file.
 
 Front end demo and documentation at http://demo.blublog.info/blog
 
+## Important Notice
+Your app must have a laravel/ui or the same authentication with User model in App folder that have property "name".
+BLUblog imports users from that User model to BlublogUser model and gives them other properties independent of your application. If logged in user is not imported to BlublogUser, they will not have access to the panel.
+For some cases that could be a good thing or a bad thing.
+
 ## Instaling
 The package requires three other packages - intervention image, laravelcollective/html and laravel/ui.
 You can install them with:
@@ -81,9 +86,7 @@ By default you can access the blog from /blog and panel from /panel.
 5. Users
 - Import users from Laravel UI.
 - They are three roles - Administrator, Moderator and Author.
-- Authors can edit and delete only their own posts. Can create tags and upload files.
-- Moderator can edit and delete all posts, tags, comments and categories.
-- Administrator have full access with control over users, menu, site settings, logs and others.
+- You can control roles permissions and create new roles.
 
 6. File manager
 - Upload files that are public and hiden.

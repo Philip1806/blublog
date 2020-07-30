@@ -2,6 +2,7 @@
 
 namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,7 +10,9 @@ use Blublog\Blublog\Models\File;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Log;
+use Blublog\Blublog\Models\BlublogUser;
 use Session;
+use Auth;
 
 class BlublogFileController extends Controller
 {
@@ -17,13 +20,14 @@ class BlublogFileController extends Controller
 
     public function download($id)
     {
+        BlublogUser::check_access('upload', File::class);
         $file = File::find($id);
-
         if(!$file){
             abort(404);
         }
         if ($file->public) {
-            return response()->download(public_path('uploads/' .  $file->filename));
+            $dir = Storage::disk(config('blublog.files_disk', 'blublog'))->getDriver()->getAdapter()->getPathPrefix();
+            return response()->download($dir.  $file->filename);
         }  else {
             return response()->download(storage_path('app/' .  $file->filename));
         }
@@ -32,15 +36,24 @@ class BlublogFileController extends Controller
 
     public function index()
     {
-        $files = File::latest()->paginate(10);
+        BlublogUser::check_access('upload', File::class);
+        if(Gate::allows('can_delete_all_files')){
+            $files = File::latest()->paginate(10);
+        } else {
+            $files = File::where([
+                ['user_id', '=', Auth::user()->id],
+            ])->latest()->paginate(10);
+        }
         foreach($files as $file){
             $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url( $file->filename);
+            $file->own = File::its_uploated_by_user($file, Auth::user()->id);
         }
         return view('blublog::panel.files.index')->with('files', $files);
     }
 
     public function create()
     {
+        BlublogUser::check_access('upload', File::class);
         $filesize = ini_get('post_max_size');
 
         return view('blublog::panel.files.create')->with('filesize', $filesize);
@@ -48,6 +61,7 @@ class BlublogFileController extends Controller
 
     public function store(Request $request)
     {
+        BlublogUser::check_access('upload', File::class);
         $rules = [
             'descr' => 'required',
             'file' => 'required',
@@ -66,32 +80,34 @@ class BlublogFileController extends Controller
             $saved = Storage::disk('local')->putFileAs('files', $request->file, $address);
             $file->public = false;
         }
-
         if(!$saved){
             Session::flash('error', __('blublog.error_uploading'));
             Log::add($request->all(), "error", __('blublog.error_uploading') );
             return redirect()->route('blublog.files.index');
         }
-
+        $file->user_id = Auth::user()->id;
         $file->size = $size;
         $file->descr = $request->descr;
         $file->filename = 'files/' . $address;
         $file->save();
-        Log::add($request->all(), "info", __('blublog.file_added') );
+        Log::add($request, "info", __('blublog.file_added') );
         Session::flash('success', __('blublog.file_added'));
-        return redirect()->route('blublog.files.index');
+        return redirect()->back();
     }
 
     public function destroy($id)
     {
-
-
+        BlublogUser::check_access('delete', File::class);
         $file = File::find($id);
         if(!$file){
             Session::flash('error', __('panel.content_does_not_found'));
             return redirect()->route('blublog.files.index');
         }
-
+        if(!File::its_uploated_by_user($file, Auth::user()->id)){
+            Session::flash('error', __('blublog.403'));
+            Log::add($id, "error", __('blublog.403') );
+            return redirect()->back();
+        }
         $filename = File::remove_directory($file->filename);
         $post = Post::with_filename($filename);
         $category = Category::with_filename($filename);

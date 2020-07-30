@@ -7,6 +7,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\Post;
 use Session;
+use Auth;
 
 class File extends Model
 {
@@ -22,13 +23,37 @@ class File extends Model
     {
         return substr($dir_and_filename, strpos($dir_and_filename, "/") + 1);
     }
+    public static function its_uploated_by_user($file, $user_id)
+    {
+        $Blublog_User = BlublogUser::where([
+            ['user_id', '=', $user_id],
+        ])->first();
+        if(!$Blublog_User){
+            return false;
+        }
+        if($Blublog_User->role == "Administrator" or $Blublog_User->role == "Moderator"){
+            return true;
+        }
+        if($user_id == $file->user_id){
+            return true;
+        }
+        return false;
 
+    }
     public static function get_url($files)
     {
         foreach($files as $file){
             $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url( $file->filename);
         }
         return $files;
+    }
+    public static function get_category_img_file($img)
+    {
+        $path = 'categories/' . $img;
+        $img_file = File::where([
+            ['filename', '=', $path],
+        ])->first();
+        return $img_file;
     }
 
     public static function img_thumbnail($file, $path)
@@ -63,6 +88,7 @@ class File extends Model
         $file->size = $size;
         $file->descr =  "'". $request->title . "'". __('blublog.post_image');
         $file->filename = 'posts/' . $address;
+        $file->user_id = Auth::user()->id;
         $file->save();
 
         // thumbnail
@@ -73,6 +99,26 @@ class File extends Model
         $blur_thumbnail_file =File::img_blurthumbnail($request->file('file'), $path);
         Post::check_if_files_uploaded($main_file,$thumbnail_file,$blur_thumbnail_file);
         return $address;
+    }
+    public static function handle_img_upload_from_category($request)
+    {
+        $size = File::get_file_size($request->file);
+        $numb = rand(99, 9999);
+        $address =  $numb . $request->file->getClientOriginalName();
+        $file_uploated = Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('categories', $request->file, $address);
+
+        if($file_uploated){
+            $file = new File;
+            $file->size = $size;
+            $file->descr = __('files.image_for_category') . $request->title;
+            $file->filename = 'categories/' . $address;
+            $file->save();
+            return $address;
+        } else {
+            Log::add($request, "error", __('blublog.error_uploading'));
+            return null;
+        }
+
     }
 
     public static function only_img($files)
@@ -98,7 +144,6 @@ class File extends Model
 
     }
 
-    // input $request->file
     public static function get_file_size($file)
     {
         //GET THE SIZE OF FILE

@@ -5,6 +5,7 @@ namespace Blublog\Blublog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Category;
+use Illuminate\Support\Facades\Storage;
 
 class Category extends Model
 {
@@ -18,6 +19,10 @@ class Category extends Model
     public static function with_filename($filename)
     {
         return Category::where('img', 'LIKE', '%' . $filename . '%')->first();
+    }
+    public static function get_img_url($img)
+    {
+        return Storage::disk(config('blublog.files_disk', 'blublog'))->url('categories/' . $img);;
     }
     public static function by_slug($slug)
     {

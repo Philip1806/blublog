@@ -16,8 +16,8 @@
         {{ Form::label('descr', 'Описание:') }}
         {{ Form::text('descr', null, ['class' => 'form-control']) }}
 
-        {{ Form::label('role', 'Роля:') }}
-        {{ Form::select('role', ['Author' => 'Author', 'Moderator' => 'Moderator', 'Administrator' => 'Administrator'], null ,['class' => 'form-control']) }}
+        {{ Form::label('role_id', 'Роля:') }}
+        {{ Form::select('role_id', $user->all_roles, null ,['class' => 'form-control']) }}
 
         {{ Form::label('newpassword', 'Нова парола:') }}
         {{ Form::text('newpassword', null, ['class' => 'form-control']) }}<br>

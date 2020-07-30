@@ -3,7 +3,8 @@ namespace Blublog\Blublog;
 
 use Closure;
 use Blublog\Blublog\Models\BlublogUser;
-class BlublogAdmin
+
+class BlublogPanel
 {
     /**
      * Handle an incoming request.
@@ -14,13 +15,16 @@ class BlublogAdmin
      */
     public function handle($request, Closure $next)
     {
-
-        $user = BlublogUser::where([
-            ['user_id', '=', $request->user()->id],
-        ])->first();
-        if($user->user_role->is_admin){
-            return $next($request);
+        if($request->user()){
+            $user = BlublogUser::where([
+                ['user_id', '=', $request->user()->id],
+            ])->first();
+            if($user){
+                return $next($request);
+            }
+            return abort(403);
         }
-        return abort(403);
+
+        return abort(404);
     }
 }

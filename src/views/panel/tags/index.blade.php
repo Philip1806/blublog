@@ -46,11 +46,14 @@
                                 <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" >{{ $tag->title }}</a></td>
                                 <td><a href="{{ route('blublog.front.tag_show', $tag->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('blublog.view')}}</a></td>
                                 <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" class="btn btn-outline-warning btn-block">{{__('blublog.edit')}}</a></td>
+                                @if (blublog_is_admin() or blublog_is_mod())
                                 <td>
                                 {!! Form::open(['route' => ['blublog.tags.destroy', $tag->id], 'method' => 'DELETE']) !!}
                                 {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
                                 {!! Form::close() !!}
                                 </td>
+                                @endif
+
                         </tr>
                         @endforeach
 

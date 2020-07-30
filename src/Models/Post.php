@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Blublog\Blublog\Models\Rate;
 use Blublog\Blublog\Models\PostsViews;
 use Session;
+use Auth;
+
 class Post extends Model
 {
     protected $table = 'blublog_posts';
@@ -318,7 +320,7 @@ class Post extends Model
 
         @return mixed
     */
-    public static function getpost($post_id, $user_id = false)
+    public static function getpost($post_id)
     {
         $post = Post::find($post_id);
         $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
@@ -326,16 +328,6 @@ class Post extends Model
         if(!$post){
             return abort(404);
         }
-        if($user_id){
-            if($post->status == "private" and  $user_id != $post->user_id){
-                return abort(404);
-            }
-        } else {
-            if($post->status != "publish"){
-                return abort(404);
-            }
-        }
-
         return $post;
     }
     //Post::img_used_by_other_post($id)
