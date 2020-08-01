@@ -1,10 +1,11 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
-use Illuminate\Support\Facades\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Page;
 use Blublog\Blublog\Models\Category;
@@ -14,7 +15,6 @@ use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Models\Ban;
 use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\PostsViews;
-use App\User;
 use Carbon\Carbon;
 use Session;
 
@@ -75,16 +75,13 @@ class BlublogFrontController extends Controller
     public function author($name)
     {
         if (!Cache::has('blublog.author'. $name)){
-            $user = User::where([
+            $user = BlublogUser::where([
                 ['name', '=', $name],
             ])->first();
             if(!$user){
                 abort(404);
             }
-            $posts = Post::where([
-                ['user_id', '=', $user->id],
-                ['status', '=', "publish"],
-            ])->latest()->paginate(10);
+            $posts = $user->posts()->where('status', '=', "publish")->paginate(10);
             $posts = Post::processing($posts);
             $posts->author = $user;
 
@@ -224,6 +221,7 @@ class BlublogFrontController extends Controller
             $post->similar_posts =  Post::processing(Post::public(Post::similar_posts($post->id)));
             $post->total_views = $post->views->count();
             $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
+            $post->author_name = Post::author_name($post);
             Cache::put('blublog.post.'. $slug, $post);
 
         } else {

@@ -122,6 +122,7 @@ Route::group(
             Route::post('/users/add', 'BlublogUserController@add')->name('blublog.users.add');
             Route::get('/users/create', 'BlublogUserController@create')->name('blublog.users.create');
             Route::get('/users', 'BlublogUserController@index')->name('blublog.users.index');
+            Route::get('/profile', 'BlublogUserController@profile')->name('blublog.users.profile');
             Route::resource('/users', 'BlublogUserController', [
                 'as' => 'blublog'
             ])->only([

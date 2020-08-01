@@ -91,13 +91,9 @@ class BlublogSetUp extends Command
 
         $users = User::get();
         foreach ($users as $user){
-            $Blublog_User = new BlublogUser;
-            $Blublog_User->user_id = $user->id;
-            $Blublog_User->role_id = 1;
-            $Blublog_User->save();
+            BlublogUser::add($user, 1);
         }
 
-        BlublogUser::first();
         $category = new Category;
         $category->title = "BLUblog";
         $category->descr = "First category. You can edit it or delete it.";
@@ -106,7 +102,7 @@ class BlublogSetUp extends Command
         $category->save();
 
         $post = new Post;
-        $post->user_id = BlublogUser::first()->user_id;
+        $post->user_id = BlublogUser::first()->id;
         $post->title = "Welcome to BLUblog!";
         $post->img = "no-img.png";
         $post->seo_title = "Welcome to BLUblog!";

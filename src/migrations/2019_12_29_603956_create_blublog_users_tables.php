@@ -16,7 +16,10 @@ class CreateBlublogUsersTables extends Migration
         Schema::create('blublog_users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->string('full_name', 150)->nullable();
+            $table->string('name', 150);
+            $table->string('email', 250)->nullable();
+            $table->string('full_name', 250)->nullable();
+            $table->string('img_url', 255)->nullable();
             $table->string('descr', 250)->nullable();
             $table->unsignedBigInteger('role_id');
             $table->timestamps();

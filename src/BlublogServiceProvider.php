@@ -54,7 +54,8 @@ class BlublogServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/public' => public_path('/'),
             __DIR__.'/views/blublog' => base_path('resources/views/vendor/blublog/blublog'),
-        ], 'public');
+            __DIR__.'/lang' => base_path('resources/lang/en/'),
+        ]);
         $this->commands($this->commands);
         $file = __DIR__ . '/Models/Helpers.php';
         if (file_exists($file)) {
@@ -88,9 +89,12 @@ class BlublogServiceProvider extends ServiceProvider
             }
             return false;
         });
-        Gate::define('blublog_edit_users', function ($user) {
+        Gate::define('blublog_edit_users', function ($user, $edit_user = false) {
             $Blublog_User = BlublogUser::get_user($user);
             if($Blublog_User->user_role->update_all_users){
+                return true;
+            }
+            if($Blublog_User->user_role->update_own_user and ($edit_user == $Blublog_User->id)){
                 return true;
             }
             return false;

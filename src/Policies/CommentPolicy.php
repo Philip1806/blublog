@@ -24,7 +24,7 @@ class CommentPolicy
         if($Blublog_User->user_role->is_admin or $Blublog_User->user_role->approve_all_comments){
             return true;
         }
-        if($user->id == $comment->post->user_id and $Blublog_User->user_role->approve_comments_from_own_posts){
+        if(blublog_get_user(1) == $comment->post->user_id and $Blublog_User->user_role->approve_comments_from_own_posts){
             return true;
         }
         return false;
@@ -44,10 +44,10 @@ class CommentPolicy
         if($Blublog_User->user_role->is_admin or $Blublog_User->user_role->update_all_comments){
             return true;
         }
-        if($user->id == $comment->post->user_id and $Blublog_User->user_role->moderate_comments_from_own_posts){
+        if(blublog_get_user(1) == $comment->post->user_id and $Blublog_User->user_role->moderate_comments_from_own_posts){
             return true;
         }
-        if($Blublog_User->user_role->moderate_own_comments and $user->id == $comment->author_id){
+        if($Blublog_User->user_role->moderate_own_comments and blublog_get_user(1) == $comment->author_id){
             return true;
         }
         return false;
@@ -67,10 +67,10 @@ class CommentPolicy
         if($Blublog_User->user_role->is_admin or $Blublog_User->user_role->delete_all_comments){
             return true;
         }
-        if($user->id == $comment->post->user_id and $Blublog_User->user_role->moderate_comments_from_own_posts){
+        if(blublog_get_user(1) == $comment->post->user_id and $Blublog_User->user_role->moderate_comments_from_own_posts){
             return true;
         }
-        if($Blublog_User->user_role->moderate_own_comments and $user->id == $comment->author_id){
+        if($Blublog_User->user_role->moderate_own_comments and blublog_get_user(1) == $comment->author_id){
             return true;
         }
         return false;

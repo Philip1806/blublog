@@ -69,7 +69,7 @@ class BlublogPostsController extends Controller
     {
         $post = Post::getpost($id);
         BlublogUser::check_access('view', $post);
-
+        $post->rating_votes = Post::rating_votes($post);
         return view('blublog::panel.posts.show')->with('post', $post);
 
     }
@@ -109,9 +109,9 @@ class BlublogPostsController extends Controller
         } else {
             $address = "no-img.png";
         }
-
+        $user = BlublogUser::get_user(Auth::user());
         $post = new Post;
-        $post->user_id = Auth::user()->id;
+        $post->user_id = $user->id;
         $post->img = $address;
         $post->title = $request->title;
         if($request->seo_title){
@@ -128,7 +128,7 @@ class BlublogPostsController extends Controller
         $post->content = $request->content;
         $post->excerpt = $request->excerpt;
         $post->slug = Post::makeslug($request->title);
-        $post->status = $request->status;
+        $post->status = Post::output_post_status($request->status);
         if($request->front){
             $post->front = true;
         } else {
@@ -208,7 +208,7 @@ class BlublogPostsController extends Controller
         if($request->slug){
             $post->slug = $request->slug;
         }
-        $post->status = $request->status;
+        $post->status = Post::output_post_status($request->status);
         if($request->front){
             $post->front = true;
         } else {

@@ -34,7 +34,7 @@
                 <a href="{{ route('blublog.admin.control', 0) }}" class="btn btn-outline-primary btn-block">{{__('blublog.clear_cache')}}</a>
               </div>
             <div class="col-sm">
-                @if (!file_exists( public_path() . '/uploads/rss.xml'))
+                @if (!file_exists( public_path() . '/blublog-uploads/rss.xml'))
                 <span class="badge  btn-block badge-warning" style="margin-bottom:10px;">{{__('blublog.no_rss')}}</span>
                 @endif
             <a href="{{ route('blublog.admin.control', 1) }}" class="btn btn-outline-primary btn-block">{{__('blublog.rss_generate')}}</a>

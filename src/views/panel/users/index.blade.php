@@ -27,7 +27,7 @@
                                         <th>{{ $user->name }}</th>
                                         <td>{{ $user->user_role->name }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td><a href="{{ route('blublog.users.edit', $user->user_id) }}" class="btn btn-warning btn-block">{{__('blublog.edit')}}</a></td>
+                                        <td><a href="{{ route('blublog.users.edit', $user->id) }}" class="btn btn-warning btn-block">{{__('blublog.edit')}}</a></td>
                                         @if (Auth::user()->name != $user->name)
                                             <td>
                                                 {!! Form::open(['route' => ['blublog.users.destroy', $user->id], 'method' => 'DELETE']) !!}

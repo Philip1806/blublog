@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.4 ALPHA",
+    'version' => "0.9.4.5 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -28,6 +28,8 @@ return [
     'number_of_similar_post_type' => "int",
     'max_unaproved_comments' => "3",
     'max_unaproved_comments_type' => "int",
+    'number_of_approved_post' => "5",
+    'number_of_approved_post_type' => "int",
 
     // String Settings
     'site_name' => "BLUblog",

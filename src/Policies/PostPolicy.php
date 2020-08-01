@@ -48,7 +48,7 @@ class PostPolicy
         if($Blublog_User->user_role->is_admin or $Blublog_User->user_role->view_stats_all_posts){
             return true;
         }
-        if($user->id == $post->user_id and $Blublog_User->user_role->view_stats_own_posts){
+        if(blublog_get_user(1) == $post->user_id and $Blublog_User->user_role->view_stats_own_posts){
             return true;
         }
         return false;
@@ -64,11 +64,10 @@ class PostPolicy
     public function update(User $user, Post $post)
     {
         $Blublog_User = BlublogUser::get_user($user);
-
         if($Blublog_User->user_role->is_admin or $Blublog_User->user_role->update_all_posts){
             return true;
         }
-        if($user->id == $post->user_id and $Blublog_User->user_role->update_own_posts){
+        if(blublog_get_user(1) == $post->user_id and $Blublog_User->user_role->update_own_posts){
             return true;
         }
         return false;
@@ -81,7 +80,7 @@ class PostPolicy
         if($Blublog_User->user_role->is_admin or $Blublog_User->user_role->delete_all_posts){
             return true;
         }
-        if($user->id == $post->user_id and $Blublog_User->user_role->delete_own_posts){
+        if(blublog_get_user(1) == $post->user_id and $Blublog_User->user_role->delete_own_posts){
             return true;
         }
         return false;

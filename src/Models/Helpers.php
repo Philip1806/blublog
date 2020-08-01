@@ -132,6 +132,28 @@ if (! function_exists('blublog_is_admin')) {
 
     }
 }
+if (! function_exists('blublog_draw_stars')) {
+    function blublog_draw_stars($max)
+    {
+        $HTML = '';
+        for($i=0; $i<$max; $i++){
+            $HTML = $HTML . '<span class="oi oi-star"></span>';
+        }
+        return $HTML;
+    }
+}
+if (! function_exists('blublog_get_user')) {
+    function blublog_get_user($only_id = false)
+    {
+        $user = BlublogUser::get_user(Auth::user());
+
+        if($only_id){
+            return $user->id;
+        } else {
+            return BlublogUser::get_user(Auth::user());
+        }
+    }
+}
 if (! function_exists('blublog_is_mod')) {
     function blublog_is_mod()
     {

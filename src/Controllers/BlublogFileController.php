@@ -12,7 +12,6 @@ use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\BlublogUser;
 use Session;
-use Auth;
 
 class BlublogFileController extends Controller
 {
@@ -36,17 +35,16 @@ class BlublogFileController extends Controller
 
     public function index()
     {
-        BlublogUser::check_access('upload', File::class);
         if(Gate::allows('can_delete_all_files')){
             $files = File::latest()->paginate(10);
         } else {
             $files = File::where([
-                ['user_id', '=', Auth::user()->id],
+                ['user_id', '=', blublog_get_user(1)],
             ])->latest()->paginate(10);
         }
         foreach($files as $file){
             $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url( $file->filename);
-            $file->own = File::its_uploated_by_user($file, Auth::user()->id);
+            $file->own = File::its_uploated_by_user($file, blublog_get_user(1));
         }
         return view('blublog::panel.files.index')->with('files', $files);
     }
@@ -85,7 +83,7 @@ class BlublogFileController extends Controller
             Log::add($request->all(), "error", __('blublog.error_uploading') );
             return redirect()->route('blublog.files.index');
         }
-        $file->user_id = Auth::user()->id;
+        $file->user_id = blublog_get_user(1);
         $file->size = $size;
         $file->descr = $request->descr;
         $file->filename = 'files/' . $address;
@@ -103,7 +101,7 @@ class BlublogFileController extends Controller
             Session::flash('error', __('panel.content_does_not_found'));
             return redirect()->route('blublog.files.index');
         }
-        if(!File::its_uploated_by_user($file, Auth::user()->id)){
+        if(!File::its_uploated_by_user($file, blublog_get_user(1)) and !blublog_is_admin()){
             Session::flash('error', __('blublog.403'));
             Log::add($id, "error", __('blublog.403') );
             return redirect()->back();

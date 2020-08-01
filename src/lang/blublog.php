@@ -15,9 +15,10 @@ return [
     'general' => 'General',
     'admin' => 'Admin',
     '404' => 'The element for this action is not found. 404',
+    '403' => 'User do not have the permission for this action.',
     'admin_panel' => 'Administration',
     'welcome' => 'Welcome!',
-
+    'stats' => 'Stats',
     'update_info' => 'Update info',
     'cant_get_update_info' => 'Unable to get update information.',
     'no_updates' => 'There is no new verison of BLUblog for now.',
@@ -87,14 +88,18 @@ return [
     |--------------------------------------------------------------------------
     */
     'users' => 'Users',
+    'full_name' => 'Full name',
     'username' => 'Username',
     'addinguser' => 'Adding user',
     'adduser' => 'Add user',
+    'profile' => 'Your profile',
+    'logout' => 'Log out',
     'role' => 'Role',
     'cant_change_your_role' => 'You can not change your role. Other changes are saved.',
     'user_edited' => 'User is edited.',
+    'user_added' => 'User is added.',
     'cant_delete_your_profile' => 'Cant delete your profile.',
-    'role' => 'Role',
+    'img_url' => 'Image url',
     /*
     |--------------------------------------------------------------------------
     | Categories
@@ -146,6 +151,7 @@ return [
     | Posts
     |--------------------------------------------------------------------------
     */
+    'post' => 'Post',
     'posts_rating' => 'Posts ratings',
     'public' => 'Public',
     'draft' => 'Draft',
@@ -172,6 +178,7 @@ return [
     'seotitle' => 'Seo title',
     'seodescr' => 'Seo description',
     'autogen' => 'Its auto generated.',
+    'needs_approve' => 'Your post will wait to be approved before its public.',
     /*
     |--------------------------------------------------------------------------
     | Pages
@@ -225,7 +232,7 @@ return [
     'delete_category_img' => 'File you try to delete is related to this category. Upload new image for this category to remove the current image.',
     'error_removing' => 'File could not be removed. Check Laravel/Blublog filesystem cofiguration. ',
     'error_uploading' => 'Could not upload file. Check Laravel/Blublog filesystem cofiguration.  ',
-    'no_results' => 'No files',
+    'no_results' => 'Not found',
     /*
     |--------------------------------------------------------------------------
     | Menu
@@ -275,6 +282,17 @@ return [
     'ban_user' => 'Ban user',
     'spam' => 'Too many attempts to add comment.',
     'its_banned' => 'Already banned.',
+    /*
+    |--------------------------------------------------------------------------
+    | Roles
+    |--------------------------------------------------------------------------
+    */
+    'roles' => 'Roles',
+    'role' => 'Role',
+    'others' => 'Others',
+    'save' => 'Save',
+    'role_edit_admin' => 'You can not edit the main admin role.',
+
     /*
         FRONT
     */

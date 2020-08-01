@@ -29,7 +29,7 @@ class CreateBlublogRolesTable extends Migration
             $table->boolean('view_stats_all_posts')->default(1);
 
             $table->boolean('posts_wait_for_approve')->default(0);
-            $table->boolean('control_post_rating')->default(0);  //gate
+            $table->boolean('control_post_rating')->default(0);
 
             // comments
             $table->boolean('create_comments')->default(1);
@@ -78,8 +78,9 @@ class CreateBlublogRolesTable extends Migration
             $table->boolean('delete_all_files')->default(0);
 
             // Settings
-            $table->boolean('is_mod')->default(0);
+            $table->boolean('change_settings')->default(0);
             $table->boolean('is_admin')->default(0);
+            $table->boolean('is_mod')->default(0);
         });
     }
 

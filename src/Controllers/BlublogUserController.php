@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Models\Role;
 use Blublog\Blublog\Models\Log;
+use Blublog\Blublog\Models\Post;
 use App\User;
 use Session;
 use Auth;
@@ -21,12 +22,14 @@ class BlublogUserController extends Controller
             abort(403);
         }
         $Blublog_Users = BlublogUser::latest()->paginate(5);
-        foreach ($Blublog_Users as $Blublog_User){
-            $user = User::find($Blublog_User->user_id);
-            $Blublog_User->name = $user->name;
-            $Blublog_User->email = $user->email;
-        }
         return view('blublog::panel.users.index')->with('users', $Blublog_Users);
+    }
+    public function profile(Request $request)
+    {
+        $Blublog_User = BlublogUser::where([
+            ['user_id', '=', Auth::user()->id],
+        ])->first();
+        return view('blublog::panel.users.profile')->with('user', $Blublog_User);
     }
     public function create()
     {
@@ -52,63 +55,50 @@ class BlublogUserController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        $Blublog_User = new BlublogUser;
-        $Blublog_User->user_id = $user->id;
-        $Blublog_User->role_id = $request->role_id ;
-        $Blublog_User->save();
-
+        BlublogUser::add($user, $request->role_id);
+        Session::flash('success', __('blublog.user_added'));
         return redirect()->back();
     }
     public function edit($id)
     {
-        if(Gate::denies('blublog_edit_users')){
+        if(Gate::denies('blublog_edit_users', $id)){
             abort(403);
         }
-        $user = User::find($id);
-        if(!$user){
-            abort(404);
-        }
-        $Blublog_User = BlublogUser::where([
-            ['user_id', '=', $id],
-        ])->first();
-        $user->role_id = $Blublog_User->role_id;
+        $Blublog_User = BlublogUser::find($id);
+        $Blublog_User->role_id = $Blublog_User->role_id;
         $actions = Log::where([
-            ['user_id', '=', $user->id],
+            ['user_id', '=', $Blublog_User->id],
             ['type', '!=', "visit"],
         ])->limit(10)->latest()->get();
-        $user->latest_actions = $actions;
-        $user->all_roles = Role::get_roles_in_array();
-        return view('blublog::panel.users.edit')->with('user', $user);
+        $Blublog_User->latest_actions = $actions;
+        $Blublog_User->all_roles = Role::get_roles_in_array();
+        return view('blublog::panel.users.edit')->with('user', $Blublog_User);
     }
     public function update(Request $request, $id)
     {
-        if(Gate::denies('blublog_edit_users')){
+        if(Gate::denies('blublog_edit_users', $id)){
             abort(403);
         }
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if($request->newpassword){
-            $user->password = Hash::make($request->newpassword);
-        }
-        $user->remember_token = $request->remember_token;
-        $user->created_at = $request->created_at;
-        $user->updated_at = $request->updated_at;
-        $user->save();
+        $Blublog_User = BlublogUser::find($id);
 
-        $Blublog_User = BlublogUser::where([
-            ['user_id', '=', $id],
-        ])->first();
-        if($request->user()->id == $id){
-            Session::flash('warning', __('blublog.cant_change_your_role'));
-        } else {
-            $Blublog_User->role_id = $request->role_id;
-            $Blublog_User->save();
+        if($request->newpassword){
+            $user = User::find($Blublog_User->user_id);
+            $user->password = Hash::make($request->newpassword);
+            $user->save();
         }
+        $Blublog_User->name = $request->name;
+        $Blublog_User->full_name = $request->full_name;
+        $Blublog_User->descr = $request->descr;
+        $Blublog_User->img_url = $request->img_url;
+        if(blublog_is_admin()){
+            $Blublog_User->email = $request->email;
+            $Blublog_User->role_id = $request->role_id;
+        }
+        $Blublog_User->save();
 
         Session::flash('success', __('blublog.user_edited'));
 
-        return redirect()->route('blublog.users.index');
+        return redirect()->route('blublog.users.profile');
     }
 
     public function destroy($id)

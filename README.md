@@ -12,6 +12,8 @@ Your app must have a laravel/ui or the same authentication with User model in Ap
 BLUblog imports users from that User model to BlublogUser model and gives them other properties independent of your application. If logged in user is not imported to BlublogUser, they will not have access to the panel.
 For some cases that could be a good thing or a bad thing.
 
+It's recommended for trusted users, because posts outputs HTML. But there is option author not to be able to make his posts public until someone approve specified number of posts.
+
 ## Instaling
 The package requires three other packages - intervention image, laravelcollective/html and laravel/ui.
 You can install them with:
@@ -116,7 +118,7 @@ Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
 
 ## ROADMAP
 - September 2020 - Fist beta of BLUblog.
-- October 2020 - Second BLUblog theme/design (package).
+- October 2020 - First BLUblog theme/design (package).
 - Q1 of 2021 - First extension (Gallery or Statistics package for BLUblog).
 
 ## Package Support

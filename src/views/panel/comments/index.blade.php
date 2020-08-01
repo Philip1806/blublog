@@ -97,7 +97,7 @@
 
 @include('blublog::panel.partials._searchjs')
 <script>
-function show_comments(comments){
+function show_files(comments){
     let panel = document.getElementById("results");
     remove_all_child(panel);
 

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Tag;
-use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Models\Comment;
 use Carbon\Carbon;
 use Blublog\Blublog\Models\Rate;
@@ -20,7 +20,7 @@ class Post extends Model
     protected $table = 'blublog_posts';
 
     public function user() {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(BlublogUser::class);
     }
     public function views() {
         return $this->hasMany(PostsViews::class, 'post_id');
@@ -55,6 +55,42 @@ class Post extends Model
         $post = Post::find($post_id);
         Cache::forget('blublog.post.'.$post->slug);
         Cache::forget('blublog.comments.'.$post->slug);
+    }
+    public static function author_name($post)
+    {
+        if($post->user->full_name){
+            return $post->user->full_name;
+        } else {
+            return $post->user->name;
+        }
+    }
+    public static function rating_votes($post)
+    {
+        $five_star = 0;
+        $four_star = 0;
+        $three_star = 0;
+        $two_star = 0;
+        $one_star = 0;
+        foreach($post->ratings as $rating){
+            if($rating->rating == 5){
+                $five_star++;
+            } elseif($rating->rating == 4){
+                $four_star++;
+            } elseif($rating->rating == 3){
+                $three_star++;
+            }elseif($rating->rating == 2){
+                $two_star++;
+            } else {
+                $one_star++;
+            }
+        }
+        return array(
+            'five_star'=>$five_star,
+            'four_star'=>$four_star,
+            'three_star'=>$three_star,
+            'two_star'=>$two_star,
+            'one_star'=>$one_star,
+        );
     }
     public static function recommended($limit= 20)
     {
@@ -218,6 +254,26 @@ class Post extends Model
         }
         return $avg_stars;
 
+    }
+    public static function output_post_status($post_status)
+    {
+        $BlubloUser = BlublogUser::get_user(Auth::user());
+        if($BlubloUser->user_role->is_admin or $BlubloUser->user_role->is_mod){
+            return $post_status;
+        }
+        if($BlubloUser->user_role->posts_wait_for_approve){
+            $posts_count = Post::where([
+                ['status', '=', 'publish'],
+                ['user_id', '=', $BlubloUser->id],
+            ])->count();
+            if($posts_count > blublog_setting('number_of_approved_post')){
+                return $post_status;
+            } else {
+                Session::flash('warning', __('blublog.needs_approve'));
+                return "draft";
+            }
+        }
+        return $post_status;
     }
     public static function next_post_id()
     {

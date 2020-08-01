@@ -54,7 +54,7 @@ class Comment extends Model
                 }
             }
             if(Auth::check()){
-                $comment->author_id = Auth::user()->id;
+                $comment->author_id = blublog_get_user(1);
             }
             $comment->body = $request->get('comment_body');
             $comment->parent_id = $request->get('comment_id');

@@ -41,7 +41,7 @@
 <div class="col-lg-9">
     {!! $post->content !!}
     {!! $post->STARS_HTML !!}
-    <span class="badge badge-secondary">Posted by <a href="{{$post->author_url}}"> {{ $post->user->name }}</a> on {{ $post->date }}</span>   <span class="badge badge-secondary"><span class="oi oi-eye"> {{$post->total_views}}</span></span>
+    <span class="badge badge-secondary">Posted by <a href="{{$post->author_url}}"> {{ $post->author_name }}</a> on {{ $post->date }}</span>   <span class="badge badge-secondary"><span class="oi oi-eye"> {{$post->total_views}}</span></span>
     @foreach ($post->tags as $tag)
         <a href="{{ route('blublog.front.tag_show', $tag->slug) }}"><span class="badge badge-pill badge-dark">{{$tag->title}}</span></a>
     @endforeach

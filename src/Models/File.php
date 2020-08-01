@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Models\BlublogUser;
 use Session;
 use Auth;
 
 class File extends Model
 {
     protected $table = 'blublog_files';
+
+    public function user() {
+        return $this->belongsTo(BlublogUser::class);
+    }
 
     public static function clear_filename($OriginalFilename)
     {
@@ -88,7 +93,7 @@ class File extends Model
         $file->size = $size;
         $file->descr =  "'". $request->title . "'". __('blublog.post_image');
         $file->filename = 'posts/' . $address;
-        $file->user_id = Auth::user()->id;
+        $file->user_id = blublog_get_user(1);
         $file->save();
 
         // thumbnail

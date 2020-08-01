@@ -29,18 +29,25 @@
     @can('view_stats', $post)
     <div class="col-lg">
         <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ModalLong">
-        {{__('blublog.views')}} ({{$post->views()->count()}})
+        {{__('blublog.stats')}}
         </button>
         <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="ModalLongTitle">{{__('blublog.views')}}</h5>
+                        <h5 class="modal-title" id="ModalLongTitle">{{__('blublog.stats')}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
+                        {!! blublog_draw_stars(5) !!} ({{$post->rating_votes['five_star']}})<br>
+                        {!! blublog_draw_stars(4) !!} ({{$post->rating_votes['four_star']}})<br>
+                        {!! blublog_draw_stars(3) !!} ({{$post->rating_votes['three_star']}})<br>
+                        {!! blublog_draw_stars(2) !!} ({{$post->rating_votes['two_star']}})<br>
+                        {!! blublog_draw_stars(1) !!} ({{$post->rating_votes['one_star']}})
+                        <hr>
+                        <h3>{{__('blublog.views')}} ({{$post->views()->count()}})</h3>
                         @foreach ($post->views()->latest()->get() as $view)
                         <div class="alert alert-info" role="alert">
                         {{$view->ip}} | <i>{{$view->agent}}</i> | <b> {{$view->created_at}}</b>

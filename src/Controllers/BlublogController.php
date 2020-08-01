@@ -34,11 +34,11 @@ class BlublogController extends Controller
 
         $private_posts = Post::where([
             ['status', '=', 'private'],
-            ['user_id', '=', Auth::user()->id],
+            ['user_id', '=', blublog_get_user(1)],
         ])->latest()->paginate(14);
         $draft_posts = Post::where([
             ['status', '=', 'draft'],
-            ['user_id', '=', Auth::user()->id],
+            ['user_id', '=', blublog_get_user(1)],
         ])->latest()->paginate(14);
         $numbcomments = Comment::all()->count();
         $numbfiles = File::all()->count();
@@ -65,15 +65,15 @@ class BlublogController extends Controller
         $this_month_posts = Post::where([
             ['created_at', '>', $thismonth],
             ['created_at', '<', $nextmonth],
-            ['user_id', '=', Auth::user()->id],
+            ['user_id', '=', blublog_get_user(1)],
         ])->get()->count();
         $last_month_posts = Post::where([
             ['created_at', '>', $lastmonth],
             ['created_at', '<', $thismonth],
-            ['user_id', '=', Auth::user()->id],
+            ['user_id', '=', blublog_get_user(1)],
         ])->get()->count();
         $myposts = Post::where([
-            ['user_id', '=', Auth::user()->id],
+            ['user_id', '=', blublog_get_user(1)],
         ])->get()->count();
 
         return view("blublog::panel.index_author")->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalposts', $totalposts)->with('myposts', $myposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
