@@ -164,6 +164,7 @@ return [
     'recommended' => 'Recommended',
     'no_ratings' => 'No ratings',
     'rating' => 'Rating',
+    'thanks_voting' => 'Thanks for voting',
     'new_copy' => 'New Copy',
     'copy' => 'Copy',
     'star' => 'Stars',
@@ -263,10 +264,14 @@ return [
     'search_post' => 'Search for post',
     'search_tag' => 'Search for tag',
     'search_comment' => 'Search for comments',
-    'search_comment_enter' => 'Enter name or IP address',
+    'search_comment_enter' => 'Enter name, part of the comment or IP address',
     'search_comment_name' => 'Search by name',
     'search_comment_ip' => 'Search by IP address',
     'search_file' => 'Search for file',
+    'search_in_filename' => 'Search in filename',
+    'search_in_title' => 'Search in title',
+    'search_in_descr' => 'Search in description',
+    'search_in_content' => 'Search in content',
     /*
     |--------------------------------------------------------------------------
     | Ban

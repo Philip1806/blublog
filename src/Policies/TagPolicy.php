@@ -4,6 +4,7 @@ namespace Blublog\Blublog\Policies;
 use App\User;
 use Blublog\Blublog\Models\BlublogUser;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Carbon\Carbon;
 
 class TagPolicy
 {
@@ -33,7 +34,7 @@ class TagPolicy
      * @param  \App\Comment  $comment
      * @return mixed
      */
-    public function delete(User $user)
+    public function delete(User $user, $tag)
     {
         $Blublog_User = BlublogUser::get_user($user);
         if($Blublog_User->user_role->delete_all_tags){

@@ -9,7 +9,8 @@
     </div><br>
     <div class="card-body">
         <input type="text" class="form-control" id="searchfor">
-        <br><input type="button" class="btn btn-info " onclick="searchfor('file')" value="{{__('blublog.search')}}">
+        <br><input type="button" class="btn btn-info " onclick="searchfor('file','filename')" value="{{__('blublog.search_in_filename')}}">
+        <input type="button" class="btn btn-info " onclick="searchfor('file','descr')" value="{{__('blublog.search_in_descr')}}">
         <h2><div id="infopanel"></div></h2>
         <ul class="list-group">
             <div id="results"></div>
@@ -53,11 +54,13 @@
             </td>
             <td>{{ $file->filename }}</td>
             <td><a href="{{ route('blublog.files.download', $file->id) }}" class="btn btn-primary btn-block" role="button">{{__('blublog.download')}}</a></td>
+            @can('delete', $file)
             <td>
                 {!! Form::open(['route' => ['blublog.files.destroy', $file->id], 'method' => 'DELETE']) !!}
                 {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
                 {!! Form::close() !!}
             </td>
+            @endcan
             </tr>
             @endforeach
         </tbody>
@@ -77,8 +80,9 @@ function show_files(files){
     for (let i =0; i<files.length ; i++){
         let link = "{{ url('/'). "/". blublog_setting('panel_prefix') }}" + "/files/" + files[i].id + "/download";
         let li = document.createElement("li");
-        li.innerHTML= '<a href="'  + link + '">' + files[i].filename + '</a>';
+        li.innerHTML= '<a href="'  + link + '">' + files[i].filename +  ' (' + files[i].size + ')</a><br>' + files[i].descr;
         li.className="list-group-item";
+        console.log(files[i]);
         panel.appendChild(li);
     }
 }

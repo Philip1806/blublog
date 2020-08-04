@@ -28,6 +28,7 @@ class BlublogBanController extends Controller
         ];
         $this->validate($request, $rules);
         Ban::ip($request->ip,$request->descr, $request->comments);
+        Log::add($request . "BlublogBanController::ban", "alert", __('blublog.ban_user') );
         Session::flash('success', __('blublog.contentcreate'));
         return back();
     }
@@ -38,6 +39,7 @@ class BlublogBanController extends Controller
             abort(404);
         }
         $ban->delete();
+        Log::add($id . "BlublogBanController::ban", "alert", __('blublog.unban') );
         Session::flash('success', __('blublog.contentdelete'));
         return back();
     }

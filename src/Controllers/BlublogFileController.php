@@ -1,7 +1,7 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
-use Illuminate\Support\Facades\View;
+
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -19,8 +19,8 @@ class BlublogFileController extends Controller
 
     public function download($id)
     {
-        BlublogUser::check_access('upload', File::class);
         $file = File::find($id);
+        BlublogUser::check_access('download', $file);
         if(!$file){
             abort(404);
         }
@@ -95,8 +95,8 @@ class BlublogFileController extends Controller
 
     public function destroy($id)
     {
-        BlublogUser::check_access('delete', File::class);
         $file = File::find($id);
+        BlublogUser::check_access('delete', $file);
         if(!$file){
             Session::flash('error', __('panel.content_does_not_found'));
             return redirect()->route('blublog.files.index');

@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Models\Role;
 use Blublog\Blublog\Models\Log;
-use Blublog\Blublog\Models\Post;
 use App\User;
 use Session;
 use Auth;

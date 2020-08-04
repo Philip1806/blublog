@@ -59,7 +59,6 @@ class BlublogTagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        BlublogUser::check_access('update', Tag::class);
         $rules = [
             'title' => 'required|max:255',
             'slug' => 'required|max:255',
@@ -67,6 +66,7 @@ class BlublogTagController extends Controller
         $this->validate($request, $rules);
 
         $tag = Tag::find($id);
+        BlublogUser::check_access('update', $tag );
         $tag->title = $request->title;
         $tag->slug = $request->slug;
         $tag->descr = $request->descr;
@@ -78,8 +78,8 @@ class BlublogTagController extends Controller
 
     public function destroy ($id)
     {
-        BlublogUser::check_access('delete', Tag::class);
         $tag = Tag::find($id);
+        BlublogUser::check_access('delete', $tag);
         if($tag){
             $tag->posts()->detach();
             $tag->delete();

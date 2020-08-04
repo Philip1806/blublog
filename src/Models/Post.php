@@ -315,30 +315,40 @@ class Post extends Model
             $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
             $post->total_views = $post->views->count();
             $post->tags =$post->tags()->get() ;
-            $post->categories = $post->categories()->get() ;
+            $post->categories = $post->categories()->get();
+            if(blublog_setting('use_rating_module_as_likes_and_dislikes')){
+                $post = Post::get_likes_dislikes($post);
+            }
         }
         if(!$posts->count() and $null == 1){
             $posts = null;
         }
         return $posts;
     }
-
+    public static function get_likes_dislikes($post)
+    {
+        $likes = 0;
+        $dislikes = 0;
+        foreach($post->ratings as $rating){
+            if($rating->rating == 5){
+                $likes++;
+            }
+            if($rating->rating == 1){
+                $dislikes++;
+            }
+        }
+        $post->likes = $likes;
+        $post->dislikes = $dislikes;
+        return $post;
+    }
     public static function get_posts_stars($post, $show_avg = true)
     {
         if(blublog_setting('no_ratings')){
             return $post;
         }
 
-        $total_ratings =  $post->ratings->count();
-        if($total_ratings){
-        $total = 0;
-        foreach($post->ratings as $rate){
-            $total = $total + $rate->rating;
-        }
-        $avg_stars = $total / $post->ratings->count();
-        } else {
-            $avg_stars = 0;
-        }
+        $avg_stars = Post::get_rating_avg($post);
+
         if(!$show_avg){
             $STARS_HTML = "";
         } else {
@@ -493,7 +503,6 @@ class Post extends Model
         }
         return false;
     }
-
     public static function thismonth()
     {
         $now = Carbon::today();
@@ -525,5 +534,4 @@ class Post extends Model
         $to = Carbon::create($thisyear, $thismonth, 1, 0)->toDateTimeString();
         return $to;
     }
-
 }

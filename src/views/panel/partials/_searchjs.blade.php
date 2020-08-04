@@ -1,5 +1,5 @@
 <script>
-function searchfor(datatype){
+function searchfor(datatype, search_in = false){
     let searchfor = document.getElementById("searchfor").value;
     if(searchfor != ""){
     let infopanel = document.getElementById("infopanel");
@@ -10,7 +10,7 @@ function searchfor(datatype){
 
     url:"{{ url('/blublog/search') }}",
 
-    data:{"_token": "{{ csrf_token() }}",slug:searchfor,type:datatype},
+    data:{"_token": "{{ csrf_token() }}",slug:searchfor,type:datatype, search_in:search_in},
 
     success:function(data){
 

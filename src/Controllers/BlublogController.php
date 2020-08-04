@@ -7,16 +7,10 @@ use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\File;
 use Blublog\Blublog\Models\Comment;
 use Blublog\Blublog\Models\Setting;
-use Auth;
 use Blublog\Blublog\Models\Log;
 
 class BlublogController extends Controller
 {
-    function __construct()
-    {
-
-    }
-
     //This is panel index
     public function panel()
     {

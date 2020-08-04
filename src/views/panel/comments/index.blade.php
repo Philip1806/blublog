@@ -8,8 +8,10 @@
     </div><br>
     <div class="card-body">
         <input type="text" class="form-control" id="searchfor" placeholder="{{__('blublog.search_comment_enter')}}">
-        <br><input type="button" class="btn btn-info " onclick="searchfor('comment')" value="{{__('blublog.search_comment_name')}}">
-        <input type="button" class="btn btn-info " onclick="searchfor('comment_ip')" value="{{__('blublog.search_comment_ip')}}">
+        <br><input type="button" class="btn btn-info " onclick="searchfor('comment')" value="{{__('blublog.search')}}">
+        @if (blublog_is_mod())
+            <input type="button" class="btn btn-info " onclick="searchfor('comment_ip')" value="{{__('blublog.search_comment_ip')}}">
+        @endif
         <h2><div id="infopanel"></div></h2>
         <ul class="list-group">
             <div id="results"></div>

@@ -222,6 +222,9 @@ class BlublogFrontController extends Controller
             $post->total_views = $post->views->count();
             $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
             $post->author_name = Post::author_name($post);
+            if(blublog_setting('use_rating_module_as_likes_and_dislikes')){
+                $post = Post::get_likes_dislikes($post);
+            }
             Cache::put('blublog.post.'. $slug, $post);
 
         } else {

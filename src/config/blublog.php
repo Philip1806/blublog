@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.4.5 ALPHA",
+    'version' => "0.9.5 ALPHA",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -102,4 +102,6 @@ return [
     'under_attack_type' => "bool",
     'comment_ask_question' => false,
     'comment_ask_question_type' => "bool",
+    'use_rating_module_as_likes_and_dislikes' => false,
+    'use_rating_module_as_likes_and_dislikes_type' => "bool",
 ];

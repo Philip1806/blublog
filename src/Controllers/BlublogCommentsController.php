@@ -3,15 +3,13 @@
 namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Models\Ban;
 use Blublog\Blublog\Models\Comment;
-use Session;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Log;
-use Auth;
+use Session;
 
 class BlublogCommentsController extends Controller
 {

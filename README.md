@@ -12,7 +12,10 @@ Your app must have a laravel/ui or the same authentication with User model in Ap
 BLUblog imports users from that User model to BlublogUser model and gives them other properties independent of your application. If logged in user is not imported to BlublogUser, they will not have access to the panel.
 For some cases that could be a good thing or a bad thing.
 
-It's recommended for trusted users, because posts outputs HTML. But there is option author not to be able to make his posts public until someone approve specified number of posts.
+It's **recommended** for trusted users, because posts outputs HTML. But there is option author not to be able to make his posts public until someone approve specified number of posts.
+
+BLUblog is made as independent blog. You can extend your laravel application with it.
+Or if you just want a blog on Laravel, you will need to make a front page (or copy blog front page) and then you will have a complete Laravel App. BLUblog does not assume you have build anything more than authentication (with laravel/ui). It provides all the basic things you will need.
 
 ## Instaling
 The package requires three other packages - intervention image, laravelcollective/html and laravel/ui.
@@ -47,7 +50,7 @@ You need to add this in filesystems.php from config folder:
 ],
 ```
 You can set up where all files from the package go.
-By default you can access the blog from /blog and panel from /panel.
+By default you can access the blog from /blog and panel from /panel. **If you get 404 error, make sure you're logged in. If you get 403 error, make sure you have run blublog:setup**;
 ## Features
 
 1. Posts (CRUD)
@@ -67,12 +70,15 @@ By default you can access the blog from /blog and panel from /panel.
 - Auto generate sitemap (RSS).
 - Custom html in header, footer and posts comments.
 - Post types: Post, Video and custom.
+- You can select posts to be recommended and for a slider. Default theme do not take advantage of this for now.
+- "On this topic" - Select a tag to show other post from the same topic.
 
 
 2. Comments (CRUD)
 - Anti-spam modul.
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
+- Basic search for comments by username, part of the comment or IP address.
 
 3. Categories (CRUD)
 - Background image.
@@ -81,13 +87,13 @@ By default you can access the blog from /blog and panel from /panel.
 
 4. Pages (CRUD)
 - TinyMCE - WYSIWYG HTML Editor.
-- Page could have sidebar or not.
+- With sidebar or not.
 - Background image.
-- Can be not public.
+- Public or not.
 
 5. Users
 - Import users from Laravel UI.
-- They are three roles - Administrator, Moderator and Author.
+- They are three built in roles - Administrator, Moderator and Author.
 - You can control roles permissions and create new roles.
 
 6. File manager

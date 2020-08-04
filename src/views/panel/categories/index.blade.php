@@ -53,12 +53,16 @@
                     <td>@if ($category->img)   {{ $category->img }}    @else <span class="badge badge-danger">{{__('blublog.none')}}</span> @endif</td>
                     <td>@if ($category->descr) {{ $category->descr }}  @else <span class="badge badge-danger">{{__('blublog.none')}}</span> @endif</td>
                     <td><a href="{{ route('blublog.front.category_show', $category->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('blublog.view')}}</a></td>
+                    @can('update', $category)
                     <td><a href="{{ route('blublog.categories.edit', $category->id) }}" class="btn btn-outline-warning btn-block">{{__('blublog.edit')}}</a></td>
+                    @endcan
+                    @can('delete', $category)
                     <td>
-                    {!! Form::open(['route' => ['blublog.categories.destroy', $category->id], 'method' => 'DELETE']) !!}
-                    {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
-                    {!! Form::close() !!}
+                        {!! Form::open(['route' => ['blublog.categories.destroy', $category->id], 'method' => 'DELETE']) !!}
+                        {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-outline-danger btn-block ' ]) !!}
+                        {!! Form::close() !!}
                     </td>
+                    @endcan
                 </tr>
                 @endforeach
             </tbody>

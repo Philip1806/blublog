@@ -18,7 +18,8 @@
     </div><br>
     <div class="card-body">
         <input type="text" class="form-control" id="searchfor" placeholder="Search for post here">
-        <br><input type="button" class="btn btn-info " onclick="searchfor('post')" value="Search">
+    <br><input type="button" class="btn btn-info " onclick="searchfor('post', 'title')" value="{{__('blublog.search_in_title')}}">
+        <input type="button" class="btn btn-info " onclick="searchfor('post', 'content')" value="{{__('blublog.search_in_content')}}">
         <h2><div id="infopanel"></div></h2>
         <ul class="list-group">
             <div id="results"></div>

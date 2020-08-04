@@ -31,6 +31,11 @@ class BlublogAPIController extends Controller
         if($request->post and is_numeric($request->star) ){
             $post_id = preg_replace('/\D/', '', $request->post);
             $selected_stars = preg_replace('/\D/', '', $request->star);
+            if(blublog_setting('use_rating_module_as_likes_and_dislikes')){
+                if($selected_stars != 5 and  $selected_stars != 1){
+                    return response()->json(false,400);
+                }
+            }
             if($selected_stars > 5 or $selected_stars < 1 or !Post::find($post_id) ){
                 return response()->json(false,400);
             }
@@ -42,14 +47,14 @@ class BlublogAPIController extends Controller
             if($have_rating){
                 $have_rating->rating = $selected_stars;
                 $have_rating->save();
-                return response()->json("Rating changed to " . $selected_stars . " stars.");
+                return response()->json(__('blublog.thanks_voting'));
             } else {
                 $rating = new Rate;
                 $rating->post_id = $post_id;
                 $rating->rating = $selected_stars;
                 $rating->ip = $ip;
                 $rating->save();
-                return response()->json("You rate this with ". $selected_stars ." stars.");
+                return response()->json(__('blublog.thanks_voting'));
             }
         }
         return response()->json(false,400);
@@ -179,9 +184,12 @@ class BlublogAPIController extends Controller
     public function search(Request $request)
     {
         if($request->type == "post"){
+            if($request->search_in != 'content' and $request->search_in != 'title'){
+                return response()->json(false);
+            }
             $posts = Post::where([
-                ['title', 'LIKE', '%'.$request->slug.'%'],
-            ])->latest()->take(10)->get();
+                [$request->search_in, 'LIKE', '%'.$request->slug.'%'],
+            ])->latest()->get();
             if($posts->count() > 0){
                 return response()->json($posts);
             } else {
@@ -190,9 +198,19 @@ class BlublogAPIController extends Controller
         }
 
         if($request->type == "file"){
-            $files = File::where([
-                ['filename', 'LIKE', '%'.$request->slug.'%'],
-            ])->latest()->get();
+            if($request->search_in != 'filename' and $request->search_in != 'descr'){
+                return response()->json(false);
+            }
+            if(blublog_is_mod()){
+                $files = File::where([
+                    [$request->search_in, 'LIKE', '%'.$request->slug.'%'],
+                ])->latest()->get();
+            } else {
+                $files = File::where([
+                    [$request->search_in, 'LIKE', '%'.$request->slug.'%'],
+                    ['user_id', '=', blublog_get_user(1)],
+                ])->latest()->get();
+            }
             if($files->count() > 0){
                 File::get_url($files);
                 return response()->json($files);
@@ -214,6 +232,11 @@ class BlublogAPIController extends Controller
             $files = Comment::where([
                 ['name', 'LIKE', '%'.$request->slug.'%'],
             ])->latest()->get();
+            if($files->count() == 0){
+                $files = Comment::where([
+                    ['body', 'LIKE', '%'.$request->slug.'%'],
+                ])->latest()->get();
+            }
             if($files->count() > 0){
                 return response()->json($files);
             } else {
@@ -221,6 +244,9 @@ class BlublogAPIController extends Controller
             }
         }
         if($request->type == "comment_ip"){
+            if(!blublog_is_mod()){
+                return response()->json(false);
+            }
             $files = Comment::where([
                 ['ip', 'LIKE', '%'.$request->slug.'%'],
             ])->latest()->get();

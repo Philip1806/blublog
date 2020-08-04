@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Setting;
 use Blublog\Blublog\Models\Menu;
 use Blublog\Blublog\Models\MenuItem;
-use Illuminate\Support\Facades\Gate;
 use Session;
 
 class BlublogMenuController extends Controller
