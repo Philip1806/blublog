@@ -2,7 +2,7 @@
 @foreach ($posts as $post)
 <div class="row">
     <div class="col-sm-4">
-        <img class="img-fluid border-primary rounded shadow"  src="{{$post->img_thumb_url}}" alt="{{$post->title}} image">
+        <img class="img-fluid border-primary rounded shadow" loading="lazy" src="{{$post->img_thumb_url}}" alt="{{$post->title}} image">
     </div>
     <div class="col-sm-8">
         <h5 class="mt-0"><a href="{{$post->slug_url}}">{{$post->title}}</a></h5>

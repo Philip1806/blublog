@@ -1,8 +1,7 @@
 <?php
 
 namespace Blublog\Blublog\Resources;
-use Blublog\Blublog\Resources\Category;
-use Blublog\Blublog\Models\Post as PostModel;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Tag extends JsonResource

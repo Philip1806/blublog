@@ -3,7 +3,7 @@
 {{ Form::text('title', null, ['class' => 'form-control']) }}
 
 {{ Form::label('content', __('blublog.content')) }}
-{{ Form::textarea('content', null, ['class' => 'form-control', 'rows' => '10']) }}
+{{ Form::textarea('content', null, ['class' => 'form-control', 'id' => 'editor','rows' => '10']) }}
 <hr>
 {{ Form::label('descr',  __('blublog.seodescr')) }}
 {{ Form::text('descr', null, ['class' => 'form-control']) }}

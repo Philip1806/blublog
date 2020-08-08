@@ -15,7 +15,7 @@
   <div class="row">
     @include('blublog::panel.partials.4_colums', ['title' => __('blublog.logs_this'),'val'=>$this_month_logs,'color'=>"warning",'icon'=>"code"])
     @include('blublog::panel.partials.4_colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"warning",'icon'=>"list"])
-    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.blublog_version'),'val'=>config('blublog.version'),'color'=>"warning",'icon'=>"cog"])
+    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.blublog_version'),'color'=>"warning",'icon'=>"cog", 'version' =>true])
   </div>
 
   @if ($notpubliccomments != 0)

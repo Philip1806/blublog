@@ -1,6 +1,7 @@
 <?php
 
 namespace Blublog\Blublog\Policies;
+
 use App\User;
 use Blublog\Blublog\Models\BlublogUser;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -12,10 +13,10 @@ class FilePolicy
     public function download(User $user, $file)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if($Blublog_User->user_role->is_admin or $Blublog_User->user_role->is_mod){
+        if ($Blublog_User->user_role->is_admin or $Blublog_User->user_role->is_mod) {
             return true;
         }
-        if($Blublog_User->id == $file->user_id){
+        if ($Blublog_User->id == $file->user_id) {
             return true;
         }
         return false;
@@ -24,7 +25,7 @@ class FilePolicy
     public function upload(User $user)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if($Blublog_User->user_role->upload_files){
+        if ($Blublog_User->user_role->upload_files) {
             return true;
         }
         return false;
@@ -36,13 +37,13 @@ class FilePolicy
      * @param  \App\Comment  $comment
      * @return mixed
      */
-    public function delete(User $user,$file)
+    public function delete(User $user, $file)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if($Blublog_User->user_role->delete_all_files){
+        if ($Blublog_User->user_role->delete_all_files) {
             return true;
         }
-        if($Blublog_User->user_role->delete_own_files and $Blublog_User->id == $file->user_id){
+        if ($Blublog_User->user_role->delete_own_files and $Blublog_User->id == $file->user_id) {
             return true;
         }
         return false;

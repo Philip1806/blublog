@@ -79,6 +79,7 @@
 @include('blublog::panel.partials._seoanddescr')
 {!! Form::close() !!}
 @include('blublog::panel.partials._postjs')
+@include('blublog::panel.posts._uploadimg')
 <script>
 $(".select3-multi").select2().val({!! json_encode($post->tags()->allRelatedIds()) !!}).trigger('change');
 $(".select2-multi").select2().val({!! json_encode($post->categories()->allRelatedIds()) !!}).trigger('change');

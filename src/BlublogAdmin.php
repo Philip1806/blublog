@@ -1,8 +1,10 @@
 <?php
+
 namespace Blublog\Blublog;
 
 use Closure;
 use Blublog\Blublog\Models\BlublogUser;
+
 class BlublogAdmin
 {
     /**
@@ -18,7 +20,7 @@ class BlublogAdmin
         $user = BlublogUser::where([
             ['user_id', '=', $request->user()->id],
         ])->first();
-        if($user->user_role->is_admin){
+        if ($user->user_role->is_admin) {
             return $next($request);
         }
         return abort(403);

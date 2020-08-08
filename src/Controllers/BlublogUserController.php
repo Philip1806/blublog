@@ -1,6 +1,7 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class BlublogUserController extends Controller
 
     public function index()
     {
-        if(Gate::denies('blublog_create_users')){
+        if (Gate::denies('blublog_create_users')) {
             abort(403);
         }
         $Blublog_Users = BlublogUser::latest()->paginate(5);
@@ -32,14 +33,14 @@ class BlublogUserController extends Controller
     }
     public function create()
     {
-        if(Gate::denies('blublog_create_users')){
+        if (Gate::denies('blublog_create_users')) {
             abort(403);
         }
         return view('blublog::panel.users.create')->with('roles', Role::get_roles_in_array());
     }
     public function add(Request $request)
     {
-        if(Gate::denies('blublog_create_users')){
+        if (Gate::denies('blublog_create_users')) {
             abort(403);
         }
         $rules = [
@@ -60,7 +61,7 @@ class BlublogUserController extends Controller
     }
     public function edit($id)
     {
-        if(Gate::denies('blublog_edit_users', $id)){
+        if (Gate::denies('blublog_edit_users', $id)) {
             abort(403);
         }
         $Blublog_User = BlublogUser::find($id);
@@ -75,12 +76,12 @@ class BlublogUserController extends Controller
     }
     public function update(Request $request, $id)
     {
-        if(Gate::denies('blublog_edit_users', $id)){
+        if (Gate::denies('blublog_edit_users', $id)) {
             abort(403);
         }
         $Blublog_User = BlublogUser::find($id);
 
-        if($request->newpassword){
+        if ($request->newpassword) {
             $user = User::find($Blublog_User->user_id);
             $user->password = Hash::make($request->newpassword);
             $user->save();
@@ -89,7 +90,7 @@ class BlublogUserController extends Controller
         $Blublog_User->full_name = $request->full_name;
         $Blublog_User->descr = $request->descr;
         $Blublog_User->img_url = $request->img_url;
-        if(blublog_is_admin()){
+        if (blublog_is_admin()) {
             $Blublog_User->email = $request->email;
             $Blublog_User->role_id = $request->role_id;
         }
@@ -102,16 +103,16 @@ class BlublogUserController extends Controller
 
     public function destroy($id)
     {
-        if(Gate::denies('blublog_delete_users')){
+        if (Gate::denies('blublog_delete_users')) {
             abort(403);
         }
         $Blublog_User = BlublogUser::find($id);
-        if(!$Blublog_User){
+        if (!$Blublog_User) {
             Session::flash('error', __('blublog.404'));
             return redirect()->route('blublog.users.index');
         }
         $user = User::find($Blublog_User->user_id);
-        if(Auth::user()->id == $user->id){
+        if (Auth::user()->id == $user->id) {
             Session::flash('warning', __('blublog.cant_delete_your_profile'));
             return redirect()->route('blublog.users.index');
         }

@@ -5,7 +5,7 @@
 <!-- Open Graph / Facebook -->
 <meta name="og:title" property="og:title" content="{{$post->seo_title}}">
 <meta name="og:description" property="og:description" content="{{$post->seo_descr}}">
-<meta name="og:image" property="og:image" content="{{url('/uploads/posts/')}}/{{$post->img}}" />
+<meta name="og:image" property="og:image" content="{$post->img_url}}" />
 <meta name="og:type" property="og:type" content="article" >
 <meta name="og:published_time" property="og:published_time" content="{{$post->created_at}}" >
 <meta name="og:article:section" property="og:article:section" content="{{$post->categories[0]->title}}" >

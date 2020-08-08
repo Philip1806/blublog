@@ -18,9 +18,8 @@ class Role extends Model
     {
         $roles = Role::get();
         $data = array();
-        foreach($roles as $role){
+        foreach ($roles as $role) {
             $data[$role->id] = $role->name;
-
         }
         return $data;
     }
@@ -28,8 +27,8 @@ class Role extends Model
     {
         unset($request['role_id']);
         $keys = array_keys($request);
-        for ($i= 0; $i < count($request); $i++){
-            if($request[$keys[$i]] == 'on'){
+        for ($i = 0; $i < count($request); $i++) {
+            if ($request[$keys[$i]] == 'on') {
                 $request[$keys[$i]] = "1";
             }
         }
@@ -38,14 +37,14 @@ class Role extends Model
         $role->save();
         return true;
     }
-    public static function edit($role,$request)
+    public static function edit($role, $request)
     {
         unset($request['role_id']);
         unset($request['_token']);
 
         $keys = array_keys($request);
-        for ($i= 0; $i < count($request); $i++){
-            if($request[$keys[$i]] == 'on'){
+        for ($i = 0; $i < count($request); $i++) {
+            if ($request[$keys[$i]] == 'on') {
                 $role->{$keys[$i]} = "1";
             } else {
                 $role->{$keys[$i]} = "0";
@@ -55,5 +54,4 @@ class Role extends Model
         $role->save();
         return true;
     }
-
 }

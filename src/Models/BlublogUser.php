@@ -13,10 +13,12 @@ use Auth;
 class BlublogUser extends Model
 {
     protected $table = 'blublog_users';
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
-    public function user_role() {
+    public function user_role()
+    {
         return $this->belongsTo(Role::class, 'role_id', 'id');
     }
     public function posts()
@@ -36,16 +38,16 @@ class BlublogUser extends Model
         $Blublog_User = BlublogUser::where([
             ['user_id', '=', $user->id],
         ])->first();
-        if(!$Blublog_User){
+        if (!$Blublog_User) {
             abort(403);
         }
         return $Blublog_User;
     }
-    public static function check_access($action,$resource)
+    public static function check_access($action, $resource)
     {
         $user = Auth::user();
         if (!$user->can($action, $resource)) {
-            Log::add($user, "alert", __('blublog.403') );
+            Log::add($user, "alert", __('blublog.403'));
             abort(403);
         }
         return true;

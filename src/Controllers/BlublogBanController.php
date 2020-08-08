@@ -13,7 +13,6 @@ class BlublogBanController extends Controller
 {
     function __construct()
     {
-
     }
     public function index()
     {
@@ -27,19 +26,19 @@ class BlublogBanController extends Controller
             'descr' => 'required|max:150',
         ];
         $this->validate($request, $rules);
-        Ban::ip($request->ip,$request->descr, $request->comments);
-        Log::add($request . "BlublogBanController::ban", "alert", __('blublog.ban_user') );
+        Ban::ip($request->ip, $request->descr, $request->comments);
+        Log::add($request . "BlublogBanController::ban", "alert", __('blublog.ban_user'));
         Session::flash('success', __('blublog.contentcreate'));
         return back();
     }
     public function destroy($id)
     {
         $ban = Ban::find($id);
-        if(!$ban){
+        if (!$ban) {
             abort(404);
         }
         $ban->delete();
-        Log::add($id . "BlublogBanController::ban", "alert", __('blublog.unban') );
+        Log::add($id . "BlublogBanController::ban", "alert", __('blublog.unban'));
         Session::flash('success', __('blublog.contentdelete'));
         return back();
     }

@@ -10,7 +10,6 @@ class MenuItem extends Model
     protected $table = 'blublog_menu_items';
     public function from_menu()
     {
-        return $this->belongsTo(Menu::class,'menu');
+        return $this->belongsTo(Menu::class, 'menu');
     }
-
 }

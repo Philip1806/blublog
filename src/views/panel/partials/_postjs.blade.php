@@ -1,15 +1,4 @@
-@if (blublog_setting("post_editor"))
-<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
-<script>tinymce.init({ selector:'textarea',   plugins: "link, image, fullscreen, textcolor, table, textcolor colorpicker, print, media mediaembed",
-image_class_list: [
-    {title: 'Responsive', value: 'img-fluid'},
-    {title: 'Tumb', value: 'img-thumbnail'},
-    {title: 'Right', value: 'rounded float-right'},
-    {title: 'Left', value: 'rounded float-left pull-right mr-2'},
-]
-});
-</script>
-@endif
+@include('blublog::panel.partials._editor')
 <script src="{{ url('/') }}/blublog\js/jquery-ui.js"></script>
 <link rel="stylesheet" href="{{ url('/') }}/blublog\css/jquery-ui.css">
 <script>
@@ -148,7 +137,7 @@ function searchforfile(){
 
     url:"{{ url('/blublog/search') }}",
 
-    data:{"_token": "{{ csrf_token() }}",slug:searchfor,type:"file"},
+    data:{"_token": "{{ csrf_token() }}",slug:searchfor,type:"post_img",search_in:'filename'},
 
     success:function(data){
 

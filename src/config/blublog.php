@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.5 ALPHA",
+    'version' => "0.9.6",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -12,8 +12,15 @@ return [
     'img_height_type' => "int",
     'img_width' => 350,
     'img_width_type' => "int",
-    'img_quality' => 60,
+    'img_quality' => 50,
     'img_quality_type' => "int",
+    'big_img_height' => 1200,
+    'big_img_height_type' => "int",
+    'big_img_width' => 700,
+    'big_img_width_type' => "int",
+    'big_img_quality' => 50,
+    'big_img_quality_type' => "int",
+
     'setting_cache' => 28800,
     'setting_cache_type' => "int",
     'index_posts_per_page' => "10",
@@ -84,6 +91,13 @@ return [
     // Bool Settings
     'post_editor' => true,
     'post_editor_type' => "bool",
+    'do_not_convert_post_img' => true,
+    'do_not_convert_post_img_type' => "bool",
+    'make_blur_img' => true,
+    'make_blur_img_type' => "bool",
+    'keep_filename' => true,
+    'keep_filename_type' => "bool",
+
     'disable_comments_modul' => false,
     'disable_comments_modul_type' => "bool",
     'approve_comments_from_users_with_approved_comments' => true,

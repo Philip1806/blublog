@@ -234,6 +234,10 @@ return [
     'error_removing' => 'File could not be removed. Check Laravel/Blublog filesystem cofiguration. ',
     'error_uploading' => 'Could not upload file. Check Laravel/Blublog filesystem cofiguration.  ',
     'no_results' => 'Not found',
+    'not_original' => 'Convert Image',
+    'keep_name' => 'Keep Image Name',
+    'upload' => 'Upload',
+    'upload_img' => 'Upload Image',
     /*
     |--------------------------------------------------------------------------
     | Menu

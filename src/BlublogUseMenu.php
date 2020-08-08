@@ -1,4 +1,5 @@
 <?php
+
 namespace Blublog\Blublog;
 
 use Closure;
@@ -16,14 +17,13 @@ class BlublogUseMenu
      */
     public function handle($request, Closure $next)
     {
-
         $Blublog_User = BlublogUser::where([
             ['user_id', '=', Auth::user()->id],
         ])->first();
-        if(!$Blublog_User){
+        if (!$Blublog_User) {
             abort(403);
         }
-        if($Blublog_User->user_role->use_menu){
+        if ($Blublog_User->user_role->use_menu) {
             return $next($request);
         }
         return abort(403);

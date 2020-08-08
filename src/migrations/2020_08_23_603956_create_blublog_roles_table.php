@@ -73,7 +73,7 @@ class CreateBlublogRolesTable extends Migration
             $table->boolean('delete_users')->default(0);
 
             // Files
-            $table->boolean('upload_files')->default(0);
+            $table->boolean('upload_files')->default(1);
             $table->boolean('delete_own_files')->default(0);
             $table->boolean('delete_all_files')->default(0);
 

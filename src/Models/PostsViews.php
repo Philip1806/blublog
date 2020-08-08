@@ -12,7 +12,7 @@ class PostsViews extends Model
 
     public static function add($post_id)
     {
-        if(PostsViews::check($post_id)){
+        if (PostsViews::check($post_id)) {
             $view = new PostsViews;
             $view->post_id = $post_id;
             $view->ip = Post::getIp();;
@@ -28,11 +28,9 @@ class PostsViews extends Model
             ['ip', '=', Post::getIp()],
             ['post_id', '=', $post_id],
         ])->first();
-        if(!$view){
+        if (!$view) {
             return true;
         }
         return false;
-
     }
-
 }

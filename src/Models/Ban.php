@@ -8,14 +8,14 @@ class Ban extends Model
 {
     protected $table = 'blublog_ban';
 
-    public static function ip($ip,$reason, $only_from_comments = 0)
+    public static function ip($ip, $reason, $only_from_comments = 0)
     {
         $ban = new Ban;
         $ban->ip = $ip;
         $ban->descr = $reason;
-        if($only_from_comments){
+        if ($only_from_comments) {
             $ban->comments = true;
-        }else{
+        } else {
             $ban->comments = false;
         }
         $ban->save();
@@ -27,7 +27,7 @@ class Ban extends Model
             ['ip', '=', $ip],
             ['comments', '=', false],
         ])->first();
-        if($ban){
+        if ($ban) {
             return true;
         }
         return false;
@@ -38,7 +38,7 @@ class Ban extends Model
             ['ip', '=', $ip],
             ['comments', '=', true],
         ])->first();
-        if($ban){
+        if ($ban) {
             return true;
         }
         return false;

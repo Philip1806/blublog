@@ -1,6 +1,7 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
+
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Log;
 
@@ -13,10 +14,10 @@ class BlublogLogController extends Controller
         //error, alert, visit, info, bot
         $error_logs = Log::where([
             ['type', '=', 'error'],
-            ])->latest()->paginate(15);
+        ])->latest()->paginate(15);
         $visit_logs = Log::where([
             ['type', '=', 'visit'],
-            ])->latest()->paginate(15);
+        ])->latest()->paginate(15);
         $alert_logs = Log::where([
             ['type', '=', 'alert'],
         ])->latest()->paginate(15);
@@ -33,5 +34,4 @@ class BlublogLogController extends Controller
         $log = Log::find($id);
         return view('blublog::panel.logs.show')->with('log', $log);
     }
-
 }

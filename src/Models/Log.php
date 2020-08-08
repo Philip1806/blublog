@@ -13,12 +13,12 @@ class Log extends Model
     public static function add($data, $type, $message = "Visit")
     {
         $user_agent = \Request::header('User-Agent');
-        if(strpos($user_agent, "bot") or !\Request::header('accept-language')){
-            if($type == "visit"){
+        if (strpos($user_agent, "bot") or !\Request::header('accept-language')) {
+            if ($type == "visit") {
                 $type = "bot";
             }
             $lang = 'Error. It is bot...';
-        } else{
+        } else {
             $lang = \Request::header('accept-language');
         }
         $track = new Log;
@@ -30,13 +30,11 @@ class Log extends Model
         $track->message = $message;
         $track->data = $data;
         $track->type = $type;
-        if($type != "visit" and \Auth::check()){
+        if ($type != "visit" and \Auth::check()) {
             $track->user_id = \Auth::user()->id;
         }
         $track->save();
 
         return true;
-
     }
-
 }

@@ -19,31 +19,37 @@ class Post extends Model
 {
     protected $table = 'blublog_posts';
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(BlublogUser::class);
     }
-    public function views() {
+    public function views()
+    {
         return $this->hasMany(PostsViews::class, 'post_id');
     }
-    public function ratings() {
+    public function ratings()
+    {
         return $this->hasMany(Rate::class, 'post_id');
     }
-    public function categories() {
-        return $this->belongsToMany(Category::class, 'blublog_posts_categories','post_id','category_id');
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'blublog_posts_categories', 'post_id', 'category_id');
     }
-    public function tags() {
+    public function tags()
+    {
         return $this->belongsToMany(Tag::class, 'blublog_posts_tags');
     }
     public function allcomments()
     {
         return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
     }
-    public static function getIp(){
-        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
-            if (array_key_exists($key, $_SERVER) === true){
-                foreach (explode(',', $_SERVER[$key]) as $ip){
+    public static function getIp()
+    {
+        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+            if (array_key_exists($key, $_SERVER) === true) {
+                foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip); // just to be safe
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
                         return $ip;
                     }
                 }
@@ -53,12 +59,12 @@ class Post extends Model
     public static function remove_cache($post_id)
     {
         $post = Post::find($post_id);
-        Cache::forget('blublog.post.'.$post->slug);
-        Cache::forget('blublog.comments.'.$post->slug);
+        Cache::forget('blublog.post.' . $post->slug);
+        Cache::forget('blublog.comments.' . $post->slug);
     }
     public static function author_name($post)
     {
-        if($post->user->full_name){
+        if ($post->user->full_name) {
             return $post->user->full_name;
         } else {
             return $post->user->name;
@@ -71,34 +77,34 @@ class Post extends Model
         $three_star = 0;
         $two_star = 0;
         $one_star = 0;
-        foreach($post->ratings as $rating){
-            if($rating->rating == 5){
+        foreach ($post->ratings as $rating) {
+            if ($rating->rating == 5) {
                 $five_star++;
-            } elseif($rating->rating == 4){
+            } elseif ($rating->rating == 4) {
                 $four_star++;
-            } elseif($rating->rating == 3){
+            } elseif ($rating->rating == 3) {
                 $three_star++;
-            }elseif($rating->rating == 2){
+            } elseif ($rating->rating == 2) {
                 $two_star++;
             } else {
                 $one_star++;
             }
         }
         return array(
-            'five_star'=>$five_star,
-            'four_star'=>$four_star,
-            'three_star'=>$three_star,
-            'two_star'=>$two_star,
-            'one_star'=>$one_star,
+            'five_star' => $five_star,
+            'four_star' => $four_star,
+            'three_star' => $three_star,
+            'two_star' => $two_star,
+            'one_star' => $one_star,
         );
     }
-    public static function recommended($limit= 20)
+    public static function recommended($limit = 20)
     {
         $posts = Post::where([
             ['recommended', '=', true],
             ['status', '=', "publish"],
         ])->latest()->limit($limit)->get();
-        if($posts){
+        if ($posts) {
             return Post::processing($posts);
         }
     }
@@ -108,17 +114,17 @@ class Post extends Model
             ['slider', '=', true],
             ['status', '=', "publish"],
         ])->latest()->get();
-        if($posts){
+        if ($posts) {
             return Post::processing($posts);
         }
     }
-    public static function for_front_page($limit= 20)
+    public static function for_front_page($limit = 20)
     {
         $posts = Post::where([
             ['front', '=', true],
             ['status', '=', "publish"],
         ])->latest()->paginate($limit);
-        if($posts){
+        if ($posts) {
             return Post::processing($posts);
         }
     }
@@ -129,7 +135,7 @@ class Post extends Model
     public static function convert_date($unformated_date, $del = "/", $carbon = false)
     {
         $date = explode($del, $unformated_date);
-        if($carbon){
+        if ($carbon) {
             $date = Carbon::createFromDate($date[2], $date[1], $date[0]);
         } else {
             $date = Carbon::createFromDate($date[2], $date[1], $date[0])->toDateTimeString();
@@ -138,7 +144,7 @@ class Post extends Model
     }
     public static function remove_post_from_collection($collection, $post)
     {
-        $collection = $collection->filter(function ($value, $key) use($post){
+        $collection = $collection->filter(function ($value, $key) use ($post) {
             return $value->id != $post->id;
         });
         return $collection;
@@ -157,7 +163,7 @@ class Post extends Model
         // Check if post do not have tags
         if (!isset($mainpost->tags[0]->id)) {
             $cat_post = Post::get_category_posts($mainpost->categories[0]->id);
-            $cat_post = Post::remove_post_from_collection($cat_post,$mainpost);
+            $cat_post = Post::remove_post_from_collection($cat_post, $mainpost);
             return $cat_post->shuffle();
         }
 
@@ -173,9 +179,9 @@ class Post extends Model
 
         // Filter the collection. No duplicates. Remove main post from collection.
         $similarpost = $similarpost->unique('id')->shuffle();
-        $similarpost = Post::remove_post_from_collection($similarpost,$mainpost);
+        $similarpost = Post::remove_post_from_collection($similarpost, $mainpost);
 
-        if($similarpost->count() <= $half_needed_similar_posts){
+        if ($similarpost->count() <= $half_needed_similar_posts) {
             // We have enough similar posts
             return $similarpost;
         }
@@ -186,13 +192,13 @@ class Post extends Model
         $rating_average = $rating_average - 0.5;
 
         // Remove posts with below average rating
-        $similarpost_rating = $similarpost->filter(function ($value, $key) use($rating_average){
-            if(Post::get_rating_avg($value)){
+        $similarpost_rating = $similarpost->filter(function ($value, $key) use ($rating_average) {
+            if (Post::get_rating_avg($value)) {
                 return Post::get_rating_avg($value) >= $rating_average;
             }
         });
 
-        if($similarpost_rating->count() >= $half_needed_similar_posts){
+        if ($similarpost_rating->count() >= $half_needed_similar_posts) {
             // We have enough similar posts
             return $similarpost_rating->take($needed_similar_posts);
         }
@@ -203,7 +209,7 @@ class Post extends Model
         $average_views = $average_views - 1.5;
 
         // Remove all posts that have below avg views from the collection
-        $similarpost_views = $similarpost->filter(function ($value, $key) use($average_views){
+        $similarpost_views = $similarpost->filter(function ($value, $key) use ($average_views) {
             return $value['views']->count() >= $average_views;
         });
 
@@ -211,12 +217,11 @@ class Post extends Model
         $ready_similarpost = $similarpost_views->merge($similarpost_rating)->unique('id')->take($needed_similar_posts);
 
         return  $ready_similarpost;
-
     }
     public static function get_category_posts($category_id, $limit = 10)
     {
         $category = Category::find($category_id);
-        if($limit){
+        if ($limit) {
             $reletedposts = $category->posts()->latest()->take($limit)->get();
         } else {
             $reletedposts = $category->posts()->latest()->get();
@@ -227,25 +232,25 @@ class Post extends Model
     {
         $all_ratings = array();
         foreach ($posts as $post) {
-            if(Post::get_rating_avg($post)){
+            if (Post::get_rating_avg($post)) {
                 array_push($all_ratings, Post::get_rating_avg($post));
             }
         }
-        return array_sum($all_ratings)/count($all_ratings);
+        return array_sum($all_ratings) / count($all_ratings);
     }
     public static function get_views_avg_of_posts_collection($posts)
     {
         $all_views = array();
         foreach ($posts as $post) {
-            array_push($all_views,$post->views->count());
+            array_push($all_views, $post->views->count());
         }
-        return array_sum($all_views)/count($all_views);
+        return array_sum($all_views) / count($all_views);
     }
     public static function get_rating_avg($post)
     {
-        if($post->ratings->count()){
+        if ($post->ratings->count()) {
             $total = 0;
-            foreach($post->ratings as $rate){
+            foreach ($post->ratings as $rate) {
                 $total = $total + $rate->rating;
             }
             $avg_stars = $total / $post->ratings->count();
@@ -253,20 +258,19 @@ class Post extends Model
             $avg_stars = 0;
         }
         return $avg_stars;
-
     }
     public static function output_post_status($post_status)
     {
         $BlubloUser = BlublogUser::get_user(Auth::user());
-        if($BlubloUser->user_role->is_admin or $BlubloUser->user_role->is_mod){
+        if ($BlubloUser->user_role->is_admin or $BlubloUser->user_role->is_mod) {
             return $post_status;
         }
-        if($BlubloUser->user_role->posts_wait_for_approve){
+        if ($BlubloUser->user_role->posts_wait_for_approve) {
             $posts_count = Post::where([
                 ['status', '=', 'publish'],
                 ['user_id', '=', $BlubloUser->id],
             ])->count();
-            if($posts_count > blublog_setting('number_of_approved_post')){
+            if ($posts_count > blublog_setting('number_of_approved_post')) {
                 return $post_status;
             } else {
                 Session::flash('warning', __('blublog.needs_approve'));
@@ -277,27 +281,27 @@ class Post extends Model
     }
     public static function next_post_id()
     {
-        if(!is_null(Post::latest()->first())){
+        if (!is_null(Post::latest()->first())) {
             $lastPost = Post::latest()->first();
-        }else{
+        } else {
             return 1;
         }
         return ++$lastPost->id;
     }
     public static function makeslug($title)
     {
-            $numb = rand(0, 999) . Post::next_post_id();
-            $slug = str_replace( " ", "-", $title);
-            $slug = preg_replace("/[^A-Za-z0-9\p{Cyrillic}-]/u","",$slug);
-            $slug = $slug . "-" . $numb ;
-            $slug = mb_strimwidth($slug, 0, 190, null);
-            return $slug;
+        $numb = rand(0, 999) . Post::next_post_id();
+        $slug = str_replace(" ", "-", $title);
+        $slug = preg_replace("/[^A-Za-z0-9\p{Cyrillic}-]/u", "", $slug);
+        $slug = $slug . "-" . $numb;
+        $slug = mb_strimwidth($slug, 0, 190, null);
+        return $slug;
     }
     public static function public($posts)
     {
-        $foo =0;
-        foreach($posts as $post){
-            if($post->status != "publish"){
+        $foo = 0;
+        foreach ($posts as $post) {
+            if ($post->status != "publish") {
                 unset($posts[$foo]);
             }
             $foo++;
@@ -306,21 +310,21 @@ class Post extends Model
     }
     public static function processing($posts, $null = 0)
     {
-        foreach ($posts as $post){
+        foreach ($posts as $post) {
             $post->date = Carbon::parse($post->created_at)->format(blublog_setting('date_format'));
             $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
             $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
             $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
-            $post = Post::get_posts_stars($post,false);
-            $post->author_url = url(config('blublog.blog_prefix') ) . "/author/". $post->user->name;
+            $post = Post::get_posts_stars($post, false);
+            $post->author_url = url(config('blublog.blog_prefix')) . "/author/" . $post->user->name;
             $post->total_views = $post->views->count();
-            $post->tags =$post->tags()->get() ;
+            $post->tags = $post->tags()->get();
             $post->categories = $post->categories()->get();
-            if(blublog_setting('use_rating_module_as_likes_and_dislikes')){
+            if (blublog_setting('use_rating_module_as_likes_and_dislikes')) {
                 $post = Post::get_likes_dislikes($post);
             }
         }
-        if(!$posts->count() and $null == 1){
+        if (!$posts->count() and $null == 1) {
             $posts = null;
         }
         return $posts;
@@ -329,11 +333,11 @@ class Post extends Model
     {
         $likes = 0;
         $dislikes = 0;
-        foreach($post->ratings as $rating){
-            if($rating->rating == 5){
+        foreach ($post->ratings as $rating) {
+            if ($rating->rating == 5) {
                 $likes++;
             }
-            if($rating->rating == 1){
+            if ($rating->rating == 1) {
                 $dislikes++;
             }
         }
@@ -343,32 +347,32 @@ class Post extends Model
     }
     public static function get_posts_stars($post, $show_avg = true)
     {
-        if(blublog_setting('no_ratings')){
+        if (blublog_setting('no_ratings')) {
             return $post;
         }
 
         $avg_stars = Post::get_rating_avg($post);
 
-        if(!$show_avg){
+        if (!$show_avg) {
             $STARS_HTML = "";
         } else {
             $STARS_HTML = "<hr>";
         }
-        for($i=1; $i<6; $i++){
-            if($show_avg){
-                $js_fun = "('" .$i . "_star')";
-                $onclick = 'onclick="set_ratingto'. $js_fun . '"';
+        for ($i = 1; $i < 6; $i++) {
+            if ($show_avg) {
+                $js_fun = "('" . $i . "_star')";
+                $onclick = 'onclick="set_ratingto' . $js_fun . '"';
             } else {
                 $onclick = "";
             }
-            if($i <= $avg_stars){
-                $STARS_HTML = $STARS_HTML . '<span '. ' style="color:#2780E3;"' . ' class="oi oi-star" id="' . $i . '_star"  '.$onclick.' ></span>';
-            } else{
-                $STARS_HTML = $STARS_HTML . '<span '. ' style="color:black;"' . ' class="oi oi-star" id="' . $i . '_star"  '.$onclick.' ></span>';
+            if ($i <= $avg_stars) {
+                $STARS_HTML = $STARS_HTML . '<span ' . ' style="color:#2780E3;"' . ' class="oi oi-star" id="' . $i . '_star"  ' . $onclick . ' ></span>';
+            } else {
+                $STARS_HTML = $STARS_HTML . '<span ' . ' style="color:black;"' . ' class="oi oi-star" id="' . $i . '_star"  ' . $onclick . ' ></span>';
             }
         }
-        if($show_avg){
-            $STARS_HTML = $STARS_HTML . " (". round($avg_stars, 2) . ")" . '<p id="rating_info">Click on stars to rate this post.</p><hr>';
+        if ($show_avg) {
+            $STARS_HTML = $STARS_HTML . " (" . round($avg_stars, 2) . ")" . '<p id="rating_info">Click on stars to rate this post.</p><hr>';
         } else {
             $STARS_HTML = $STARS_HTML . "";
         }
@@ -391,7 +395,7 @@ class Post extends Model
         $post = Post::find($post_id);
         $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
         $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
-        if(!$post){
+        if (!$post) {
             return abort(404);
         }
         return $post;
@@ -411,7 +415,7 @@ class Post extends Model
         $post = Post::where([
             ['img', '=', $post->img],
         ])->latest()->get();
-        if($post->count() > 1){
+        if ($post->count() > 1) {
             return true;
         }
         return false;
@@ -429,18 +433,18 @@ class Post extends Model
         $posts = Post::where([
             ['status', '=', "publish"],
         ])->latest()->paginate($pages);
-        if($posts){
+        if ($posts) {
             $posts = Post::processing($posts);
             return $posts;
-            foreach ($posts as $post){
-                $post = Post::get_posts_stars($post,false);
+            foreach ($posts as $post) {
+                $post = Post::get_posts_stars($post, false);
                 $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
                 $post->img_url = Post::get_img_url($post->img);
                 $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
                 $post->date = Carbon::parse($post->created_at)->format(blublog_setting('date_format'));
                 $post->total_views = $post->count();
 
-                if($post->tag_id){
+                if ($post->tag_id) {
                     $post->maintag_id = $post->tag_id;
                 } else {
                     $post->maintag_id = $post->categories[0]->id;
@@ -461,8 +465,8 @@ class Post extends Model
     }
     public static function get_numb_of_posts_in_tags($post)
     {
-        foreach($post->tags as $tag){
-            $tag->number_of_posts = $tag->posts()->where("status",'=','publish')->count();
+        foreach ($post->tags as $tag) {
+            $tag->number_of_posts = $tag->posts()->where("status", '=', 'publish')->count();
         }
         return $post;
     }
@@ -470,35 +474,38 @@ class Post extends Model
     {
         return Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $img);;
     }
+    public static function get_thumb_url($img)
+    {
+        return Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $img);;
+    }
 
-    public static function check_if_files_uploaded($mainfile,$thumbnail_file,$blur_thumbnail_file)
+    public static function check_if_files_uploaded($mainfile, $thumbnail_file, $blur_thumbnail_file)
     {
         $message = '';
-        if(!$mainfile){
+        if (!$mainfile) {
             $message = $message . "Main file was not uploaded. ";
         }
-        if(!$thumbnail_file){
+        if (!$thumbnail_file) {
             $message = $message . "Thumbnail file was not uploaded. ";
         }
-        if(!$blur_thumbnail_file){
+        if (!$blur_thumbnail_file) {
             $message = $message . "Blur thumbnail file was not uploaded. ";
         }
-        if(!$mainfile or !$thumbnail_file or !$blur_thumbnail_file){
+        if (!$mainfile or !$thumbnail_file or !$blur_thumbnail_file) {
             $message = $message . "Check if you're set up blublog file driver in config/filesystems and blublog settings.";
             Session::flash('warning', $message);
             return false;
         }
         return true;
-
     }
     public static function delete_post_imgs($img)
     {
-        $img_status = Storage::disk(config('blublog.files_disk', 'blublog'))->delete("posts/". $img);
+        $img_status = Storage::disk(config('blublog.files_disk', 'blublog'))->delete("posts/" . $img);
         $path2 = 'posts/' . "thumbnail_" . $img;
-        $thumbnail_img_status =Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path2);
+        $thumbnail_img_status = Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path2);
         $path3 = 'posts/' . "blur_thumbnail_" . $img;
-        $blur_img_status =Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path3);
-        if($img_status and $thumbnail_img_status and $blur_img_status){
+        $blur_img_status = Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path3);
+        if ($img_status and $thumbnail_img_status and $blur_img_status) {
             return true;
         }
         return false;

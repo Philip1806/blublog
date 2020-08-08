@@ -84,9 +84,9 @@
 {!! Form::close() !!}
 
 @include('blublog::panel.partials._postjs')
+@include('blublog::panel.posts._uploadimg')
 <script>
 $(".select2-multi").select2();
 $(".select3-multi").select2();
 </script>
-
 @endsection

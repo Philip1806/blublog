@@ -1,6 +1,7 @@
 <?php
 
 namespace   Blublog\Blublog\Controllers;
+
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,60 +22,60 @@ class BlublogSettingController extends Controller
     }
     public function admin_control($setting)
     {
-        if($setting == 0){
+        if ($setting == 0) {
             Artisan::call('cache:clear');
             Session::flash('success', __('blublog.cache_clear'));
-            Log::add($setting, "info", __('blublog.cache_clear') );
+            Log::add($setting, "info", __('blublog.cache_clear'));
             return redirect()->back();
         }
-        if($setting == 1){
+        if ($setting == 1) {
             Artisan::call('blublog:sitemap');
             Session::flash('success', __('blublog.rss_generated'));
-            Log::add($setting, "info", __('blublog.rss_generated') );
+            Log::add($setting, "info", __('blublog.rss_generated'));
             return redirect()->back();
         }
-        if($setting == 2){
-            if(!file_exists( storage_path().'/framework/down')){
+        if ($setting == 2) {
+            if (!file_exists(storage_path() . '/framework/down')) {
                 Artisan::call('down', [
                     '--allow' => Post::getIp(), '--message' => blublog_setting('maintenance_massage')
                 ]);
-                Log::add($setting, "info", __('blublog.turn_on_maintenance') );
+                Log::add($setting, "info", __('blublog.turn_on_maintenance'));
             } else {
                 Artisan::call('up');
-                Log::add($setting, "info", __('blublog.turn_off_maintenance') );
+                Log::add($setting, "info", __('blublog.turn_off_maintenance'));
             }
             return redirect()->back();
         }
-        if($setting == 3){
+        if ($setting == 3) {
             $settings = Setting::get();
-            if(blublog_setting('under_attack')){
-                foreach($settings as $setting){
-                    if($setting->name == "disable_comments_modul"){
+            if (blublog_setting('under_attack')) {
+                foreach ($settings as $setting) {
+                    if ($setting->name == "disable_comments_modul") {
                         $setting->val = serialize(false);
                     }
-                    if($setting->name == "no_ratings"){
+                    if ($setting->name == "no_ratings") {
                         $setting->val = serialize(false);
                     }
-                    if($setting->name == "disable_search_modul"){
+                    if ($setting->name == "disable_search_modul") {
                         $setting->val = serialize(false);
                     }
-                    if($setting->name == "under_attack"){
+                    if ($setting->name == "under_attack") {
                         $setting->val = serialize(false);
                     }
                     $setting->save();
                 }
             } else {
-                foreach($settings as $setting){
-                    if($setting->name == "disable_comments_modul"){
+                foreach ($settings as $setting) {
+                    if ($setting->name == "disable_comments_modul") {
                         $setting->val = serialize(true);
                     }
-                    if($setting->name == "no_ratings"){
+                    if ($setting->name == "no_ratings") {
                         $setting->val = serialize(true);
                     }
-                    if($setting->name == "disable_search_modul"){
+                    if ($setting->name == "disable_search_modul") {
                         $setting->val = serialize(true);
                     }
-                    if($setting->name == "under_attack"){
+                    if ($setting->name == "under_attack") {
                         $setting->val = serialize(true);
                     }
                     $setting->save();
@@ -89,10 +90,10 @@ class BlublogSettingController extends Controller
         //error, alert, visit, info, bot
         $error_logs = Log::where([
             ['type', '=', 'error'],
-            ])->latest()->paginate(15);
+        ])->latest()->paginate(15);
         $visit_logs = Log::where([
             ['type', '=', 'visit'],
-            ])->latest()->paginate(15);
+        ])->latest()->paginate(15);
         $alert_logs = Log::where([
             ['type', '=', 'alert'],
         ])->latest()->paginate(15);
@@ -107,25 +108,25 @@ class BlublogSettingController extends Controller
     public function roles()
     {
         $posts = array(
-            'create_posts','update_own_posts','delete_own_posts','view_stats_own_posts',
-            'update_all_posts','delete_all_posts','view_stats_all_posts','posts_wait_for_approve','control_post_rating',
+            'create_posts', 'update_own_posts', 'delete_own_posts', 'view_stats_own_posts',
+            'update_all_posts', 'delete_all_posts', 'view_stats_all_posts', 'posts_wait_for_approve', 'control_post_rating',
         );
         $comments = array(
-            'create_comments','moderate_comments_from_own_posts','moderate_own_comments','update_all_comments',
-            'delete_all_comments','approve_comments_from_own_posts','approve_all_comments','ban_user_from_commenting',
+            'create_comments', 'moderate_comments_from_own_posts', 'moderate_own_comments', 'update_all_comments',
+            'delete_all_comments', 'approve_comments_from_own_posts', 'approve_all_comments', 'ban_user_from_commenting',
         );
         $tags_cat_pages = array(
-            'create_tags','moderate_tags_created_within_set_time','update_all_tags','delete_all_tags',
-            'view_categories','create_categories','update_categories','delete_categories','view_pages',
-            'create_pages','update_pages','delete_pages'
-            );
+            'create_tags', 'moderate_tags_created_within_set_time', 'update_all_tags', 'delete_all_tags',
+            'view_categories', 'create_categories', 'update_categories', 'delete_categories', 'view_pages',
+            'create_pages', 'update_pages', 'delete_pages'
+        );
         $others = array(
-            'create_users','update_own_user','update_all_users',
-            'delete_users','change_settings','upload_files','delete_own_files','delete_all_files','use_menu',
+            'create_users', 'update_own_user', 'update_all_users',
+            'delete_users', 'change_settings', 'upload_files', 'delete_own_files', 'delete_all_files', 'use_menu',
             'is_mod', 'is_admin'
-            );
+        );
         $roles = Role::get();
-        foreach($roles as $role){
+        foreach ($roles as $role) {
             $role->posts = $posts;
             $role->comments = $comments;
             $role->tags_cat_pages = $tags_cat_pages;
@@ -135,13 +136,13 @@ class BlublogSettingController extends Controller
     }
     public function role(Request $request)
     {
-        if($request->role_id == 'new'){
+        if ($request->role_id == 'new') {
             Role::add_new($request->all());
             Session::flash('success', __('blublog.contentcreate'));
         }
         $role = Role::find($request->role_id);
-        if($role){
-            if($role->id == 1){
+        if ($role) {
+            if ($role->id == 1) {
                 Session::flash('error', __('blublog.role_admin_change'));
                 return redirect()->back();
             }
@@ -149,7 +150,7 @@ class BlublogSettingController extends Controller
             Session::flash('success', __('blublog.contentupdate'));
             return redirect()->back();
         }
-        Log::add($request, "alert", __('blublog.404') );
+        Log::add($request, "alert", __('blublog.404'));
         Session::flash('error', __('blublog.404'));
         return redirect()->back();
     }
@@ -162,18 +163,18 @@ class BlublogSettingController extends Controller
     {
         $url = "https://blublog.info/info/blublog/update-info/" . config('blublog.version');
         $file_headers = @get_headers($url);
-        $data = array("msg"=>"", "major"=>false, "have_update"=> false, "fix"=>"");
+        $data = array("msg" => "", "major" => false, "have_update" => false, "fix" => "");
 
-        if ($file_headers[0] == 'HTTP/1.1 200 OK' or $file_headers[0] == 'HTTP/1.0 200 OK'){
+        if ($file_headers[0] == 'HTTP/1.1 200 OK' or $file_headers[0] == 'HTTP/1.0 200 OK') {
             $data = json_decode(file_get_contents($url), true);
 
-            if(exec('echo EXEC') == 'EXEC'){
+            if (exec('echo EXEC') == 'EXEC') {
                 $can_update = true;
             } else {
                 $can_update = false;
             }
             $can_update = true;
-            if(!$data['have_update']){
+            if (!$data['have_update']) {
                 Session::flash('success', "No updates");
             }
         } else {
@@ -189,17 +190,17 @@ class BlublogSettingController extends Controller
         $keys = array_keys($request->all());
         $value = array_values($request->all());
 
-        for($i = 1; $i < count($request->all()); $i++){
+        for ($i = 1; $i < count($request->all()); $i++) {
             $setting = Setting::where([
                 ['name', '=', $keys[$i]],
             ])->first();
-            if($setting->type == "bool"){
-                if($value[$i]){
+            if ($setting->type == "bool") {
+                if ($value[$i]) {
                     $setting->val = serialize(true);
-                }else{
+                } else {
                     $setting->val = serialize(false);
                 }
-            } else{
+            } else {
                 $setting->val = serialize($value[$i]);
             }
             $setting->save();

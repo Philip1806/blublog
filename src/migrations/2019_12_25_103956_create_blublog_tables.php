@@ -71,6 +71,7 @@ class CreateBlublogTables extends Migration
             $table->string('descr', 250);
             $table->string('filename', 250);
             $table->boolean('public')->default(1);
+            $table->boolean('is_in_post')->default(0);
             $table->timestamps();
         });
 
@@ -116,7 +117,6 @@ class CreateBlublogTables extends Migration
             $table->text('data')->nullable();
             $table->timestamps();
         });
-
     }
 
     /**

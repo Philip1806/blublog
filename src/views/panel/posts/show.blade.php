@@ -120,7 +120,9 @@
         </div>
     </div>
 </div>
-
+@if (!empty($images[0]->id))
+@include('blublog::panel.files._table', ['files'=>$images,'no_title'=>true])
+@endif
 
 <div class="col-xl-12" style="margin-top:50px;">
         <div class="card shadow">
@@ -130,5 +132,4 @@
                 </div>
         </div>
 </div>
-
 @endsection

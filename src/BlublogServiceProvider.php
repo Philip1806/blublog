@@ -32,12 +32,7 @@ class BlublogServiceProvider extends ServiceProvider
         Page::class => PagePolicy::class,
         File::class => FilePolicy::class,
     ];
-    public function registerPolicies()
-    {
-        foreach ($this->policies as $key => $value) {
-            Gate::policy($key, $value);
-        }
-    }
+
     /**
      * Register any application services.
      *
@@ -49,23 +44,13 @@ class BlublogServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/views', 'blublog');
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
         $this->mergeConfigFrom(
-            __DIR__.'/config/blublog.php', 'blublog'
+            __DIR__ . '/config/blublog.php',
+            'blublog'
         );
-        $this->publishes([
-            __DIR__.'/public' => public_path('/'),
-            __DIR__.'/views/blublog' => base_path('resources/views/vendor/blublog/blublog'),
-            __DIR__.'/lang' => base_path('resources/lang/en/'),
-        ]);
+        $this->publish_files();
         $this->commands($this->commands);
-        $file = __DIR__ . '/Models/Helpers.php';
-        if (file_exists($file)) {
-            require_once($file);
-        }
-        app('router')->aliasMiddleware('BlublogAdmin', \Blublog\Blublog\BlublogAdmin::class);
-        app('router')->aliasMiddleware('BlublogUseMenu', \Blublog\Blublog\BlublogUseMenu::class);
-        app('router')->aliasMiddleware('BlublogPanel', \Blublog\Blublog\BlublogPanel::class);
-
-
+        $this->register_helpers();
+        $this->add_middleware();
     }
 
     /**
@@ -75,37 +60,70 @@ class BlublogServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->register_policies();
+        $this->define_gates();
+    }
+
+    public function publish_files()
+    {
+        $this->publishes([
+            __DIR__ . '/public' => public_path('/'),
+            __DIR__ . '/views/blublog' => base_path('resources/views/vendor/blublog/blublog'),
+            __DIR__ . '/lang' => base_path('resources/lang/en/'),
+        ]);
+    }
+    public function register_helpers()
+    {
+        $file = __DIR__ . '/Models/Helpers.php';
+        if (file_exists($file)) {
+            require_once($file);
+        }
+    }
+    public function add_middleware()
+    {
+        app('router')->aliasMiddleware('BlublogAdmin', \Blublog\Blublog\BlublogAdmin::class);
+        app('router')->aliasMiddleware('BlublogUseMenu', \Blublog\Blublog\BlublogUseMenu::class);
+        app('router')->aliasMiddleware('BlublogPanel', \Blublog\Blublog\BlublogPanel::class);
+    }
+    public function register_policies()
+    {
+        foreach ($this->policies as $key => $value) {
+            Gate::policy($key, $value);
+        }
+    }
+
+    public function define_gates()
+    {
         Gate::define('can_delete_all_files', function ($user) {
             $Blublog_User = BlublogUser::get_user($user);
-            if($Blublog_User->user_role->delete_all_files){
+            if ($Blublog_User->user_role->delete_all_files) {
                 return true;
             }
             return false;
         });
         Gate::define('blublog_create_users', function ($user) {
             $Blublog_User = BlublogUser::get_user($user);
-            if($Blublog_User->user_role->create_users){
+            if ($Blublog_User->user_role->create_users) {
                 return true;
             }
             return false;
         });
         Gate::define('blublog_edit_users', function ($user, $edit_user = false) {
             $Blublog_User = BlublogUser::get_user($user);
-            if($Blublog_User->user_role->update_all_users){
+            if ($Blublog_User->user_role->update_all_users) {
                 return true;
             }
-            if($Blublog_User->user_role->update_own_user and ($edit_user == $Blublog_User->id)){
+            if ($Blublog_User->user_role->update_own_user and ($edit_user == $Blublog_User->id)) {
                 return true;
             }
             return false;
         });
         Gate::define('blublog_delete_users', function ($user) {
             $Blublog_User = BlublogUser::get_user($user);
-            if($Blublog_User->user_role->delete_users){
+            if ($Blublog_User->user_role->delete_users) {
                 return true;
             }
             return false;
         });
-        $this->registerPolicies();
     }
 }

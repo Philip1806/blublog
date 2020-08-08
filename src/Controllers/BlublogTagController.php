@@ -27,7 +27,7 @@ class BlublogTagController extends Controller
         $this->validate($request, $rules);
 
         $tag = new Tag;
-        if($request->slug){
+        if ($request->slug) {
             $tag->slug = $request->slug;
         } else {
             $tag->slug = Post::makeslug($request->title);
@@ -35,7 +35,7 @@ class BlublogTagController extends Controller
         $tag->title = $request->title;
         $tag->descr = $request->descr;
         $tag->save();
-        Log::add($request, "info", __('blublog.contentcreate') );
+        Log::add($request, "info", __('blublog.contentcreate'));
         Session::flash('success',  __('blublog.contentcreate'));
         return redirect()->route('blublog.tags.index');
     }
@@ -66,21 +66,21 @@ class BlublogTagController extends Controller
         $this->validate($request, $rules);
 
         $tag = Tag::find($id);
-        BlublogUser::check_access('update', $tag );
+        BlublogUser::check_access('update', $tag);
         $tag->title = $request->title;
         $tag->slug = $request->slug;
         $tag->descr = $request->descr;
         $tag->save();
-        Log::add($request, "info", __('blublog.contentedit') );
+        Log::add($request, "info", __('blublog.contentedit'));
         Session::flash('success', __('blublog.contentedit'));
         return redirect()->back();
     }
 
-    public function destroy ($id)
+    public function destroy($id)
     {
         $tag = Tag::find($id);
         BlublogUser::check_access('delete', $tag);
-        if($tag){
+        if ($tag) {
             $tag->posts()->detach();
             $tag->delete();
             Session::flash('success', __('blublog.contentdelete'));
@@ -88,5 +88,4 @@ class BlublogTagController extends Controller
         }
         return redirect()->back();
     }
-
 }

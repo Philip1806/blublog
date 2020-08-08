@@ -24,39 +24,38 @@ class BlublogCategoryController extends Controller
     public function store(Request $request)
     {
         BlublogUser::check_access('create', Category::class);
-            $rules = [
-                'title' => 'required|max:255',
-            ];
-            $this->validate($request, $rules);
+        $rules = [
+            'title' => 'required|max:255',
+        ];
+        $this->validate($request, $rules);
 
         $category = new Category;
         $category->title = $request->title;
         $category->descr = $request->descr;
         $category->slug =  Post::makeslug($request->title);
-        if($request->rgb){
+        if ($request->rgb) {
             $category->colorcode = $request->rgb . ";";
-        }else{
-            $category->colorcode = "rgb(". rand(1,255) . "," . rand(1,255) . "," . rand(1,255) . ");";
+        } else {
+            $category->colorcode = "rgb(" . rand(1, 255) . "," . rand(1, 255) . "," . rand(1, 255) . ");";
         }
-        if($request->file){
+        if ($request->file) {
             $category->img = File::handle_img_upload_from_category($request);
         }
         $category->save();
         Cache::forget('blublog.categories');
         Session::flash('success', __('blublog.contentcreate'));
-        Log::add($request, "info", __('blublog.contentcreate') );
+        Log::add($request, "info", __('blublog.contentcreate'));
         return redirect()->route('blublog.categories.index');
     }
     public function edit($id)
     {
         BlublogUser::check_access('update', Category::class);
         $category = Category::find($id);
-        if(!$category){
+        if (!$category) {
             abort(404);
         }
 
         return view('blublog::panel.categories.edit')->with('category', $category);
-
     }
     public function update(Request $request, $id)
     {
@@ -70,9 +69,9 @@ class BlublogCategoryController extends Controller
 
         $category = Category::find($id);
 
-        if($request->file){
+        if ($request->file) {
             $old_img = File::get_category_img_file($category->img);
-            if($old_img){
+            if ($old_img) {
                 Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path);
                 $old_img->delete();
             }
@@ -81,9 +80,9 @@ class BlublogCategoryController extends Controller
             $address = $category->img;
         }
 
-        if($request->rgb){
+        if ($request->rgb) {
             $category->colorcode = $request->rgb . ";";
-        }else{
+        } else {
             $category->colorcode = $request->colorcode;
         }
         $category->title = $request->title;
@@ -92,7 +91,7 @@ class BlublogCategoryController extends Controller
         $category->img = $address;
         $category->save();
         Cache::forget('blublog.categories');
-        Log::add($request, "info", __('blublog.contentupdate') );
+        Log::add($request, "info", __('blublog.contentupdate'));
         Session::flash('success', __('blublog.contentupdate'));
         return redirect()->back();
     }
@@ -100,7 +99,7 @@ class BlublogCategoryController extends Controller
     {
         BlublogUser::check_access('delete', Category::class);
         $Category = Category::find($id);
-        if(!$Category){
+        if (!$Category) {
             Session::flash('error', __('general.content_does_not_found'));
             return redirect()->route('categories.index');
         }
@@ -109,14 +108,14 @@ class BlublogCategoryController extends Controller
         $file = File::where([
             ['filename', '=', $path],
         ])->first();
-        if($file){
+        if ($file) {
             $file->delete();
-            if(!Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path)){
-                Log::add($Category, "error", __('blublog.error_removing') );
+            if (!Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path)) {
+                Log::add($Category, "error", __('blublog.error_removing'));
             }
         }
         $Category->posts()->detach();
-        Log::add($Category, "info", __('blublog.contentdelete') );
+        Log::add($Category, "info", __('blublog.contentdelete'));
         $Category->delete();
 
         Session::flash('success', __('blublog.contentdelete'));
