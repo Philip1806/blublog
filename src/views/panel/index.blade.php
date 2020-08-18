@@ -1,4 +1,12 @@
 @extends('blublog::panel.main')
+@section('navbar')
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ blublog_panel_url('/posts/create') }}">{{ __('blublog.add_post') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ blublog_panel_url('/posts/create') }}">{{ __('blublog.add_post') }}</a></li>
+    </ol>
+</nav>
+@endsection
 @section('content')
 @foreach ($php_errors as $error)
     <div class="alert alert-warning" role="alert">

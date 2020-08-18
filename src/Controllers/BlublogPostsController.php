@@ -242,9 +242,6 @@ class BlublogPostsController extends Controller
         } else {
             $post->slider = false;
         }
-        if ($request->new_date) {
-            $post->created_at = Post::convert_date($request->new_date);
-        }
         $post->img = $address;
         $post->save();
         Post::remove_cache($post->id);

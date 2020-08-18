@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-<a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/panel') }}">
+<a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ blublog_panel_url('') }}">
     <div class="sidebar-brand-text mx-3">
         @if (blublog_is_admin())
             {{ __('blublog.admin_panel') }}
@@ -22,7 +22,7 @@
 </li>
 
 <li class="nav-item active">
-  <a class="nav-link" href="{{ url('/panel') }}">
+  <a class="nav-link" href="{{ blublog_panel_url('') }}">
     <i class="oi oi-home"></i>
     <span>{{ __('blublog.home') }}</span></a>
 </li>

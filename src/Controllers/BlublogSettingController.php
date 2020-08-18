@@ -10,6 +10,7 @@ use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Role;
 use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 use Session;
 
 class BlublogSettingController extends Controller
@@ -22,6 +23,9 @@ class BlublogSettingController extends Controller
     }
     public function admin_control($setting)
     {
+        if (!blublog_is_admin()) {
+            abort(403);
+        }
         if ($setting == 0) {
             Artisan::call('cache:clear');
             Session::flash('success', __('blublog.cache_clear'));
@@ -84,6 +88,24 @@ class BlublogSettingController extends Controller
             Artisan::call('cache:clear');
             return redirect()->back();
         }
+
+        if ($setting == 4) {
+            $logs = Log::where([
+                ['created_at', '<', Carbon::today()->subMonths(3)],
+            ])->get();
+            foreach ($logs as $log) {
+                $log->delete();
+            }
+        }
+        if ($setting == 5) {
+            $logs = Log::where([
+                ['created_at', '<', Carbon::today()->subMonths(6)],
+            ])->get();
+            foreach ($logs as $log) {
+                $log->delete();
+            }
+        }
+        return redirect()->back();
     }
     public function logs()
     {

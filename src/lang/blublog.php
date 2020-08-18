@@ -82,6 +82,9 @@ return [
     'turn_on_maintenance' => 'Turn on maintenance mode',
     'turn_on_under_attack' => 'Turn on under attack mode.',
     'turn_off_under_attack' => 'Turn off under attack mode.',
+    'clear_logs_before_3' => 'Clear logs created before 3 months.',
+    'clear_logs_before_6' => 'Clear logs created before 6 months.',
+
     /*
     |--------------------------------------------------------------------------
     | Users
@@ -317,4 +320,5 @@ return [
     'approved' => 'Comment approved.',
     'not_approved' => 'The comment is now hidden.',
     'on_this_topic' => 'More about this topic',
+    'give_rating' => 'Click on stars to rate this post.',
 ];

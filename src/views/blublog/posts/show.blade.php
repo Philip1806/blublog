@@ -14,7 +14,6 @@
 <meta name="og:article:tag" property="og:article:tag" content="{{ $tag->title }}" >
 @endforeach
 @endif
-<meta name="og:url" property="og:url" content="{{ url('/') }}/posts/{{ $post->slug}}" />
 <meta name="og:locale" property="og:locale" content="en_EN" />
 <meta name="og:site_name" property="og:site_name" content="{!!blublog_setting('site_name')!!}" >
 <meta name="robots" content="index, follow">

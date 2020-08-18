@@ -10,10 +10,17 @@ class FilePolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability)
+    {
+        $Blublog_User = BlublogUser::get_user($user);
+        if ($Blublog_User->user_role->is_admin) {
+            return true;
+        }
+    }
     public function download(User $user, $file)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if ($Blublog_User->user_role->is_admin or $Blublog_User->user_role->is_mod) {
+        if ($Blublog_User->user_role->is_mod) {
             return true;
         }
         if ($Blublog_User->id == $file->user_id) {

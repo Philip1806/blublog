@@ -26,7 +26,6 @@ class CreateBlublogSettingsTables extends Migration
             $table->unsignedBigInteger('post_id');
             $table->string('ip', 250)->nullable();
             $table->string('agent', 250);
-            $table->text('data')->nullable();
             $table->timestamps();
             //$table->foreign('post_id')->references('id')->on('blublog_posts');
         });

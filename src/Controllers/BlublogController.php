@@ -51,7 +51,19 @@ class BlublogController extends Controller
                 ['created_at', '>', $thismonth],
                 ['created_at', '<', $nextmonth],
             ])->get()->count();
-            return view("blublog::panel.index")->with('this_month_logs', $this_month_logs)->with('php_errors', $php_errors)->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('version_info', Setting::get_blublog_version())->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
+            return view("blublog::panel.index", [
+                'this_month_logs' => $this_month_logs,
+                'php_errors' => $php_errors,
+                'notpubliccomments' => $notpubliccomments,
+                'private_posts' => $private_posts,
+                'draft_posts' => $draft_posts,
+                'totalfiles' => $numbfiles,
+                'totalcomments' => $numbcomments,
+                'totalposts' => $totalposts,
+                'version_info' => Setting::get_blublog_version(),
+                'last_month_posts' => $last_month_posts,
+                'this_month_posts' => $this_month_posts,
+            ]);
         } elseif (blublog_is_mod()) {
             return view("blublog::panel.index_mod")->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
         }

@@ -72,8 +72,12 @@ class BlublogCategoryController extends Controller
         if ($request->file) {
             $old_img = File::get_category_img_file($category->img);
             if ($old_img) {
-                Storage::disk(config('blublog.files_disk', 'blublog'))->delete($path);
-                $old_img->delete();
+                if (!Storage::disk(config('blublog.files_disk', 'blublog'))->delete($old_img->filename)) {
+                    Log::add($request, "error", __('blublog.error_removing'));
+                    Session::flash('error', __('blublog.error_removing'));
+                } else {
+                    $old_img->delete();
+                }
             }
             $address = File::handle_img_upload_from_category($request);
         } else {

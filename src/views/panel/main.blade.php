@@ -117,7 +117,7 @@
 
 
 
-  <script src="{{ url('/') }}\blublog/js/bootstrap.min.js"></script>
-  <script src="{{ url('/') }}\blublog/js/custom.js"></script>
+  <script src="{{ url('blublog/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url('blublog/js/custom.js') }}"></script>
   </body>
 </html>

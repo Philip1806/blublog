@@ -30,9 +30,22 @@
                     @endif
                     @if ($setting->type == "bool")
                     <br>
-                    {{ Form::label($setting->name, $setting->label) }}
-                    {{Form::hidden($setting->name,0)}}
-                    {{Form::checkbox($setting->name, null,unserialize($setting->val))}}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-check form-check-inline">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        {{ Form::label($setting->name, $setting->label) }}
+                                        {{Form::hidden($setting->name,0)}}
+                                    </div>
+                                    <div class="col-sm">
+                                        {{Form::checkbox($setting->name, null,unserialize($setting->val))}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                     @endif
                     @endforeach
                   </div>

@@ -24,6 +24,15 @@ class BlublogFrontController extends Controller
 
     public function __construct()
     {
+        if (!Cache::has('blublog.rec_posts')) {
+            $rec_posts = Post::recommended();
+
+            Cache::put('blublog.rec_posts', $rec_posts,  now()->addMinutes(config('blublog.setting_cache')));
+        } else {
+            $rec_posts = Cache::get('blublog.rec_posts');
+        }
+        View::share('rec_posts', $rec_posts);
+
         if (!Cache::has('blublog.categories')) {
             $categories = Category::get();
             Cache::put('blublog.categories', $categories,  now()->addMinutes(config('blublog.setting_cache')));
@@ -32,7 +41,10 @@ class BlublogFrontController extends Controller
         }
         View::share('categories', $categories);
         $ip = Post::getIp();
-        if ($ip != blublog_setting('ignore_ip')) {
+        if (
+            !blublog_setting('do_not_track_visits') and
+            ($ip != blublog_setting('ignore_ip'))
+        ) {
             Log::add('null', "visit");
         }
 
@@ -126,7 +138,7 @@ class BlublogFrontController extends Controller
         ];
         $this->validate($request, $rules);
         $search =  $request->search;
-
+        Log::add($search, 'info', 'Search used');
         $result = collect(new Post);
 
         $posts = Post::where([
@@ -226,6 +238,7 @@ class BlublogFrontController extends Controller
             }
             $post = Post::get_posts_stars($post);
             $post->img_url = Post::get_img_url($post->img);
+            $post->img_thumb_url = Post::get_thumb_url($post->img);
             $post->similar_posts =  Post::processing(Post::public(Post::similar_posts($post->id)));
             $post->total_views = $post->views->count();
             $post->author_url = url(config('blublog.blog_prefix')) . "/author/" . $post->user->name;

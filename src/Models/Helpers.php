@@ -138,6 +138,12 @@ if (!function_exists('blublog_draw_stars')) {
         return $HTML;
     }
 }
+if (!function_exists('blublog_panel_url')) {
+    function blublog_panel_url($address)
+    {
+        return url(config('blublog.panel_prefix') . $address);
+    }
+}
 if (!function_exists('blublog_get_user')) {
     function blublog_get_user($only_id = false)
     {

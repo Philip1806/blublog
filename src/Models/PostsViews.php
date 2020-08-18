@@ -17,7 +17,6 @@ class PostsViews extends Model
             $view->post_id = $post_id;
             $view->ip = Post::getIp();;
             $view->agent = \Request::header('User-Agent');
-            $view->data = $post_id;
             $view->save();
             Log::add('null', "visit");
         }

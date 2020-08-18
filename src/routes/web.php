@@ -43,6 +43,7 @@ Route::group(
 
             ],
             static function () {
+                Route::get('/', 'BlublogController@panel')->name('blublog.panel');
                 Route::get('/comments/approve/{id}', 'BlublogCommentsController@approve')->name('blublog.comments.approve');
 
                 Route::get('/rating/duplicate/{id}', 'BlublogRatingController@duplicate')->name('blublog.posts.rating.duplicate');
@@ -130,8 +131,6 @@ Route::group(
                 ])->only([
                     'edit', 'update', 'destroy'
                 ]);
-
-                Route::get('/', 'BlublogController@panel')->name('blublog.panel');
 
                 Route::group(
                     ['middleware' => 'BlublogAdmin'],

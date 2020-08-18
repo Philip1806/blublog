@@ -41,9 +41,7 @@ class BlublogFileController extends Controller
                 ['user_id', '=', blublog_get_user(1)],
             ])->latest()->paginate(10);
         }
-        foreach ($files as $file) {
-            $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url($file->filename);
-        }
+        $files = File::get_url($files);
         return view('blublog::panel.files.index')->with('files', $files);
     }
 
@@ -76,7 +74,7 @@ class BlublogFileController extends Controller
         }
         if (!$saved) {
             Session::flash('error', __('blublog.error_uploading'));
-            Log::add($request->all(), "error", __('blublog.error_uploading'));
+            Log::add($request, "error", __('blublog.error_uploading'));
             return redirect()->route('blublog.files.index');
         }
         $file->user_id = blublog_get_user(1);

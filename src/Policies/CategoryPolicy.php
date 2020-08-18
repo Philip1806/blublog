@@ -1,6 +1,7 @@
 <?php
 
 namespace Blublog\Blublog\Policies;
+
 use App\User;
 use Blublog\Blublog\Models\BlublogUser;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -9,10 +10,17 @@ class CategoryPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability)
+    {
+        $Blublog_User = BlublogUser::get_user($user);
+        if ($Blublog_User->user_role->is_admin) {
+            return true;
+        }
+    }
     public function view(User $user)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if($Blublog_User->user_role->view_categories){
+        if ($Blublog_User->user_role->view_categories) {
             return true;
         }
         return false;
@@ -21,7 +29,7 @@ class CategoryPolicy
     public function create(User $user)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if($Blublog_User->user_role->create_categories){
+        if ($Blublog_User->user_role->create_categories) {
             return true;
         }
         return false;
@@ -30,7 +38,7 @@ class CategoryPolicy
     public function update(User $user)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if($Blublog_User->user_role->update_categories){
+        if ($Blublog_User->user_role->update_categories) {
             return true;
         }
         return false;
@@ -39,7 +47,7 @@ class CategoryPolicy
     public function delete(User $user)
     {
         $Blublog_User = BlublogUser::get_user($user);
-        if($Blublog_User->user_role->delete_categories){
+        if ($Blublog_User->user_role->delete_categories) {
             return true;
         }
         return false;

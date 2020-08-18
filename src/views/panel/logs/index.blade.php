@@ -38,4 +38,20 @@
         </div>
     </div>
 </div>
+
+<div class="card border-danger shadow" style="margin-top: 20px;">
+    <div class="card-header bg-danger  text-white">
+    {{__('blublog.site_actions')}}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm">
+                <a href="{{ route('blublog.admin.control', 4) }}" class="btn btn-outline-primary btn-block">{{__('blublog.clear_logs_before_3')}}</a>
+              </div>
+            <div class="col-sm">
+                <a href="{{ route('blublog.admin.control', 5) }}" class="btn btn-outline-primary btn-block">{{__('blublog.clear_logs_before_6')}}</a>
+            </div>
+          </div>
+   </div>
+  </div>
 @endsection

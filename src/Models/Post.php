@@ -236,7 +236,11 @@ class Post extends Model
                 array_push($all_ratings, Post::get_rating_avg($post));
             }
         }
-        return array_sum($all_ratings) / count($all_ratings);
+        if (count($all_ratings)) {
+            return array_sum($all_ratings) / count($all_ratings);
+        } else {
+            return 0;
+        }
     }
     public static function get_views_avg_of_posts_collection($posts)
     {
@@ -353,11 +357,8 @@ class Post extends Model
 
         $avg_stars = Post::get_rating_avg($post);
 
-        if (!$show_avg) {
-            $STARS_HTML = "";
-        } else {
-            $STARS_HTML = "<hr>";
-        }
+        $STARS_HTML = "";
+
         for ($i = 1; $i < 6; $i++) {
             if ($show_avg) {
                 $js_fun = "('" . $i . "_star')";
@@ -372,7 +373,7 @@ class Post extends Model
             }
         }
         if ($show_avg) {
-            $STARS_HTML = $STARS_HTML . " (" . round($avg_stars, 2) . ")" . '<p id="rating_info">Click on stars to rate this post.</p><hr>';
+            $STARS_HTML = $STARS_HTML . " (" . round($avg_stars, 2) . ")" . '<p id="rating_info">' . __('blublog.give_rating') . '</p>';
         } else {
             $STARS_HTML = $STARS_HTML . "";
         }
@@ -440,7 +441,7 @@ class Post extends Model
                 $post = Post::get_posts_stars($post, false);
                 $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
                 $post->img_url = Post::get_img_url($post->img);
-                $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
+                $post->img_thumb_url =  Post::get_thumb_url($post->img);
                 $post->date = Carbon::parse($post->created_at)->format(blublog_setting('date_format'));
                 $post->total_views = $post->count();
 

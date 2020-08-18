@@ -16,7 +16,6 @@
 <meta name="og:title" property="og:title" content="Category: {{ $category->title }}">
 <meta name="og:description" property="og:description" content="{{ $category->descr }}">
 <meta name="og:site_name" property="og:site_name" content="{!!blublog_setting('site_name')!!}" >
-<meta name="og:url" property="og:url" content="{{ url('/') }}/categories/{{ $category->slug }}" />
 <meta name="og:locale" property="og:locale" content="en_EN" />
 <meta name="robots" content="index, follow">
 @endsection
