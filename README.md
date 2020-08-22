@@ -65,6 +65,8 @@ php artisan blublog:setup
 You can set up where all files from the package go.
 By default you can access the blog from /blog and panel from /panel. **If you get 404 error, make sure you're logged in. If you get 403 error, make sure you have run blublog:setup**;
 
+**If post images don't show, make sure you have configured blublog file driver. If you use the one above, make sure your APP_URL in .env file is correct.**
+
 ## Features
 
 1. Posts (CRUD)
@@ -133,7 +135,7 @@ By default you can access the blog from /blog and panel from /panel. **If you ge
 ## Design Customization
 
 Creating your own desing/theme for BLUblog is easy. Look at the documentation. (still not made)
-Basically, you put your theme files (blade.php) in here: \resources\views\vendor\blublog\your_theme_name and from setting page change theme field from "blublog" to "your_theme_name".
+Basically, you put your theme files (blade.php) in here: \resources\views\vendor\blublog\your_theme_name and from settings page change theme field from "blublog" to "your_theme_name".
 Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
 
 ## TODO

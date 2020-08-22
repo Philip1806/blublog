@@ -31,6 +31,9 @@
 
             <div id="collapse{{$role->id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
+                    @if ($role->id != 2 and $role->id != 3)
+                    <a  class="btn btn-outline-danger btn-block mb-3" href="{{ route('blublog.roles.delete', $role->id) }}" >{{__('blublog.delete')}}</a>
+                    @endif
                     @include('blublog::panel.settings._roles_table', ['role' => $role, 'role_id'=>$role->id])
                 </div>
             </div>

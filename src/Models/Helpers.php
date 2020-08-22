@@ -156,6 +156,24 @@ if (!function_exists('blublog_get_user')) {
         }
     }
 }
+if (!function_exists('blublog_get_user_from_id')) {
+    function blublog_get_username_from_id($user_id, $only_name = false)
+    {
+        if (!$user_id) {
+            return 0;
+        }
+        $Blublog_User = BlublogUser::where([
+            ['user_id', '=', $user_id],
+        ])->first();
+        if (!$Blublog_User) {
+            return 0;
+        }
+        if ($only_name) {
+            return $Blublog_User->name;
+        }
+        return $Blublog_User;
+    }
+}
 if (!function_exists('blublog_is_mod')) {
     function blublog_is_mod()
     {

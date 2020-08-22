@@ -12,7 +12,5 @@
 
     </div>
 </div>
-
-
-
+@include('blublog::panel.partials._editor')
 @endsection

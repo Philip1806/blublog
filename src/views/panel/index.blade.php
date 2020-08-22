@@ -2,7 +2,7 @@
 @section('navbar')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ blublog_panel_url('/posts/create') }}">{{ __('blublog.add_post') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ blublog_panel_url('/tags') }}">{{ __('blublog.add_tag') }}</a></li>
         <li class="breadcrumb-item"><a href="{{ blublog_panel_url('/posts/create') }}">{{ __('blublog.add_post') }}</a></li>
     </ol>
 </nav>

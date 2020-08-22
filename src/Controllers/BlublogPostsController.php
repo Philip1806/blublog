@@ -124,12 +124,12 @@ class BlublogPostsController extends Controller
         if ($request->seo_title) {
             $post->seo_title = $request->seo_title;
         } else {
-            $post->seo_title = substr($request->title, 0, 157); //to do
+            $post->seo_title = Post::make_seo_title($request->title);
         }
-        if ($request->descr) {
-            $post->seo_descr = $request->descr;
+        if ($request->seo_descr) {
+            $post->seo_descr = $request->seo_descr;
         } else {
-            $post->seo_descr = substr($request->content, 0, 157); //to do
+            $post->seo_descr = Post::make_seo_descr($request->content);
         }
         $post->headlight = $request->headlight;
         $post->content = $request->content;
@@ -161,8 +161,8 @@ class BlublogPostsController extends Controller
         } else {
             $post->slider = false;
         }
-        if ($request->created_at) {
-            $post->created_at = Post::convert_date($request->created_at);
+        if ($request->new_date) {
+            $post->created_at = Post::convert_date($request->new_date);
         }
         $post->save();
         $post->tags()->sync($request->tags, false);
@@ -205,12 +205,16 @@ class BlublogPostsController extends Controller
         } else {
             $address = $post->img;
         }
-
         $post->title = $request->title;
-        if ($request->descr) {
-            $post->seo_descr = $request->descr;
+        if ($request->seo_title) {
+            $post->seo_title = $request->seo_title;
         } else {
-            $post->seo_descr = substr($request->content, 0, 157); //todo
+            $post->seo_title = Post::make_seo_title($request->title);
+        }
+        if ($request->seo_descr) {
+            $post->seo_descr = $request->seo_descr;
+        } else {
+            $post->seo_descr = Post::make_seo_descr($request->content);
         }
         $post->headlight = $request->headlight;
         $post->content = $request->content;
@@ -241,6 +245,9 @@ class BlublogPostsController extends Controller
             $post->slider = true;
         } else {
             $post->slider = false;
+        }
+        if ($request->new_date) {
+            $post->created_at = Post::convert_date($request->new_date);
         }
         $post->img = $address;
         $post->save();

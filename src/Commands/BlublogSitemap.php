@@ -43,6 +43,7 @@ class BlublogSitemap extends Command
         $posts = Post::where([
             ['status', '=', "publish"],
         ])->latest()->get();
+        $posts = Post::processing($posts);
         $rssFileContents = view('blublog::rss', ['posts' =>  $posts]);
         Storage::disk(config('blublog.files_disk', 'blublog'))->put('rss.xml', $rssFileContents);
         $this->info("\n" . "Completed");

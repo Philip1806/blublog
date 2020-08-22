@@ -4,7 +4,7 @@
         <h4>{{__('blublog.seotitle')}}:</span></h4>
         {{ Form::text('seo_title', null, ['class' => 'form-control']) }}
         <h4>{{__('blublog.seodescr')}}:</h4>
-        {{ Form::text('descr', null, ['class' => 'form-control']) }}
+        {{ Form::text('seo_descr', null, ['class' => 'form-control']) }}
     </div>
 </div>
 <div class="card" style="margin-top:10px;">

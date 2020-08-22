@@ -14,9 +14,10 @@
     </div>
     <ul class="list-group list-group-flush">
     <li class="list-group-item"><strong>{{$log->message}}</strong></li>
+    <li class="list-group-item">{{$log->ip}} ({{blublog_get_username_from_id($log->user_id,true)}})</li>
     <li class="list-group-item">{{$log->user_agent}}</li>
-    <li class="list-group-item">{{$log->request_url}}</li>
-    <li class="list-group-item">{{$log->referer}}</li>
+    <li class="list-group-item">{{urldecode($log->request_url)}}</li>
+    <li class="list-group-item">{{urldecode($log->referer)}}</li>
     <li class="list-group-item">{{$log->lang}}</li>
     <li class="list-group-item">
         <p><a class="btn btn-primary" data-toggle="collapse" href="#Collapse1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">{{ __('blublog.show_all_data') }}</a></p>

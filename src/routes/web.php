@@ -137,7 +137,7 @@ Route::group(
                     static function () {
 
                         // Admin Only
-
+                        Route::get('/roles/delete/{role}', 'BlublogUserController@destroy_role')->name('blublog.roles.delete');
                         Route::get('/settings', 'BlublogSettingController@general_settings')->name('blublog.settings.general');
                         Route::resource('/settings', 'BlublogSettingController', [
                             'as' => 'blublog'
@@ -149,7 +149,6 @@ Route::group(
                         ])->only([
                             'index', 'show', 'destroy'
                         ]);
-                        Route::get('/updates', 'BlublogSettingController@update_blublog')->name('blublog.update');
                         Route::post('/role/update', 'BlublogSettingController@role')->name('blublog.roles.update');
                         Route::get('/roles', 'BlublogSettingController@roles')->name('blublog.roles');
                     }

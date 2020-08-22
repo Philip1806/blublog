@@ -292,13 +292,21 @@ class Post extends Model
         }
         return ++$lastPost->id;
     }
+    public static function make_seo_descr($content)
+    {
+        return mb_strimwidth(strip_tags($content), 0, 155, "...");
+    }
+    public static function make_seo_title($title)
+    {
+        return mb_strimwidth($title, 0, 60, null);
+    }
     public static function makeslug($title)
     {
         $numb = rand(0, 999) . Post::next_post_id();
         $slug = str_replace(" ", "-", $title);
         $slug = preg_replace("/[^A-Za-z0-9\p{Cyrillic}-]/u", "", $slug);
         $slug = $slug . "-" . $numb;
-        $slug = mb_strimwidth($slug, 0, 190, null);
+        $slug = mb_strimwidth($slug, 0, 100, null);
         return $slug;
     }
     public static function public($posts)
@@ -319,6 +327,7 @@ class Post extends Model
             $post->slug_url = "/" . config('blublog.blog_prefix') . "/posts/" . $post->slug;
             $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
             $post->img_thumb_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/thumbnail_' . $post->img);
+            $post->img_blur_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/blur_thumbnail_' . $post->img);
             $post = Post::get_posts_stars($post, false);
             $post->author_url = url(config('blublog.blog_prefix')) . "/author/" . $post->user->name;
             $post->total_views = $post->views->count();
@@ -401,7 +410,6 @@ class Post extends Model
         }
         return $post;
     }
-    //Post::img_used_by_other_post($id)
 
     /*
         Check if post img is been used for other post.

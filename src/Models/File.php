@@ -83,11 +83,10 @@ class File extends Model
     }
     public static function img_blurthumbnail($file, $path)
     {
-
         $img = Image::make($file);
-        $img->fit(100, 56, function ($constraint) {
+        $img->fit(blublog_setting('blur_img_height'), blublog_setting('blur_img_width'), function ($constraint) {
             $constraint->upsize();
-        })->blur(1)->interlace();
+        })->interlace();
         $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $path, 30);
         return true;
     }
@@ -100,7 +99,7 @@ class File extends Model
         $size = File::get_file_size($request->file);
 
         if (blublog_setting('keep_filename')) {
-            $address = Post::next_post_id() . "-" . File::clear_filename($request->file->getClientOriginalName());
+            $address = Post::next_post_id() . rand(0, 9) . "-" . File::clear_filename($request->file->getClientOriginalName());
         } else {
             $address = File::random_file_name($request->file->getClientOriginalName(), Post::next_post_id());
         }

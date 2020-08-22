@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.7",
+    'version' => "0.9.8",
     'blog_prefix' => "blog",
     'panel_prefix' => "panel",
     'files_disk' => "blublog",
@@ -20,6 +20,11 @@ return [
     'big_img_width_type' => "int",
     'big_img_quality' => 50,
     'big_img_quality_type' => "int",
+
+    'blur_img_height' => 300,
+    'blur_img_height_type' => "int",
+    'blur_img_width' => 175,
+    'blur_img_width_type' => "int",
 
     'setting_cache' => 28800,
     'setting_cache_type' => "int",

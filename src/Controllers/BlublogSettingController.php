@@ -161,6 +161,7 @@ class BlublogSettingController extends Controller
         if ($request->role_id == 'new') {
             Role::add_new($request->all());
             Session::flash('success', __('blublog.contentcreate'));
+            return redirect()->back();
         }
         $role = Role::find($request->role_id);
         if ($role) {
@@ -180,30 +181,6 @@ class BlublogSettingController extends Controller
     {
         $settings = Setting::latest()->get();
         return view('blublog::panel.settings.general')->with('settings', $settings);
-    }
-    public function update_blublog()
-    {
-        $url = "https://blublog.info/info/blublog/update-info/" . config('blublog.version');
-        $file_headers = @get_headers($url);
-        $data = array("msg" => "", "major" => false, "have_update" => false, "fix" => "");
-
-        if ($file_headers[0] == 'HTTP/1.1 200 OK' or $file_headers[0] == 'HTTP/1.0 200 OK') {
-            $data = json_decode(file_get_contents($url), true);
-
-            if (exec('echo EXEC') == 'EXEC') {
-                $can_update = true;
-            } else {
-                $can_update = false;
-            }
-            $can_update = true;
-            if (!$data['have_update']) {
-                Session::flash('success', "No updates");
-            }
-        } else {
-            Session::flash('error', __('blublog.cant_get_update_info'));
-            $can_update = false;
-        }
-        return view('blublog::panel.settings.updates')->with('data', $data)->with('can_update', $can_update);
     }
     public function store(Request $request)
     {

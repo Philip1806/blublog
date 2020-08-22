@@ -4,7 +4,7 @@
     <div class="card-body text-primary">
         {{Form::select('status', [ 'publish' => 'Public', 'draft' => 'Draft', 'private' => 'Private']) }}
         {{Form::select('type', [ 'posts' => 'Post', 'video' => 'Video']) }}
-        {{ Form::text('new_date', null, ['class' => 'form-control', 'placeholder'=>$date,'id'=>'datepicker','style'=>'margin-top:20px;']) }}
+        {{ Form::text('new_date', null, ['class' => 'form-control', 'placeholder'=>$date,'id'=>'datepicker', 'autocomplete'=>'off' ,'style'=>'margin-top:20px;']) }}
     </div>
 </div>
 <div id="pagepanel"></div><br>

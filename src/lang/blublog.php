@@ -24,7 +24,6 @@ return [
     'no_updates' => 'There is no new verison of BLUblog for now.',
     'update_now' => 'Click update button for auto updating BLUblog. Backup data before that.',
     'cant_update' => 'Sorry, you will need to update BLUblog manuly.',
-
     'mod_panel' => 'Moderation',
     'user_panel' => 'Author panel',
     'home' => 'Home',
@@ -47,7 +46,6 @@ return [
     'views' => 'Views',
     'private' => 'Private',
     'private_info' => 'Visible only for you',
-    'file_input' => 'Upload file:',
     'img' => 'Image',
     'latest_img' => 'Latest upload images:',
     'maintag' => 'Main tag',
@@ -228,6 +226,7 @@ return [
     'size' => 'Size',
     'download' => 'Download',
     'uploading_file' => 'Uploading File',
+    'file_input' => 'Upload file:',
     'max_size' => 'Max size:',
     'php_ini' => 'Change it in php.ini',
     'file_added' => 'File added',
@@ -304,6 +303,8 @@ return [
     'others' => 'Others',
     'save' => 'Save',
     'role_edit_admin' => 'You can not edit the main admin role.',
+    'delete_main_role' => 'You can not delete the main roles.',
+    'users_roles_changed' => 'Users that was using the deleted role are now authors.',
 
     /*
         FRONT

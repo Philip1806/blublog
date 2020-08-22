@@ -101,6 +101,33 @@ class BlublogUserController extends Controller
         return redirect()->route('blublog.users.profile');
     }
 
+    public function destroy_role($id)
+    {
+        if (!blublog_is_admin()) {
+            abort(403);
+        }
+        if ($id == 1 or $id == 2 or $id == 3) {
+            Log::add($id, "error", __('blublog.delete_main_role'));
+            Session::flash('error', __('blublog.delete_main_role'));
+            return redirect()->route('blublog.roles');
+        }
+
+        $BlublogUser = BlublogUser::where([
+            ['role_id', '=', $id],
+        ])->first();
+
+        if ($BlublogUser) {
+            Log::add($id, "alert", __('blublog.users_roles_changed'));
+            Session::flash('warning', __('blublog.users_roles_changed'));
+            return redirect()->route('blublog.roles');
+        }
+
+        $role = Role::find($id);
+        $role->delete();
+
+        Session::flash('success', __('blublog.contentdelete'));
+        return redirect()->route('blublog.roles');
+    }
     public function destroy($id)
     {
         if (Gate::denies('blublog_delete_users')) {

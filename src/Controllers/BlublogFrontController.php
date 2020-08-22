@@ -287,7 +287,7 @@ class BlublogFrontController extends Controller
 
         $rules = [
             'name' => 'required|max:50',
-            'comment_body' => 'required|max:1200',
+            'comment_body' => 'required|max:9200',
             'email' => 'required|email',
         ];
         $this->validate($request, $rules);

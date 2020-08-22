@@ -29,11 +29,11 @@ class BlublogController extends Controller
         $private_posts = Post::where([
             ['status', '=', 'private'],
             ['user_id', '=', blublog_get_user(1)],
-        ])->latest()->paginate(14);
+        ])->latest()->limit(14)->get();
         $draft_posts = Post::where([
             ['status', '=', 'draft'],
             ['user_id', '=', blublog_get_user(1)],
-        ])->latest()->paginate(14);
+        ])->latest()->limit(14)->get();
         $numbcomments = Comment::all()->count();
         $numbfiles = File::all()->count();
 

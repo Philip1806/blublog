@@ -59,7 +59,7 @@
                             <span class="badge badge-danger">{{__('blublog.its_hiden')}}</span>
                             @endif
                         </td>
-                        <td><a href="{{ route('blublog.front.post_show', $comment->post_slug) }}">{{$comment->body }}</a></td>
+                        <td><a href="{{ route('blublog.front.post_show', $comment->post_slug) }}">{{mb_strimwidth($comment->body, 0, 160, '...') }}</a></td>
                         <td>{{ $comment->name }}</td>
 
                         @can('update', $comment)

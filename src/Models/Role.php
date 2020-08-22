@@ -32,7 +32,6 @@ class Role extends Model
                 $request[$keys[$i]] = "1";
             }
         }
-        dd($request);
         $role = new Role($request);
         $role->save();
         return true;

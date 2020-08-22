@@ -12,7 +12,7 @@
       <title><![CDATA[{!! $post->title !!}]]></title>
       <link>{{ route('blublog.front.post_show', $post->slug) }}</link>
       <guid isPermaLink="true">{{ route('blublog.front.post_show', $post->slug) }}</guid>
-      <description><![CDATA[<div><img width="300" height="169" src="{{ url('/uploads/posts/') }}/thumbnail_{{ $post->img }}"/></div>{!! strip_tags($post->descr) !!}]]></description>
+      <description><![CDATA[<div><img width="300" height="169" src="{{ $post->img_thumb_url }}"/></div>{!! strip_tags($post->seo_descr) !!}]]></description>
       <category>{!! $post->categories[0]->title !!}</category>
       <pubDate>{{ $post->created_at->format(DateTime::RSS) }}</pubDate>
     </item>

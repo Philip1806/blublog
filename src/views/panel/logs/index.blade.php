@@ -4,9 +4,8 @@
 <br>
 <div class="card border-primary ">
     <div class="card-header text-white bg-primary">{{__('blublog.logs')}}</div>
-    <div class="card-body text-primary">
         <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <div class="nav nav-tabs pt-2" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-error-tab" data-toggle="tab" href="#nav-error" role="tab" aria-controls="nav-error" aria-selected="true">
                 Errors ({{$error_logs->total()}})</a>
               <a class="nav-item nav-link" id="nav-visit-tab" data-toggle="tab" href="#nav-visit" role="tab" aria-controls="nav-visit" aria-selected="false">
@@ -36,7 +35,6 @@
                 @include('blublog::panel.logs._tablelog', ['logs' => $info_logs])
             </div>
         </div>
-    </div>
 </div>
 
 <div class="card border-danger shadow" style="margin-top: 20px;">
