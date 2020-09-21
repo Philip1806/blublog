@@ -20,5 +20,7 @@
 
 @else
 <br>
-   <center> <b>{{__('blublog.no_pages')}}.</b> </center><hr>
+<div class="p-4 h3 text-center">
+    {{__('blublog.no_pages')}}
+</div>
 @endif

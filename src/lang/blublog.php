@@ -147,6 +147,7 @@ return [
     'show_all_data' => 'Show all data',
     'can_be_empty' => 'Can be empty',
     'logs_this' => 'Logs/Events this month',
+    'latest_important_logs' => ':number important logs in past 24 hours.',
     /*
     |--------------------------------------------------------------------------
     | Posts
@@ -209,7 +210,7 @@ return [
     'its_hiden' => 'Hiden',
     'created_at' => 'Created at',
     'comment_edited' => 'Comment edited',
-    'comment_deleted' => 'On',
+    'comment_deleted' => 'Comment deleted',
     'max_unaproved_comments' => 'You hit the limit for unapproved comments. Wait to be approved. You will be auto banned if you try to add more.',
     'warning_unaproved_comments' => 'You can not post more comments. Wait to be approved.',
     'comment_added_wait' => 'Comment added. When it is approved it will show.',
@@ -240,6 +241,7 @@ return [
     'keep_name' => 'Keep Image Name',
     'upload' => 'Upload',
     'upload_img' => 'Upload Image',
+    'delete_only_record' => 'File was not found and can not be deleted, but the record for this file in database was deleted. This should not happend if you have not manually change/delete files.',
     /*
     |--------------------------------------------------------------------------
     | Menu
@@ -258,6 +260,16 @@ return [
     'contentedit' => 'Successfully edited',
     'set_main_menu' => 'Set as main',
     'items_of_menu' => 'Items of',
+    /*
+    |--------------------------------------------------------------------------
+    | Errors
+    |--------------------------------------------------------------------------
+    */
+    'BlublogViewNotFound' => "BLUblog could not find the view for this page. Make sure the theme you're using have all needed views.",
+    'BlublogNoAccess' => "You do not have permission for this.",
+    'BlublogNoFileDriver' => "Selected disk does not have a configured driver. By default BLUblog use blublog disk. Make sure you have configured it in /config/filesystems.php of your app.",
+    'BlublogNotFound' => "What you're looking for does not exist. :(",
+    'BlublogModulDisabled' => 'Sorry, this functionality is turned off.',
     /*
     |--------------------------------------------------------------------------
     | Search
@@ -305,7 +317,7 @@ return [
     'role_edit_admin' => 'You can not edit the main admin role.',
     'delete_main_role' => 'You can not delete the main roles.',
     'users_roles_changed' => 'Users that was using the deleted role are now authors.',
-
+    'no_permission' => 'You can not use this.',
     /*
         FRONT
     */

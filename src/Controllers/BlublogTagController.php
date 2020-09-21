@@ -25,16 +25,7 @@ class BlublogTagController extends Controller
             'title' => 'required|max:200',
         ];
         $this->validate($request, $rules);
-
-        $tag = new Tag;
-        if ($request->slug) {
-            $tag->slug = $request->slug;
-        } else {
-            $tag->slug = Post::makeslug($request->title);
-        }
-        $tag->title = $request->title;
-        $tag->descr = $request->descr;
-        $tag->save();
+        Tag::create_new($request);
         Log::add($request, "info", __('blublog.contentcreate'));
         Session::flash('success',  __('blublog.contentcreate'));
         return redirect()->route('blublog.tags.index');
@@ -47,7 +38,7 @@ class BlublogTagController extends Controller
     public function edit($id)
     {
         BlublogUser::check_access('update', Tag::class);
-        $tag = Tag::find($id);
+        $tag = Tag::findOrFail($id);
         return view('blublog::panel.tags.edit')->with('tag', $tag);
     }
 
@@ -65,7 +56,7 @@ class BlublogTagController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $tag = Tag::find($id);
+        $tag = Tag::findOrFail($id);
         BlublogUser::check_access('update', $tag);
         $tag->title = $request->title;
         $tag->slug = $request->slug;
@@ -78,14 +69,12 @@ class BlublogTagController extends Controller
 
     public function destroy($id)
     {
-        $tag = Tag::find($id);
+        $tag = Tag::findOrFail($id);
         BlublogUser::check_access('delete', $tag);
-        if ($tag) {
-            $tag->posts()->detach();
-            $tag->delete();
-            Session::flash('success', __('blublog.contentdelete'));
-            Log::add($id . "BlublogTagController::destroy", "info", __('blublog.contentdelete'));
-        }
+        $tag->posts()->detach();
+        $tag->delete();
+        Session::flash('success', __('blublog.contentdelete'));
+        Log::add($id . "BlublogTagController::destroy", "info", __('blublog.contentdelete'));
         return redirect()->back();
     }
 }

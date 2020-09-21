@@ -7,8 +7,12 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\BlublogUser;
+use Blublog\Blublog\Exceptions\BlublogNoFileDriver;
 use Session;
 use Auth;
+use Blublog\Blublog\Exceptions\BlublogNotFound;
+use Exception;
+use InvalidArgumentException;
 
 class File extends Model
 {
@@ -18,7 +22,72 @@ class File extends Model
     {
         return $this->belongsTo(BlublogUser::class);
     }
-
+    public static function putFileAs($dir, $file, $address)
+    {
+        return Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs($dir, $file, $address);
+    }
+    public static function delete_file($dir)
+    {
+        return Storage::disk(config('blublog.files_disk', 'blublog'))->delete($dir);
+    }
+    public static function find_by_id($id)
+    {
+        $File = File::find($id);
+        if (!$File) {
+            throw new BlublogNotFound;
+        }
+        return $File;
+    }
+    public static function exists($file)
+    {
+        if ($file->public) {
+            $exists = Storage::disk(config('blublog.files_disk', 'blublog'))->exists($file->filename);
+        } else {
+            $exists = Storage::disk('local')->exists($file->filename);
+        }
+        if (!$exists) {
+            throw new BlublogNotFound;
+        }
+        return true;
+    }
+    public static function check_driver()
+    {
+        try {
+            Storage::disk(config('blublog.files_disk', 'blublog'));
+        } catch (\InvalidArgumentException $exception) {
+            throw new BlublogNoFileDriver();
+        }
+    }
+    public static function remove($file)
+    {
+        // Delete File
+        if ($file->public) {
+            $dir = pathinfo($file->filename, PATHINFO_DIRNAME);
+            /*  Need to be checked - Fixes bug
+                If you create two post with difrend images and change the image of
+                one of the post with the image of the other posts,
+                then you can delete the image that is not used by any post,
+                but it won't delete thumbnail.
+            */
+            try {
+                if ($dir == "posts") {
+                    $ext = pathinfo($file->filename, PATHINFO_EXTENSION);
+                    $filename = pathinfo($file->filename, PATHINFO_FILENAME);
+                    $thumbnail = "thumbnail_" . $filename . "." . $ext;
+                    $blur_thumbnail = "blur_" . $thumbnail;
+                    Storage::disk(config('blublog.files_disk', 'blublog'))->delete('posts/' . $thumbnail);
+                    Storage::disk(config('blublog.files_disk', 'blublog'))->delete('posts/' . $blur_thumbnail);
+                }
+                $removed = Storage::disk(config('blublog.files_disk', 'blublog'))->delete($file->filename);
+            } catch (InvalidArgumentException $exception) {
+                Log::add($file, "error", __('blublog.error_removing') . ' exception');
+                throw new BlublogNoFileDriver;
+            }
+        } else {
+            $removed = Storage::disk('local')->delete($file->filename);
+        }
+        return $removed;
+    }
     public static function clear_filename($OriginalFilename)
     {
         $OriginalFilename = str_replace(' ', '_', $OriginalFilename);
@@ -38,10 +107,49 @@ class File extends Model
     }
     public static function check_dir($dir)
     {
-        $save_dir = Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $dir;
+        $save_dir = File::AdapterPathPrefix() . $dir;
         if (!file_exists($save_dir)) {
             mkdir($save_dir, 0777, true);
         }
+    }
+    public static function AdapterPathPrefix()
+    {
+        try {
+            $prefix = Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix();
+        } catch (\InvalidArgumentException $exception) {
+            throw new BlublogNoFileDriver();
+        }
+        return $prefix;
+    }
+    public static function create_new($request)
+    {
+        $size = File::get_file_size($request->file);
+        $file = new File;
+        $address = rand(0, 9999) .  File::clear_filename($request->file->getClientOriginalName());
+        try {
+            if ($request->public) {
+                $saved = File::putFileAs('files', $request->file, $address);
+                $file->public = true;
+            } else {
+                $saved = File::putFileAs('files', $request->file, $address);
+                $file->public = false;
+            }
+        } catch (InvalidArgumentException $exception) {
+            Log::add($request, "error", __('blublog.error_uploading') . ' exception');
+            throw new BlublogNoFileDriver;
+        }
+        if (!$saved) {
+            Session::flash('error', __('blublog.error_uploading'));
+            Log::add($request, "error", __('blublog.error_uploading'));
+            return redirect()->route('blublog.files.index');
+        }
+        $file->user_id = blublog_get_user(1);
+        $file->size = $size;
+        $file->descr = $request->descr;
+        $file->filename = 'files/' . $address;
+        $file->save();
+
+        return true;
     }
     public static function get_url_from_dir($filename)
     {
@@ -65,12 +173,12 @@ class File extends Model
         $img->fit(blublog_setting('img_height'), blublog_setting('img_width'), function ($constraint) {
             $constraint->upsize();
         })->interlace();
-        $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $path, blublog_setting('img_quality'));
+        $img->save(File::AdapterPathPrefix() . $path, blublog_setting('img_quality'));
         return true;
     }
     public static function big_img_upload($file, $path)
     {
-        $save_dir = Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $path;
+        $save_dir = File::AdapterPathPrefix() . $path;
         $img = Image::make($file);
         $img->resize(blublog_setting('big_img_height'), blublog_setting('big_img_width'), function ($constraint) {
             $constraint->aspectRatio();
@@ -87,7 +195,7 @@ class File extends Model
         $img->fit(blublog_setting('blur_img_height'), blublog_setting('blur_img_width'), function ($constraint) {
             $constraint->upsize();
         })->interlace();
-        $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $path, 30);
+        $img->save(File::AdapterPathPrefix() . $path, 30);
         return true;
     }
     public static function random_file_name($OriginalName, $id = null)
@@ -105,7 +213,7 @@ class File extends Model
         }
 
         if (blublog_setting('do_not_convert_post_img')) {
-            $main_file = Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('posts', $request->file, $address);
+            $main_file = File::putFileAs('posts', $request->file, $address);
         } else {
             $size = File::get_file_size_from_bytes(File::big_img_upload($request->file, 'posts/' . $address));
             $main_file = $size;
@@ -134,7 +242,7 @@ class File extends Model
     }
     public static function upload_img_direct($img, $dir, $filename)
     {
-        return Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs($dir, $img, $filename);
+        return File::putFileAs($dir, $img, $filename);
     }
     public static function handle_img_upload_from_category($request)
     {
@@ -144,7 +252,7 @@ class File extends Model
         } else {
             $address = File::random_file_name($request->file->getClientOriginalName());
         }
-        $file_uploated = Storage::disk(config('blublog.files_disk', 'blublog'))->putFileAs('categories', $request->file, $address);
+        $file_uploated = File::putFileAs('categories', $request->file, $address);
 
         if ($file_uploated) {
             $file = new File;

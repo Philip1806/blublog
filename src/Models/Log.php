@@ -37,4 +37,21 @@ class Log extends Model
 
         return true;
     }
+    public static function by_user($blublog_user_id, $limit = 10)
+    {
+        return Log::where([
+            ['user_id', '=', $blublog_user_id],
+            ['type', '!=', "visit"],
+        ])->limit($limit)->latest()->get();
+    }
+    public static function latest_important($limit = 10)
+    {
+        return Log::where([
+            ['type', '=', 'error'],
+            ['created_at', '>', now()->subDay()],
+        ])->orWhere(function ($query) {
+            $query->where('type', '=', 'alert');
+            $query->where('created_at', '>', now()->subDay());
+        })->latest()->limit($limit)->get();
+    }
 }

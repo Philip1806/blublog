@@ -5,7 +5,7 @@
     <div class="card-header bg-primary text-white">
       Your profile
       @if (Gate::allows('blublog_edit_users', $user->id))
-      <a href="{{ route('blublog.users.edit', $user->user_id) }}" class="btn btn-warning btn-sm">{{__('blublog.edit')}}</a>
+      <a href="{{ route('blublog.users.edit', $user->id) }}" class="btn btn-warning btn-sm">{{__('blublog.edit')}}</a>
       @endif
     </div>
     <div class="card-body">

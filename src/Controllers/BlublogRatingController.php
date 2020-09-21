@@ -14,11 +14,9 @@ class BlublogRatingController extends Controller
     {
         BlublogUser::check_access('rating', Post::class);
         $ratings = Rate::latest()->paginate(10);
-
         if ($ratings) {
             foreach ($ratings as $rating) {
-                $postt = Post::find($rating->post_id);
-                $rating->postname = $postt['title'];
+                $rating->postname = $rating->post->title;
             }
         }
         return view('blublog::panel.posts.rating')->with('ratings', $ratings);
@@ -27,29 +25,17 @@ class BlublogRatingController extends Controller
     public function duplicate($id)
     {
         BlublogUser::check_access('rating', Post::class);
-        $current = Rate::find($id);
-        if ($current) {
-            $rating = new Rate;
-            $rating->post_id = $current->post_id;
-            $rating->rating = $current->rating;
-            $rating->ip = $current->ip;
-            $rating->save();
-        }
-
+        $original = Rate::findOrFail($id);
+        Rate::copy($original);
         return redirect()->back();
     }
 
     public function destroy($id)
     {
         BlublogUser::check_access('rating', Post::class);
-        $rating = Rate::find($id);
-        if ($rating) {
-            $rating->delete();
-            Session::flash('success', __('blublog.contentdelete'));
-            return redirect()->back();
-        }
-
-        Session::flash('error', __('blublog.404'));
+        $rating = Rate::findOrFail($id);
+        $rating->delete();
+        Session::flash('success', __('blublog.contentdelete'));
         return redirect()->back();
     }
 }

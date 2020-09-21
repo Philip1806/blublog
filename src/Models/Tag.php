@@ -12,6 +12,19 @@ class Tag extends Model
     {
         return $this->belongsToMany(Post::class, 'blublog_posts_tags');
     }
+    public static function create_new($request)
+    {
+        $tag = new Tag;
+        if ($request->slug) {
+            $tag->slug = $request->slug;
+        } else {
+            $tag->slug = Post::makeslug($request->title);
+        }
+        $tag->title = $request->title;
+        $tag->descr = $request->descr;
+        $tag->save();
+        return $tag;
+    }
     public static function get_tag_posts($tag_id, $remove = false)
     {
         $tag = Tag::find($tag_id);

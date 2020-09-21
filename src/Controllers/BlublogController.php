@@ -14,6 +14,7 @@ class BlublogController extends Controller
     //This is panel index
     public function panel()
     {
+        File::check_driver();
         $php_errors = Setting::PhpCheck();
         // geting this month
         $thismonth = Post::thismonth();
@@ -63,9 +64,19 @@ class BlublogController extends Controller
                 'version_info' => Setting::get_blublog_version(),
                 'last_month_posts' => $last_month_posts,
                 'this_month_posts' => $this_month_posts,
+                'logs' => Log::latest_important(),
             ]);
         } elseif (blublog_is_mod()) {
-            return view("blublog::panel.index_mod")->with('notpubliccomments', $notpubliccomments)->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalfiles', $numbfiles)->with('totalcomments', $numbcomments)->with('totalposts', $totalposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
+            return view("blublog::panel.index_mod", [
+                'notpubliccomments' => $notpubliccomments,
+                'private_posts' => $private_posts,
+                'draft_posts' => $draft_posts,
+                'totalfilesaccess' => $numbfiles,
+                'totalcomments' => $numbcomments,
+                'totalposts' => $totalposts,
+                'last_month_posts' => $last_month_posts,
+                'this_month_posts' => $this_month_posts,
+            ]);
         }
         //Get posts in this time range
         $this_month_posts = Post::where([
@@ -82,6 +93,14 @@ class BlublogController extends Controller
             ['user_id', '=', blublog_get_user(1)],
         ])->get()->count();
 
-        return view("blublog::panel.index_author")->with('private_posts', $private_posts)->with('draft_posts', $draft_posts)->with('totalposts', $totalposts)->with('myposts', $myposts)->with('last_month_posts', $last_month_posts)->with('this_month_posts', $this_month_posts);
+        return view("blublog::panel.index_author", [
+            'private_posts' => $private_posts,
+            'draft_posts' => $draft_posts,
+            'totalposts' => $totalposts,
+            'myposts' => $myposts,
+            'last_month_posts' => $last_month_posts,
+            'this_month_posts' => $this_month_posts,
+            'private_posts' => $private_posts,
+        ]);
     }
 }

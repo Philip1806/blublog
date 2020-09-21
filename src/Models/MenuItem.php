@@ -12,4 +12,13 @@ class MenuItem extends Model
     {
         return $this->belongsTo(Menu::class, 'menu');
     }
+    public static function create_new($request)
+    {
+        $item = new MenuItem;
+        $item->label = $request->title;
+        $item->url = $request->url;
+        $item->parent = $request->parent_id;
+        $item->menu = $request->menu_id;
+        $item->save();
+    }
 }

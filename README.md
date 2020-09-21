@@ -3,12 +3,12 @@
 ## About BLUBLOG
 
 **BLUblog is close to BETA version.**
-BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation.
+BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation. It's made simple with mostly blade and a little basic javascript.
 URL address of the panel and blog can be changed in config file.
 
 Front end demo and documentation at http://demo.blublog.info/blog
 
-## Important Notice
+## Requirements And Important Notice
 
 1. Your app must have a laravel/ui or the same authentication with User model in App folder that have property "name".
    BLUblog imports users from that User model to BlublogUser model and gives them other properties independent of your application. If logged in user is not imported to BlublogUser, they will not have access to the panel.
@@ -36,19 +36,19 @@ composer require intervention/image
 composer require blublog/blublog
 ```
 
-2. In app.php from config folder add this in providers if it's not there:
+- Make sure in app.php from config folder, under providers this is there:
 
 ```
 Blublog\Blublog\BlublogServiceProvider::class,
 ```
 
-3. login into your app without going to the blog. Run these one by one:
+3. login into your app without going to the blog and run this:
 
 ```
-php artisan migrate
-php artisan vendor:publish --provider="Blublog\Blublog\BlublogServiceProvider"
-php artisan blublog:setup
+php artisan blublog:install
 ```
+
+You will be ask if you want express install. Unless you get errors, you should use express install.
 
 4. Cool. Everything except uploading/deleting files should work.
    You need to add this in filesystems.php from config folder:
@@ -63,7 +63,10 @@ php artisan blublog:setup
 ```
 
 You can set up where all files from the package go.
-By default you can access the blog from /blog and panel from /panel. **If you get 404 error, make sure you're logged in. If you get 403 error, make sure you have run blublog:setup**;
+
+By default you can access the blog from /blog and panel from /panel.
+
+**If you get 404 error, make sure you're logged in. If you get 403 error, make sure you have run blublog:setup or blublog:install**;
 
 **If post images don't show, make sure you have configured blublog file driver. If you use the one above, make sure your APP_URL in .env file is correct.**
 
@@ -146,7 +149,7 @@ Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
 - Make the code better - more compact, reduce repetition...
 - Add comments for most of the code.
 - Testing, testing, testing...
-- Write documentation (20% done).
+- Write documentation (50% done).
 
 2. Planed extension/packages
 

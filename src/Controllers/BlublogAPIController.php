@@ -283,16 +283,10 @@ class BlublogAPIController extends Controller
             }
         }
         if ($request->type == "comment") {
-            $files = Comment::where([
-                ['name', 'LIKE', '%' . $request->slug . '%'],
-            ])->latest()->get();
-            if ($files->count() == 0) {
-                $files = Comment::where([
-                    ['body', 'LIKE', '%' . $request->slug . '%'],
-                ])->latest()->get();
-            }
-            if ($files->count() > 0) {
-                return response()->json($files);
+            $comments = Comment::search($request->slug);
+            Comment::post_info($comments);
+            if ($comments->count() > 0) {
+                return response()->json($comments);
             } else {
                 return response()->json(false);
             }
@@ -301,11 +295,10 @@ class BlublogAPIController extends Controller
             if (!blublog_is_mod()) {
                 return response()->json(false);
             }
-            $files = Comment::where([
-                ['ip', 'LIKE', '%' . $request->slug . '%'],
-            ])->latest()->get();
-            if ($files->count() > 0) {
-                return response()->json($files);
+            $comments = Comment::search_by_ip($request->slug);
+            Comment::post_info($comments);
+            if ($comments->count() > 0) {
+                return response()->json($comments);
             } else {
                 return response()->json(false);
             }

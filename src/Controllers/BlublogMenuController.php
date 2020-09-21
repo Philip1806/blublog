@@ -20,10 +20,7 @@ class BlublogMenuController extends Controller
     }
     public function set_main_menu($id)
     {
-        $menu = Menu::find($id);
-        if (!$menu) {
-            abort(404);
-        }
+        $menu = Menu::findOrFail($id);
         $setting = Setting::where([
             ['name', '=', "main_menu_name"],
         ])->first();
@@ -42,20 +39,11 @@ class BlublogMenuController extends Controller
     }
     public function menu_items($id)
     {
-        $menu = Menu::find($id);
-        if (!$menu) {
-            abort(404);
-        }
-        return view('blublog::panel.menu.items')->with('menu', $menu);
+        return view('blublog::panel.menu.items')->with('menu', Menu::findOrFail($id));
     }
     public function edit_item($id)
     {
-
-        $item = MenuItem::find($id);
-        if (!$item) {
-            abort(404);
-        }
-        return view('blublog::panel.menu.edit')->with('item', $item);
+        return view('blublog::panel.menu.edit')->with('item',  MenuItem::findOrFail($id));
     }
     public function edit_item_update(Request $request)
     {
@@ -66,16 +54,12 @@ class BlublogMenuController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $item = MenuItem::find($request->item_id);
-        if ($item) {
-            $item->label = $request->label;
-            $item->url = $request->url;
-            $item->save();
-            Session::flash('success', __('blublog.contentedit'));
-            Cache::forget('blublog.menu.' . $item->from_menu->name);
-            return back();
-        }
-        Session::flash('error', __('blublog.404'));
+        $item = MenuItem::findOrFail($request->item_id);
+        $item->label = $request->label;
+        $item->url = $request->url;
+        $item->save();
+        Session::flash('success', __('blublog.contentedit'));
+        Cache::forget('blublog.menu.' . $item->from_menu->name);
         return back();
     }
     public function edit_menu_update(Request $request)
@@ -86,16 +70,11 @@ class BlublogMenuController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $menu = Menu::find($request->menu_id);
-
-        if ($menu) {
-            $menu->name = $request->name;
-            $menu->save();
-            Cache::forget('blublog.menu.' . $menu->name);
-            Session::flash('success', __('blublog.contentedit'));
-        }
-
-        return back();
+        $menu = Menu::findOrFail($request->menu_id);
+        $menu->name = $request->name;
+        $menu->save();
+        Cache::forget('blublog.menu.' . $menu->name);
+        Session::flash('success', __('blublog.contentedit'));
     }
     public function add_menu_store(Request $request)
     {
@@ -113,28 +92,22 @@ class BlublogMenuController extends Controller
     }
     public function destroy_menu($id)
     {
-        $menu = Menu::find($id);
-        if ($menu) {
-            foreach ($menu->items as $item) {
-                $item->delete();
-            }
-            Cache::forget('blublog.menu.' . $menu->name);
-            $menu->delete();
-            Session::flash('success', __('blublog.contentdelete'));
-            return back();
+        $menu = Menu::findOrFail($id);
+        foreach ($menu->items as $item) {
+            $item->delete();
         }
+        Cache::forget('blublog.menu.' . $menu->name);
+        $menu->delete();
+        Session::flash('success', __('blublog.contentdelete'));
         return back();
     }
 
     public function destroy_item($id)
     {
-        $item = MenuItem::find($id);
-        if ($item) {
-            Cache::forget('blublog.menu.' . $item->from_menu->name);
-            $item->delete();
-            Session::flash('success', __('blublog.contentdelete'));
-            return back();
-        }
+        $item = MenuItem::findOrFail($id);
+        Cache::forget('blublog.menu.' . $item->from_menu->name);
+        $item->delete();
+        Session::flash('success', __('blublog.contentdelete'));
         return back();
     }
 
@@ -148,25 +121,15 @@ class BlublogMenuController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $menu = Menu::find($request->menu_id);
-        $parent = MenuItem::find($request->parent_id);
+        $menu = Menu::findOrFail($request->menu_id);
+        $parent = MenuItem::findOrFail($request->parent_id);
         Cache::forget('blublog.menu.' . $menu->name);
         if ($parent->parent == 1) {
             Session::flash('error', "That nesting is not supported.");
             return back();
         }
-
-        if ($menu and  $parent) {
-            $item = new MenuItem;
-            $item->label = $request->title;
-            $item->url = $request->url;
-            $item->parent = $request->parent_id;
-            $item->menu = $request->menu_id;
-            $item->save();
-            Session::flash('success', __('blublog.contentcreate'));
-            return back();
-        }
-        Session::flash('error', "Unvalid id data.");
+        MenuItem::create_new($request);
+        Session::flash('success', __('blublog.contentcreate'));
         return back();
     }
 
@@ -180,19 +143,15 @@ class BlublogMenuController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $menu = Menu::find($request->menu_id);
+        $menu = Menu::findOrFail($request->menu_id);
         Cache::forget('blublog.menu.' . $menu->name);
-        if ($menu) {
-            $item = new MenuItem;
-            $item->label = $request->title;
-            $item->url = $request->url;
-            $item->parent = 0;
-            $item->menu = $menu->id;
-            $item->save();
-            Session::flash('success', __('blublog.contentcreate'));
-            return back();
-        }
-        Session::flash('error', "Menu id is wrong.");
+        $item = new MenuItem;
+        $item->label = $request->title;
+        $item->url = $request->url;
+        $item->parent = 0;
+        $item->menu = $menu->id;
+        $item->save();
+        Session::flash('success', __('blublog.contentcreate'));
         return back();
     }
 }

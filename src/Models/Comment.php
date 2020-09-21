@@ -8,10 +8,12 @@ use Blublog\Blublog\Models\Log;
 use Session;
 use Carbon\Carbon;
 use Auth;
+use Blublog\Blublog\Exceptions\BlublogNotFound;
 
 class Comment extends Model
 {
     protected $table = 'blublog_comments';
+
     public function commentable()
     {
         return $this->morphTo();
@@ -67,6 +69,55 @@ class Comment extends Model
         $post->allcomments()->save($comment);
 
         return back();
+    }
+    public static function find_by_id($id)
+    {
+        $Comment = Comment::find($id);
+        if (!$Comment) {
+            throw new BlublogNotFound;
+        }
+        return $Comment;
+    }
+    public static function post_info($comments)
+    {
+        foreach ($comments as $comment) {
+            $comment->post_url = url('/') . "/" . config('blublog.blog_prefix') . "/posts/" . $comment->post->slug;
+            $comment->post_title = $comment->post->title;
+        }
+        return $comments;
+    }
+    public static function search_by_ip($slug)
+    {
+        return Comment::where([
+            ['ip', 'LIKE', '%' . $slug . '%'],
+        ])->latest()->with('post')->get();
+    }
+    public static function search($slug)
+    {
+        $comments = Comment::where([
+            ['name', 'LIKE', '%' . $slug . '%'],
+        ])->latest()->with('post')->get();
+        if ($comments->count() == 0) {
+            $comments = Comment::where([
+                ['body', 'LIKE', '%' . $slug . '%'],
+            ])->latest()->with('post')->get();
+        }
+        return $comments;
+    }
+    public static function edit($request, $comment)
+    {
+        if ($request->public) {
+            $comment->public = true;
+        } else {
+            $comment->public = false;
+        }
+        $comment->name = $request->name;
+        $comment->created_at = $request->created_at;
+        $comment->email = $request->email;
+        $comment->ip = $request->ip;
+        $comment->body = $request->body;
+        $comment->save();
+        return true;
     }
     public static function limit_unapproved_comments_reached_soon()
     {

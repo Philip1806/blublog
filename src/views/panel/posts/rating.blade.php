@@ -22,17 +22,25 @@
                 @foreach ( $ratings as $post )
                 <tr>
                     <td>
-                    @if ($post->rating == '5')
-                    <span class="badge badge-success">{{ $post->rating }} {{ __('blublog.stars') }}</span>
-                    @elseif ($post->rating == '4')
-                    <span class="badge badge-success">{{ $post->rating }} {{ __('blublog.stars') }}</span>
-                    @elseif ($post->rating == '3')
-                    <span class="badge badge-warning">{{ $post->rating }} {{ __('blublog.stars') }}</span>
-                    @elseif ($post->rating == '2')
-                    <span class="badge badge-danger">{{ $post->rating }} {{ __('blublog.stars') }}</span>
-                    @else
-                    <span class="badge badge-danger">{{ $post->rating }} {{ __('blublog.star') }}</span>
-                    @endif
+                        @if (blublog_setting('use_rating_module_as_likes_and_dislikes'))
+                            @if ($post->rating == '5')
+                                <div class="text-success">Like</div>
+                            @elseif($post->rating == '1')
+                                <div class="text-danger">Dislike</div>
+                            @endif
+                        @else
+                            @if ($post->rating == '5')
+                            <span class="badge badge-success">{{ $post->rating }} {{ __('blublog.stars') }}</span>
+                            @elseif ($post->rating == '4')
+                            <span class="badge badge-success">{{ $post->rating }} {{ __('blublog.stars') }}</span>
+                            @elseif ($post->rating == '3')
+                            <span class="badge badge-warning">{{ $post->rating }} {{ __('blublog.stars') }}</span>
+                            @elseif ($post->rating == '2')
+                            <span class="badge badge-danger">{{ $post->rating }} {{ __('blublog.stars') }}</span>
+                            @else
+                            <span class="badge badge-danger">{{ $post->rating }} {{ __('blublog.star') }}</span>
+                            @endif
+                        @endif
                     </td>
                     <td><a href="{{ route('blublog.posts.show', $post->post_id) }}" >{{ $post->postname }}</a></td>
                     <td>{{ $post->created_at }}</td>

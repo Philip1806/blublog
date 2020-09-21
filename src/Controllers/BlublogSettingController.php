@@ -90,20 +90,14 @@ class BlublogSettingController extends Controller
         }
 
         if ($setting == 4) {
-            $logs = Log::where([
+            Log::where([
                 ['created_at', '<', Carbon::today()->subMonths(3)],
-            ])->get();
-            foreach ($logs as $log) {
-                $log->delete();
-            }
+            ])->delete();
         }
         if ($setting == 5) {
-            $logs = Log::where([
+            Log::where([
                 ['created_at', '<', Carbon::today()->subMonths(6)],
-            ])->get();
-            foreach ($logs as $log) {
-                $log->delete();
-            }
+            ])->delete();
         }
         return redirect()->back();
     }
@@ -163,27 +157,24 @@ class BlublogSettingController extends Controller
             Session::flash('success', __('blublog.contentcreate'));
             return redirect()->back();
         }
-        $role = Role::find($request->role_id);
-        if ($role) {
-            if ($role->id == 1) {
-                Session::flash('error', __('blublog.role_admin_change'));
-                return redirect()->back();
-            }
-            Role::edit($role, $request->all());
-            Session::flash('success', __('blublog.contentupdate'));
+        $role = Role::findOrFail($request->role_id);
+        if ($role->id == 1) {
+            Session::flash('error', __('blublog.role_admin_change'));
             return redirect()->back();
         }
-        Log::add($request, "alert", __('blublog.404'));
-        Session::flash('error', __('blublog.404'));
+        Role::edit($role, $request->all());
+        Session::flash('success', __('blublog.contentupdate'));
         return redirect()->back();
     }
     public function general_settings()
     {
-        $settings = Setting::latest()->get();
-        return view('blublog::panel.settings.general')->with('settings', $settings);
+        return view('blublog::panel.settings.general')->with('settings', Setting::latest()->get());
     }
     public function store(Request $request)
     {
+        if (!blublog_is_admin()) {
+            abort(403);
+        }
         // no validation...It's only for admins
         Cache::flush();
         $keys = array_keys($request->all());

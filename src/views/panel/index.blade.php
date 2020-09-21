@@ -8,22 +8,42 @@
 </nav>
 @endsection
 @section('content')
+
+@if ($logs->count() > 3)
+    <a class="my-2 btn btn-warning btn-block" data-toggle="collapse" href="#collapseLogs" role="button" aria-expanded="false" aria-controls="collapseLogs">
+        {{__('blublog.latest_important_logs', ['number' => $logs->count()])}}
+    </a>
+
+  <div class="my-2 collapse" id="collapseLogs">
+    <div class="card card-body">
+        @foreach ($logs as $log)
+        @if ($log->type == "alert")
+            <div class="alert alert-warning" role="alert">
+        @else
+            <div class="alert alert-danger" role="alert">
+        @endif
+            <a href="{{ route('blublog.logs.show', $log->id) }}">{{ $log->message}}</a>
+        </div>
+        @endforeach
+    </div>
+  </div>
+@endif
 @foreach ($php_errors as $error)
     <div class="alert alert-warning" role="alert">
         {{ $error}}
     </div>
 @endforeach
   <div class="row">
-    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_this'),'val'=>$this_month_posts,'color'=>"primary",'icon'=>"list"])
-    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"success",'icon'=>"list"])
-    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_total'),'val'=>$totalposts,'color'=>"info",'icon'=>"list"])
+    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_this'),'val'=>$this_month_posts,'color'=>"primary",'icon'=>"excerpt"])
+    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"success",'icon'=>"excerpt"])
+    @include('blublog::panel.partials.colums', ['title' => __('blublog.posts_total'),'val'=>$totalposts,'color'=>"secondary",'icon'=>"excerpt"])
     @include('blublog::panel.partials.colums', ['title' => __('blublog.comments'),'val'=>$totalcomments,'color'=>"warning",'icon'=>"comment-square"])
   </div>
 
   <div class="row">
     @include('blublog::panel.partials.4_colums', ['title' => __('blublog.logs_this'),'val'=>$this_month_logs,'color'=>"warning",'icon'=>"code"])
-    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.posts_last'),'val'=>$last_month_posts,'color'=>"warning",'icon'=>"list"])
-    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.blublog_version'),'color'=>"warning",'icon'=>"cog", 'version' =>true])
+    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.files'),'val'=>$totalfiles,'color'=>"info",'icon'=>"file"])
+    @include('blublog::panel.partials.4_colums', ['title' => __('blublog.blublog_version'),'color'=>"danger",'icon'=>"cog", 'version' =>true])
   </div>
 
   @if ($notpubliccomments != 0)
@@ -43,7 +63,7 @@
               </div>
             <div class="col-sm">
                 @if (!file_exists( public_path() . '/blublog-uploads/rss.xml'))
-                <span class="badge  btn-block badge-warning" style="margin-bottom:10px;">{{__('blublog.no_rss')}}</span>
+                <span class="badge  btn-block badge-info" style="margin-bottom:10px;">{{__('blublog.no_rss')}}</span>
                 @endif
             <a href="{{ route('blublog.admin.control', 1) }}" class="btn btn-outline-primary btn-block">{{__('blublog.rss_generate')}}</a>
             </div>

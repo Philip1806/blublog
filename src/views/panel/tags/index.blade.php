@@ -43,7 +43,7 @@
                 <tbody>
                         @foreach ( $tags as $tag )
                         <tr>
-                                <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" >{{ $tag->title }}</a></td>
+                        <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" >{{ $tag->title }}</a> ({{$tag->posts()->count()}})</td>
                                 <td><a href="{{ route('blublog.front.tag_show', $tag->slug) }}"  role="button" class="btn btn-outline-primary btn-block ">{{__('blublog.view')}}</a></td>
                                 @can('update', $tag)
                                 <td><a href="{{ route('blublog.tags.edit', $tag->id) }}" class="btn btn-outline-warning btn-block">{{__('blublog.edit')}}</a></td>
@@ -64,7 +64,9 @@
         {!! $tags->links(); !!}
         <hr>
         @else
-        <center> <b>{{ __('blublog.no_results')}}</b> </center>
+        <div class="p-4 h3 text-center">
+            {{__('blublog.no_results')}}
+        </div>
         @endif
     </div>
 </div>

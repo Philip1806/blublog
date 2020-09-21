@@ -8,7 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     protected $table = 'blublog_pages';
-
+    public static function public()
+    {
+        return Page::where([
+            ['public', '=', true],
+        ])->latest()->paginate(10);
+    }
+    public static function hidden()
+    {
+        return Page::where([
+            ['public', '=', false],
+        ])->latest()->paginate(10);
+    }
     public static function handle_request($page, $request)
     {
         //DO NOT like mass assignment...

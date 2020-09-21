@@ -1,7 +1,7 @@
 <?php
 
 use Blublog\Blublog\Models\Setting;
-use Blublog\Blublog\Models\Post;
+use Blublog\Blublog\Exceptions\BlublogViewNotFound;
 use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Models\MenuItem;
@@ -52,7 +52,7 @@ if (!function_exists('blublog_get_view_path')) {
         } elseif (view()->exists($def_path)) {
             return $def_path;
         } else {
-            abort(403, "View " . $viewname . " not found.");
+            throw new BlublogViewNotFound();
         }
     }
 }
@@ -126,6 +126,19 @@ if (!function_exists('blublog_is_admin')) {
         } else {
             return false;
         }
+    }
+}
+if (!function_exists('blublog_have_permission')) {
+    function blublog_have_permission($permission)
+    {
+        if (auth()->check()) {
+            $Blublog_User = BlublogUser::get_user(Auth::user());
+            $permissions = BlublogUser::get_permissions();
+            if (in_array($permission, $permissions) and $Blublog_User->user_role->{$permission}) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 if (!function_exists('blublog_draw_stars')) {

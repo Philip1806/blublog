@@ -13,6 +13,7 @@ class Setting extends Model
     {
         $value = Cache::remember('blublog.version', 86400, function () {
             $def = array(
+                'your_ver' => config('blublog.version'),
                 'ver' => config('blublog.version'),
                 'msg' => 'Could not check for updates.',
             );
@@ -20,6 +21,7 @@ class Setting extends Model
                 $data = [
                     'software' => 'blublog',
                     'ver' => config('blublog.version'),
+                    'your_ver' => config('blublog.version'),
                 ];
                 if (Setting::send_post_request('https://blublog.info/api/get-update-info', $data)) {
                     return Setting::send_post_request('https://blublog.info/api/get-update-info', $data);

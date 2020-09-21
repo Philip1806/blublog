@@ -17,6 +17,7 @@ use Blublog\Blublog\Models\BlublogUser;
 use Carbon\Carbon;
 use Session;
 use Auth;
+use Blublog\Blublog\Exceptions\BlublogNoFileDriver;
 
 class BlublogPostsController extends Controller
 {
@@ -29,7 +30,13 @@ class BlublogPostsController extends Controller
     {
         $posts = Post::where([
             ['status', '=', 'publish'],
-        ])->latest()->paginate(14);
+        ])->latest()->paginate(15);
+        if (isset($_GET['views'])) {
+            $posts = Post::by_views();
+        }
+        if (isset($_GET['author'])) {
+            $posts = Post::by_author();
+        }
         $private_posts = Post::where([
             ['status', '=', 'private'],
             ['user_id', '=', Auth::user()->id],
@@ -51,6 +58,7 @@ class BlublogPostsController extends Controller
             Session::flash('error', __('blublog.gd_not_installed'));
             return redirect()->back();
         }
+        File::check_driver();
         BlublogUser::check_access('create', Post::class);
         $tags = Tag::latest()->get();
         $categories = Category::latest()->get();
@@ -68,33 +76,41 @@ class BlublogPostsController extends Controller
      */
     public function show($id)
     {
-        $post = Post::getpost($id);
-        BlublogUser::check_access('view', $post);
-        $post->rating_votes = Post::rating_votes($post);
-        $images = File::where([
-            ['descr', '=', $post->id],
-            ['is_in_post', '=', true],
-        ])->latest()->paginate(14);
-        foreach ($images as $file) {
-            $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url($file->filename);
+        try {
+            $post = Post::getpost($id);
+            BlublogUser::check_access('view', $post);
+            $post->rating_votes = Post::rating_votes($post);
+            $images = File::where([
+                ['descr', '=', $post->id],
+                ['is_in_post', '=', true],
+            ])->latest()->paginate(14);
+            foreach ($images as $file) {
+                $file->url = Storage::disk(config('blublog.files_disk', 'blublog'))->url($file->filename);
+            }
+        } catch (\InvalidArgumentException $exception) {
+            throw new BlublogNoFileDriver();
         }
         return view('blublog::panel.posts.show')->with('images', $images)->with('post', $post);
     }
     public function edit($id)
     {
-        $post = Post::getpost($id);
-        BlublogUser::check_access('update', $post);
-        $date =  Carbon::now()->format('d/m/Y');
-        $tags = Tag::all();
-        $tags2 = array();
-        foreach ($tags as $tag) {
-            $tags2[$tag->id] = $tag->title;
-        }
-        $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
-        $categories = Category::all();
-        $categories2 = array();
-        foreach ($categories as $category) {
-            $categories2[$category->id] = $category->title;
+        try {
+            $post = Post::getpost($id);
+            BlublogUser::check_access('update', $post);
+            $date =  Carbon::now()->format('d/m/Y');
+            $tags = Tag::all();
+            $tags2 = array();
+            foreach ($tags as $tag) {
+                $tags2[$tag->id] = $tag->title;
+            }
+            $post->img_url = Storage::disk(config('blublog.files_disk', 'blublog'))->url('posts/' . $post->img);
+            $categories = Category::all();
+            $categories2 = array();
+            foreach ($categories as $category) {
+                $categories2[$category->id] = $category->title;
+            }
+        } catch (\InvalidArgumentException $exception) {
+            throw new BlublogNoFileDriver();
         }
 
         return view("blublog::panel.posts.ed")->with('post_id', $id)->with('tags', $tags2)->with('date', $date)->with('post', $post)->with('categories', $categories2);
@@ -271,7 +287,7 @@ class BlublogPostsController extends Controller
     }
     public function destroy($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         BlublogUser::check_access('delete', $post);
         $views = Rate::where([
             ['post_id', '=', $post->id],
@@ -280,10 +296,6 @@ class BlublogPostsController extends Controller
             $view->delete();
         }
 
-        if (!isset($post->id)) {
-            Session::flash('error', __('general.404'));
-            return redirect()->back();
-        }
         if (!Post::img_used_by_other_post($id)) {
             if ($post->img != "no-img.png") {
                 $path = 'posts/' . $post->img;

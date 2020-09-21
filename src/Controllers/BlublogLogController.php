@@ -27,11 +27,17 @@ class BlublogLogController extends Controller
         $bot_logs = Log::where([
             ['type', '=', 'bot'],
         ])->latest()->paginate(15);
-        return view('blublog::panel.logs.index')->with('error_logs', $error_logs)->with('visit_logs', $visit_logs)->with('info_logs', $info_logs)->with('bot_logs', $bot_logs)->with('alert_logs', $alert_logs);
+        return view('blublog::panel.logs.index', [
+            'error_logs' => $error_logs,
+            'visit_logs' => $visit_logs,
+            'info_logs' => $info_logs,
+            'bot_logs' => $bot_logs,
+            'alert_logs' => $alert_logs,
+        ]);
     }
     public function show($id)
     {
-        $log = Log::find($id);
+        $log = Log::findOrFail($id);
         return view('blublog::panel.logs.show')->with('log', $log);
     }
 }

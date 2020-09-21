@@ -54,12 +54,12 @@
 
                         <td>
                             @if ($comment->public)
-                            <span class="badge badge-success">{{__('blublog.its_approved')}}</span>
+                            <span class="badge py-2 btn-block badge-success">{{__('blublog.its_approved')}}</span>
                             @else
-                            <span class="badge badge-danger">{{__('blublog.its_hiden')}}</span>
+                            <span class="badge py-2 btn-block badge-danger">{{__('blublog.its_hiden')}}</span>
                             @endif
                         </td>
-                        <td><a href="{{ route('blublog.front.post_show', $comment->post_slug) }}">{{mb_strimwidth($comment->body, 0, 160, '...') }}</a></td>
+                        <td><a href="{{ $comment->post_url }}">{{mb_strimwidth($comment->body, 0, 160, '...') }}</a></td>
                         <td>{{ $comment->name }}</td>
 
                         @can('update', $comment)
@@ -89,11 +89,13 @@
 
                 </tbody>
         </table>
-        {!! $comments->links(); !!}
-        <hr>
+        <div class="p-2">
+            {!! $comments->links(); !!}
+        </div>
         @else
-        <hr>
-    <center> <b>{{__('blublog.no_comments')}}</b> </center>
+        <div class="card-body text-center">
+            <b>{{__('blublog.no_comments')}}</b>
+        </div>
         @endif
 </div>
 
@@ -102,11 +104,10 @@
 function show_files(comments){
     let panel = document.getElementById("results");
     remove_all_child(panel);
-
     for (let i =0; i<comments.length ; i++){
         let link = "{{ url('/'). "/". blublog_setting('panel_prefix') }}" + "/comments/" + comments[i].id + "/edit";
         let li = document.createElement("li");
-        li.innerHTML= '<a href="'  + link + '">' + comments[i].name + '</a><br>' + comments[i].body;
+        li.innerHTML= '<a href="'  + link + '"> <b>' + comments[i].name + '</b> ' + '(<a href="'  + comments[i].post_url + '">{{__("blublog.post")}}</a>)' + '</a><br>' + comments[i].body;
         li.className="list-group-item";
         panel.appendChild(li);
     }

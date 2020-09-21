@@ -38,7 +38,7 @@
 
 @section('content')
 <div class="col-lg-9">
-    {!! $post->content !!}
+    {!! $post->content !!}<br>
     {!! $post->STARS_HTML !!}
     <span class="badge badge-secondary">Posted by <a href="{{$post->author_url}}"> {{ $post->author_name }}</a> on {{ $post->date }}</span>   <span class="badge badge-secondary"><span class="oi oi-eye"> {{$post->total_views}}</span></span>
     @foreach ($post->tags as $tag)

@@ -56,6 +56,25 @@ class Post extends Model
             }
         }
     }
+    public static function by_views($paginate = true)
+    {
+        $posts = Post::all_posts();
+        $posts = $posts->sortBy('total_views');
+        if ($paginate) {
+            $posts =  collect($posts)->paginate(15, null, 'views');
+        }
+        return $posts;
+    }
+    public static function by_author($paginate = true)
+    {
+        $posts = Post::all_posts();
+        $posts = $posts->sortBy('user_id');
+        if ($paginate) {
+            $posts =  collect($posts)->paginate(15, null, 'author');
+        }
+        return $posts;
+    }
+
     public static function remove_cache($post_id)
     {
         $post = Post::find($post_id);
@@ -306,7 +325,7 @@ class Post extends Model
         $slug = str_replace(" ", "-", $title);
         $slug = preg_replace("/[^A-Za-z0-9\p{Cyrillic}-]/u", "", $slug);
         $slug = $slug . "-" . $numb;
-        $slug = mb_strimwidth($slug, 0, 100, null);
+        $slug = mb_strimwidth($slug, 0, 70, null);
         return $slug;
     }
     public static function public($posts)
@@ -319,6 +338,13 @@ class Post extends Model
             $foo++;
         }
         return $posts;
+    }
+    public static function all_posts()
+    {
+        $posts = Post::where([
+            ['status', '=', 'publish'],
+        ])->latest()->get();
+        return  Post::processing($posts);
     }
     public static function processing($posts, $null = 0)
     {

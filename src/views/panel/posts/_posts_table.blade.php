@@ -5,8 +5,8 @@
             <th scope="col"></th>
             <th scope="col"></th>
             <th scope="col">{{__('blublog.title')}}</th>
-            <th scope="col">{{__('blublog.author')}}</th>
-            <th scope="col">{{__('blublog.views')}}</th>
+            <th scope="col"><a href="{{ blublog_panel_url('/posts?author') }}">{{__('blublog.author')}} </a></th>
+            <th scope="col"><a href="{{ blublog_panel_url('/posts?views') }}">{{__('blublog.views')}} </a></th>
         </tr>
         </thead>
         <tbody>
@@ -28,8 +28,12 @@
 
         </tbody>
 </table>
-{!! $posts->links(); !!}
+<div class="col align-self-center p-2">
+    {!! $posts->links(); !!}
+</div>
 
 @else
-<center> <b>{{__('blublog.no_posts')}}</b> </center><br>
+<div class="p-4 h3 text-center">
+    {{__('blublog.no_posts')}}
+</div>
 @endif

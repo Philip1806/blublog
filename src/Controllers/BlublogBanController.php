@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Ban;
 use Blublog\Blublog\Models\Log;
-use Carbon\Carbon;
 use Session;
 
 class BlublogBanController extends Controller
@@ -33,11 +32,7 @@ class BlublogBanController extends Controller
     }
     public function destroy($id)
     {
-        $ban = Ban::find($id);
-        if (!$ban) {
-            abort(404);
-        }
-        $ban->delete();
+        Ban::destroy($id);
         Log::add($id . "BlublogBanController::ban", "alert", __('blublog.unban'));
         Session::flash('success', __('blublog.contentdelete'));
         return back();

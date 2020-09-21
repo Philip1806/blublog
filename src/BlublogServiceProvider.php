@@ -17,12 +17,15 @@ use Blublog\Blublog\Policies\TagPolicy;
 use Blublog\Blublog\Policies\CategoryPolicy;
 use Blublog\Blublog\Policies\PagePolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BlublogServiceProvider extends ServiceProvider
 {
     protected $commands = [
         'Blublog\Blublog\Commands\BlublogSetUp',
         'Blublog\Blublog\Commands\BlublogSitemap',
+        'Blublog\Blublog\Commands\BlublogInstall',
     ];
     protected $policies = [
         Post::class => PostPolicy::class,
@@ -60,6 +63,20 @@ class BlublogServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Collection::macro('paginate', function ($perPage, $page = null, $pageName = 'page') {
+            $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
+
+            return new LengthAwarePaginator(
+                $this->forPage($page, $perPage)->values(),
+                $this->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'pageName' => $pageName,
+                ]
+            );
+        });
         $this->register_policies();
         $this->define_gates();
     }

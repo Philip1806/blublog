@@ -2,9 +2,9 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.8",
-    'blog_prefix' => "blog",
-    'panel_prefix' => "panel",
+    'version' => "0.9.9",
+    'blog_prefix' => "blog", //Don't change, probably won't work.
+    'panel_prefix' => "panel", //Don't change, probably won't work.
     'files_disk' => "blublog",
 
     // Int Settings
