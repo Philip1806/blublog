@@ -125,62 +125,7 @@ class BlublogPostsController extends Controller
             'content' => 'required',
         ];
         $this->validate($request, $rules);
-        if ($request->file) {
-            $address = File::handle_img_upload($request);
-        } elseif ($request->customimg != "") {
-            $address = $request->customimg;
-        } else {
-            $address = "no-img.png";
-        }
-        $user = BlublogUser::get_user(Auth::user());
-        $post = new Post;
-        $post->user_id = $user->id;
-        $post->img = $address;
-        $post->title = $request->title;
-        if ($request->seo_title) {
-            $post->seo_title = $request->seo_title;
-        } else {
-            $post->seo_title = Post::make_seo_title($request->title);
-        }
-        if ($request->seo_descr) {
-            $post->seo_descr = $request->seo_descr;
-        } else {
-            $post->seo_descr = Post::make_seo_descr($request->content);
-        }
-        $post->headlight = $request->headlight;
-        $post->content = $request->content;
-        $post->excerpt = $request->excerpt;
-        $post->slug = Post::makeslug($request->title);
-        $post->status = Post::output_post_status($request->status);
-        if ($request->front) {
-            $post->front = true;
-        } else {
-            $post->front = false;
-        }
-        if ($request->main_tag_id) {
-            $post->tag_id = $request->main_tag_id;
-        }
-        if ($request->recommended) {
-            $post->recommended = true;
-        } else {
-            $post->recommended = false;
-        }
-
-        if ($request->comments) {
-            $post->comments = true;
-        } else {
-            $post->comments = false;
-        }
-
-        if ($request->slider) {
-            $post->slider = true;
-        } else {
-            $post->slider = false;
-        }
-        if ($request->new_date) {
-            $post->created_at = Post::convert_date($request->new_date);
-        }
-        $post->save();
+        $post = Post::create_new($request);
         $post->tags()->sync($request->tags, false);
         $post->categories()->sync($request->categories, false);
         if ($post->status == "publish") {
@@ -199,74 +144,7 @@ class BlublogPostsController extends Controller
             'slug' => 'max:200',
         ];
         $this->validate($request, $rules);
-        $post = Post::find($id);
-        BlublogUser::check_access('update', $post);
-        if ($request->file) {
-            if ($post->img != "no-img.png") {
-                //The post had a image before.
-                if (!Post::img_used_by_other_post($post->id)) {
-                    // Old post img is not used by other posts. Image can be deleted.
-                    $file = File::where([
-                        ['filename', '=', "posts/" . $post->img],
-                    ])->first();
-                    if ($file) {
-                        $file->delete();
-                    }
-                    Post::delete_post_imgs($post->img);
-                }
-            }
-            $address = File::handle_img_upload($request);
-        } elseif ($request->customimg != "") {
-            $address = $request->customimg;
-        } else {
-            $address = $post->img;
-        }
-        $post->title = $request->title;
-        if ($request->seo_title) {
-            $post->seo_title = $request->seo_title;
-        } else {
-            $post->seo_title = Post::make_seo_title($request->title);
-        }
-        if ($request->seo_descr) {
-            $post->seo_descr = $request->seo_descr;
-        } else {
-            $post->seo_descr = Post::make_seo_descr($request->content);
-        }
-        $post->headlight = $request->headlight;
-        $post->content = $request->content;
-        $post->excerpt = $request->excerpt;
-        if ($request->slug) {
-            $post->slug = $request->slug;
-        }
-        $post->status = Post::output_post_status($request->status);
-        if ($request->front) {
-            $post->front = true;
-        } else {
-            $post->front = false;
-        }
-        if ($request->recommended) {
-            $post->recommended = true;
-        } else {
-            $post->recommended = false;
-        }
-        if ($request->comments) {
-            $post->comments = true;
-        } else {
-            $post->comments = false;
-        }
-        if ($request->main_tag_id) {
-            $post->tag_id = $request->main_tag_id;
-        }
-        if ($request->slider) {
-            $post->slider = true;
-        } else {
-            $post->slider = false;
-        }
-        if ($request->new_date) {
-            $post->created_at = Post::convert_date($request->new_date);
-        }
-        $post->img = $address;
-        $post->save();
+        $post = Post::edit_by_id($request, $id);
         Post::remove_cache($post->id);
         if ($post->status != "private") {
             Log::add($request, "info", "Post edited");

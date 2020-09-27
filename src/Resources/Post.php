@@ -22,7 +22,7 @@ class Post extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'excerpt' => $this->excerpt,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->format('d-m-Y H:i'),
             'img' => $this->img,
             'rating' =>  PostModel::get_rating_avg($this),
             'votes' => $this->ratings->count(),

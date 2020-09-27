@@ -20,6 +20,7 @@ class Category extends JsonResource
             'descr' => $this->descr,
             'colorcode' => $this->colorcode,
             'img' => $this->img,
+            'number_of_posts' => $this->posts->count(),
         ];
     }
     public function with($request)

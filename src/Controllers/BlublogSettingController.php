@@ -99,6 +99,12 @@ class BlublogSettingController extends Controller
                 ['created_at', '<', Carbon::today()->subMonths(6)],
             ])->delete();
         }
+        if ($setting == 6) {
+            Log::where([
+                ['created_at', '<', Carbon::today()->subMonths(3)],
+                ['type', '=', 'bot'],
+            ])->delete();
+        }
         return redirect()->back();
     }
     public function logs()

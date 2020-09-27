@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "0.9.9",
+    'version' => "1.0.0",
     'blog_prefix' => "blog", //Don't change, probably won't work.
     'panel_prefix' => "panel", //Don't change, probably won't work.
     'files_disk' => "blublog",
@@ -96,6 +96,8 @@ return [
     // Bool Settings
     'post_editor' => true,
     'post_editor_type' => "bool",
+    'enable_public_api' => true,
+    'enable_public_api_type' => "bool",
     'do_not_convert_post_img' => true,
     'do_not_convert_post_img_type' => "bool",
     'make_blur_img' => true,

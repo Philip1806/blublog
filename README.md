@@ -2,9 +2,9 @@
 
 ## About BLUBLOG
 
-**BLUblog is close to BETA version.**
+**First BETA version is now available. Check it out.**
+
 BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation. It's made simple with mostly blade and a little basic javascript.
-URL address of the panel and blog can be changed in config file.
 
 Front end demo and documentation at http://demo.blublog.info/blog
 
@@ -12,7 +12,6 @@ Front end demo and documentation at http://demo.blublog.info/blog
 
 1. Your app must have a laravel/ui or the same authentication with User model in App folder that have property "name".
    BLUblog imports users from that User model to BlublogUser model and gives them other properties independent of your application. If logged in user is not imported to BlublogUser, they will not have access to the panel.
-   For some cases that could be a good thing or a bad thing.
 
 2. It's **recommended** for trusted users, because posts outputs HTML. But there is option author not to be able to make his posts public until someone approve specified number of posts.
 
@@ -42,7 +41,7 @@ composer require blublog/blublog
 Blublog\Blublog\BlublogServiceProvider::class,
 ```
 
-3. login into your app without going to the blog and run this:
+2. login into your app without going to the blog and run this:
 
 ```
 php artisan blublog:install
@@ -50,7 +49,7 @@ php artisan blublog:install
 
 You will be ask if you want express install. Unless you get errors, you should use express install.
 
-4. Cool. Everything except uploading/deleting files should work.
+3. Cool. Everything except uploading/deleting files should work.
    You need to add this in filesystems.php from config folder:
 
 ```
@@ -116,7 +115,7 @@ By default you can access the blog from /blog and panel from /panel.
 
 5. Users
 
-- Import users from Laravel UI.
+- Import users from Laravel UI (/App/User model).
 - They are three built in roles - Administrator, Moderator and Author.
 - You can control roles permissions and create new roles.
 
@@ -131,13 +130,14 @@ By default you can access the blog from /blog and panel from /panel.
 - Very basic menu options. You can make links and dropdowns. There are html templates for the links and dropdowns, so that you can change it if your theme do not use bootstrap.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 - Maintenance mode.
+- Check for BLUblog update.
 
 8. API
    Simple API for getting posts, categories, comments, tags and others. It's a public API, so for actions requiring authorization, you will need to use the panel. You can write your own custom api calls for your theme.
 
 ## Design Customization
 
-Creating your own desing/theme for BLUblog is easy. Look at the documentation. (still not made)
+Creating your own desing/theme for BLUblog is easy. Look at the documentation at WIKI page.
 Basically, you put your theme files (blade.php) in here: \resources\views\vendor\blublog\your_theme_name and from settings page change theme field from "blublog" to "your_theme_name".
 Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
 
@@ -149,7 +149,7 @@ Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
 - Make the code better - more compact, reduce repetition...
 - Add comments for most of the code.
 - Testing, testing, testing...
-- Write documentation (50% done).
+- Improve documentation.
 
 2. Planed extension/packages
 
@@ -159,7 +159,6 @@ Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
 
 ## ROADMAP
 
-- September 2020 - Fist beta of BLUblog.
 - October 2020 - First BLUblog theme/design (package).
 - Q1 of 2021 - First extension (Gallery or Statistics package for BLUblog).
 

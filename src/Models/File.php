@@ -157,6 +157,20 @@ class File extends Model
 
         return $url;
     }
+
+    public static function only_post_img($files)
+    {
+        $images = collect(new Post);
+
+        foreach ($files as $file) {
+            $filename = File::remove_directory($file->filename);
+            $post = Post::with_filename($filename);
+            if ($post) {
+                $images->push($file);
+            }
+        }
+        return $images;
+    }
     public static function get_category_img_file($img)
     {
         $path = 'categories/' . $img;

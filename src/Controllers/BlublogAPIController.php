@@ -114,7 +114,8 @@ class BlublogAPIController extends Controller
             ['is_in_post', '=', false],
         ])->latest()->paginate(10);
         File::get_url($files);
-        $images = File::only_img($files);
+
+        $images = File::only_img($files, true);
 
         return response()->json($images);
     }
@@ -186,6 +187,20 @@ class BlublogAPIController extends Controller
         return $response;
     }
 
+    public function categories()
+    {
+        if (!Cache::has('blublog.api.categories')) {
+            $categories = Category::get();
+            if (!$categories) {
+                return response()->json(null, 404);
+            }
+            $response =  CategoryResource::collection($categories);
+            Cache::put('blublog.api.categories', $response);
+        } else {
+            $response = Cache::get('blublog.api.categories');
+        }
+        return $response;
+    }
     public function category($slug)
     {
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -264,9 +279,11 @@ class BlublogAPIController extends Controller
                 ['is_in_post', '=', false],
             ])->latest()->get();
 
-            if ($files->count() > 0) {
-                File::get_url($files);
-                return response()->json($files);
+            $images = File::only_post_img($files);
+
+            if ($images->count() > 0) {
+                File::get_url($images);
+                return response()->json($images);
             } else {
                 return response()->json(false);
             }
