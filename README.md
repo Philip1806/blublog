@@ -2,7 +2,7 @@
 
 ## About BLUBLOG
 
-**First BETA version is now available. Check it out.**
+**The package is been rewritten for second version in dev branch**
 
 BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation. It's made simple with mostly blade and a little basic javascript.
 

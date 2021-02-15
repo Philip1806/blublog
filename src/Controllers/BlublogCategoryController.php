@@ -3,18 +3,13 @@
 namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Category;
-use Blublog\Blublog\Models\File;
-use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\BlublogUser;
 use Blublog\Blublog\Exceptions\BlublogNotFound;
 use Blublog\Blublog\Exceptions\BlublogNoAccess;
-
-use Exception;
 use Session;
 
 class BlublogCategoryController extends Controller

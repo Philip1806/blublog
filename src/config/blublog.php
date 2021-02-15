@@ -2,7 +2,7 @@
 
 return [
     // LOW LEVEL SETTING
-    'version' => "1.0.0",
+    'version' => "1.0.1",
     'blog_prefix' => "blog", //Don't change, probably won't work.
     'panel_prefix' => "panel", //Don't change, probably won't work.
     'files_disk' => "blublog",
