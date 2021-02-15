@@ -4,56 +4,34 @@ namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Blublog\Blublog\Models\Post;
+use Illuminate\Support\Facades\Gate;
 
 class Tag extends Model
 {
     protected $table = 'blublog_tags';
+    protected $guarded = ['created_at', 'updated_at'];
     public function posts()
     {
         return $this->belongsToMany(Post::class, 'blublog_posts_tags');
     }
-    public static function create_new($request)
+    public static function createTag($title)
     {
-        $tag = new Tag;
-        if ($request->slug) {
-            $tag->slug = $request->slug;
-        } else {
-            $tag->slug = Post::makeslug($request->title);
+        if (!Gate::allows('blublog_create_tags')) {
+            abort(403);
         }
-        $tag->title = $request->title;
-        $tag->descr = $request->descr;
-        $tag->save();
-        return $tag;
+        Tag::create([
+            'title' => $title,
+            'slug' => blublog_create_slug($title),
+        ]);
+        return redirect()->back();
     }
-    public static function get_tag_posts($tag_id, $remove = false)
+    public function removeTag()
     {
-        $tag = Tag::find($tag_id);
-        $posts = $tag->posts()->latest()->limit(blublog_setting('number_main_tag_posts'))->get();
-        if ($remove) {
-            $foo = 0;
-            foreach ($posts as $post) {
-                if ($post->id == $remove) {
-                    unset($posts[$foo]);
-                }
-                $foo++;
-            }
+        if (!Gate::allows('blublog_delete_tags')) {
+            abort(403);
         }
-        $posts = Post::public($posts);
-        $posts = Post::processing($posts);
-        return $posts;
-    }
-    public static function by_slug($slug)
-    {
-        $tag = Tag::where([
-            ['slug', '=', $slug],
-        ])->first();
-        if (!$tag) {
-            return false;
-        }
-        $posts = $tag->posts()->where("status", '=', 'publish')->latest();
-        $tag->number_of_posts = $posts->count();
-        $tag->get_posts = $posts->paginate(blublog_setting('tags_posts_per_page'));
-        $tag->get_posts = Post::processing($tag->get_posts);
-        return $tag;
+        $this->posts()->detach();
+        $this->delete();
+        return redirect()->back();
     }
 }

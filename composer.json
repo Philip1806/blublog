@@ -6,8 +6,7 @@
     "package",
     "admin",
     "panel",
-    "posts",
-    "pages"
+    "posts"
   ],
   "description": "BLUblog is simple laravel blog package with admin panel.",
   "type": "library",
@@ -26,8 +25,7 @@
     }
   },
   "require": {
-    "laravel/framework": "^6.0",
-    "laravelcollective/html": "^6.0",
+    "laravel/framework": "~6.0|~7.0|~8.0",
     "intervention/image": "2.*"
   },
   "extra": {

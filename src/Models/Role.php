@@ -2,55 +2,74 @@
 
 namespace Blublog\Blublog\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Blublog\Blublog\Models\RolePermission;
 
 class Role extends Model
 {
     protected $table = 'blublog_roles';
-    protected $guarded = ['is_admin', 'is_mod'];
+    protected $guarded = [];
+    protected $with = ['permissions'];
     public $timestamps = false;
-
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'blublog_roles_users', 'user_id');
+    }
+    public function permissions()
+    {
+        return $this->belongsToMany(RolePermission::class, 'blublog_roles_permissions', 'role_id', 'permission_id');
+    }
     public function comments()
     {
         return $this->hasMany('App\Comment');
     }
-    public static function get_roles_in_array()
+
+    public function changePermission($permissionToChange)
     {
-        $roles = Role::get();
-        $data = array();
-        foreach ($roles as $role) {
-            $data[$role->id] = $role->name;
-        }
-        return $data;
-    }
-    public static function add_new($request)
-    {
-        unset($request['role_id']);
-        $keys = array_keys($request);
-        for ($i = 0; $i < count($request); $i++) {
-            if ($request[$keys[$i]] == 'on') {
-                $request[$keys[$i]] = "1";
+        foreach ($this->permissions as $permission) {
+            if ($permission->permission == $permissionToChange) {
+                if ($permission->value) {
+                    $permission->value = 0;
+                } else {
+                    $permission->value = 1;
+                }
+                $permission->save();
             }
         }
-        $role = new Role($request);
-        $role->save();
         return true;
     }
-    public static function edit($role, $request)
+    public function havePermission($check)
     {
-        unset($request['role_id']);
-        unset($request['_token']);
-
-        $keys = array_keys($request);
-        for ($i = 0; $i < count($request); $i++) {
-            if ($request[$keys[$i]] == 'on') {
-                $role->{$keys[$i]} = "1";
-            } else {
-                $role->{$keys[$i]} = "0";
+        foreach ($this->permissions as $permission) {
+            if ($permission->permission == $check) {
+                if ($permission->value) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
-
-        $role->save();
         return true;
+    }
+
+    public function permissionsBySections()
+    {
+        $permissions = $this->permissions->sortBy([
+            ['section', 'asc']
+        ]);
+        $sections = array();
+        for ($i = 0; $i < $permissions->last()->section; $i++) {
+            $options = array();
+            foreach ($permissions as $permission) {
+                if ($permission->section == $i) {
+                    array_push($options, $permission);
+                }
+            }
+            array_push($sections, $options);
+        }
+
+
+        return $sections;
     }
 }

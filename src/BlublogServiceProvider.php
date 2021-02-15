@@ -2,40 +2,22 @@
 
 namespace Blublog\Blublog;
 
-use Blublog\Blublog\Models\BlublogUser;
 use Illuminate\Support\ServiceProvider;
-use Blublog\Blublog\Models\Post;
-use Blublog\Blublog\Models\Comment;
-use Blublog\Blublog\Models\Tag;
-use Blublog\Blublog\Models\Category;
-use Blublog\Blublog\Models\Page;
-use Blublog\Blublog\Models\File;
-use Blublog\Blublog\Policies\FilePolicy;
-use Blublog\Blublog\Policies\PostPolicy;
-use Blublog\Blublog\Policies\CommentPolicy;
-use Blublog\Blublog\Policies\TagPolicy;
-use Blublog\Blublog\Policies\CategoryPolicy;
-use Blublog\Blublog\Policies\PagePolicy;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Blublog\Blublog\Livewire\PostTable;
+use Blublog\Blublog\Livewire\BlublogUsersTable;
+use Blublog\Blublog\Livewire\BlublogEditRoles;
+use Blublog\Blublog\Livewire\BlublogTags;
+use Blublog\Blublog\Livewire\BlublogUploadFile;
+use Blublog\Blublog\Livewire\BlublogImageSection;
+use Blublog\Blublog\Livewire\BlublogCreateEditPost;
+use Blublog\Blublog\Livewire\BlublogListImages;
+use Blublog\Blublog\BlublogAdmin;
+use Blublog\Blublog\BlublogPanel;
+
 
 class BlublogServiceProvider extends ServiceProvider
 {
-    protected $commands = [
-        'Blublog\Blublog\Commands\BlublogSetUp',
-        'Blublog\Blublog\Commands\BlublogSitemap',
-        'Blublog\Blublog\Commands\BlublogInstall',
-    ];
-    protected $policies = [
-        Post::class => PostPolicy::class,
-        Comment::class => CommentPolicy::class,
-        Tag::class => TagPolicy::class,
-        Category::class => CategoryPolicy::class,
-        Page::class => PagePolicy::class,
-        File::class => FilePolicy::class,
-    ];
-
     /**
      * Register any application services.
      *
@@ -43,17 +25,17 @@ class BlublogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
-        $this->loadViewsFrom(__DIR__ . '/views', 'blublog');
-        $this->loadMigrationsFrom(__DIR__ . '/migrations');
+        $this->loadRoutesFrom(__DIR__ . '/web.php');
+        $this->loadViewsFrom(__DIR__ . '/Views', 'blublog');
+        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
         $this->mergeConfigFrom(
-            __DIR__ . '/config/blublog.php',
+            __DIR__ . '/Config/blublog.php',
             'blublog'
         );
+        app('router')->aliasMiddleware('BlublogAdmin', BlublogAdmin::class);
+        app('router')->aliasMiddleware('BlublogPanel', BlublogPanel::class);
         $this->publish_files();
-        $this->commands($this->commands);
         $this->register_helpers();
-        $this->add_middleware();
     }
 
     /**
@@ -63,21 +45,7 @@ class BlublogServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Collection::macro('paginate', function ($perPage, $page = null, $pageName = 'page') {
-            $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
-
-            return new LengthAwarePaginator(
-                $this->forPage($page, $perPage)->values(),
-                $this->count(),
-                $perPage,
-                $page,
-                [
-                    'path' => LengthAwarePaginator::resolveCurrentPath(),
-                    'pageName' => $pageName,
-                ]
-            );
-        });
-        $this->register_policies();
+        $this->register_componets();
         $this->define_gates();
     }
 
@@ -85,60 +53,111 @@ class BlublogServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/public' => public_path('/'),
-            __DIR__ . '/views/blublog' => base_path('resources/views/vendor/blublog/blublog'),
-            __DIR__ . '/lang' => base_path('resources/lang/en/'),
+            __DIR__ . '/views' => base_path('resources/views/vendor/blublog'),
         ]);
     }
     public function register_helpers()
     {
-        $file = __DIR__ . '/Models/Helpers.php';
+        $file = __DIR__ . '/Helpers.php';
         if (file_exists($file)) {
             require_once($file);
         }
     }
-    public function add_middleware()
+    public function register_componets()
     {
-        app('router')->aliasMiddleware('BlublogAdmin', \Blublog\Blublog\BlublogAdmin::class);
-        app('router')->aliasMiddleware('BlublogUseMenu', \Blublog\Blublog\BlublogUseMenu::class);
-        app('router')->aliasMiddleware('BlublogPanel', \Blublog\Blublog\BlublogPanel::class);
+        \Livewire::component('post-table', PostTable::class);
+        \Livewire::component('blublog-users-table', BlublogUsersTable::class);
+        \Livewire::component('blublog-edit-roles-perm', BlublogEditRoles::class);
+        \Livewire::component('blublog-tags', BlublogTags::class);
+        \Livewire::component('blublog-upload-img', BlublogUploadFile::class);
+        \Livewire::component('blublog-img-section', BlublogImageSection::class);
+        \Livewire::component('blublog-create-edit-post', BlublogCreateEditPost::class);
+        \Livewire::component('blublog-list-images', BlublogListImages::class);
     }
-    public function register_policies()
-    {
-        foreach ($this->policies as $key => $value) {
-            Gate::policy($key, $value);
-        }
-    }
-
     public function define_gates()
     {
-        Gate::define('can_delete_all_files', function ($user) {
-            $Blublog_User = BlublogUser::get_user($user);
-            if ($Blublog_User->user_role->delete_all_files) {
+        Gate::define('blublog_edit_users', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('edit-users')) {
                 return true;
             }
             return false;
         });
         Gate::define('blublog_create_users', function ($user) {
-            $Blublog_User = BlublogUser::get_user($user);
-            if ($Blublog_User->user_role->create_users) {
-                return true;
-            }
-            return false;
-        });
-        Gate::define('blublog_edit_users', function ($user, $edit_user = false) {
-            $Blublog_User = BlublogUser::get_user($user);
-            if ($Blublog_User->user_role->update_all_users) {
-                return true;
-            }
-            if ($Blublog_User->user_role->update_own_user and ($edit_user == $Blublog_User->id)) {
+            if ($user->blublogRoles->first()->havePermission('create-users')) {
                 return true;
             }
             return false;
         });
         Gate::define('blublog_delete_users', function ($user) {
-            $Blublog_User = BlublogUser::get_user($user);
-            if ($Blublog_User->user_role->delete_users) {
+            if ($user->blublogRoles->first()->havePermission('delete-users')) {
                 return true;
+            }
+            return false;
+        });
+        Gate::define('blublog_create_categories', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('create-categories')) {
+                return true;
+            }
+            return false;
+        });
+        Gate::define('blublog_edit_categories', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('edit-categories')) {
+                return true;
+            }
+            return false;
+        });
+        Gate::define('blublog_delete_categories', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('delete-categories')) {
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('blublog_create_tags', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('create-tags')) {
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('blublog_edit_tags', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('edit-tags')) {
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('blublog_delete_tags', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('delete-tags')) {
+                return true;
+            }
+            return false;
+        });
+        Gate::define('blublog_upload_files', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('upload-files')) {
+                return true;
+            }
+            return false;
+        });
+        Gate::define('blublog_delete_files', function ($user, $file) {
+            if ($user->blublogRoles->first()->havePermission('delete-files')) {
+                return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('delete-own-files')) {
+                if ($file->user_id == $user->id) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        Gate::define('blublog_delete_posts', function ($user, $post) {
+            if ($user->blublogRoles->first()->havePermission('delete-posts')) {
+                return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('delete-own-posts')) {
+                if ($post->user_id == $user->id) {
+                    return true;
+                }
             }
             return false;
         });

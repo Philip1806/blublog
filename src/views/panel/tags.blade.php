@@ -14,10 +14,6 @@
         </li>
     </ul>
 @endsection
-
-
 @section('content')
-
-    @livewire('post-table')
-
+    @livewire('blublog-tags')
 @endsection
