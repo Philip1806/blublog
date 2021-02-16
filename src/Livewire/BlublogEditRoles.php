@@ -3,9 +3,6 @@
 namespace Blublog\Blublog\Livewire;
 
 use Livewire\Component;
-use Blublog\Blublog\Models\Role;
-use Livewire\WithPagination;
-
 
 class BlublogEditRoles extends Component
 {
@@ -23,7 +20,7 @@ class BlublogEditRoles extends Component
             $this->message = 'Admin role permissions can not be changed.';
         } else {
             $this->role->changePermission($permission);
-            $this->message = 'Permission ' . $permission . 'was changed.';
+            $this->message = 'Permission ' . $permission . ' was changed.';
         }
     }
 }

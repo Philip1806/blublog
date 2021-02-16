@@ -1,5 +1,5 @@
 <div>
-    @foreach ($images->chunk(4) as $chunks)
+    @forelse ($images->chunk(4) as $chunks)
         <div class="row course-set courses__row">
             @foreach ($chunks as $image)
                 <div class="col-md-3 course-block course-block-lessons">
@@ -13,6 +13,10 @@
                 </div>
             @endforeach
         </div>
-    @endforeach
+    @empty
+        <div class="alert alert-info" role="alert">
+            There are no uploaded photos. :(
+        </div>
+    @endforelse
     {{ $images->links() }}
 </div>

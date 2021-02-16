@@ -27,7 +27,6 @@ class BlublogPostsController extends Controller
      */
     public function index()
     {
-
         return view('blublog::panel.posts.index');
     }
     public function create()
@@ -37,10 +36,14 @@ class BlublogPostsController extends Controller
     }
     public function edit($id)
     {
-        return view('blublog::panel.posts.edit')->with('post', Post::findOrFail($id));
+        $post =  Post::findOrFail($id);
+        $this->authorize('blublog_edit_post', $post);
+        return view('blublog::panel.posts.edit')->with('post', $post);
     }
     public function store(Request $request)
     {
+        dd($request->categories);
+        $this->authorize('blublog_create_posts');
         $rules = [
             'title' => 'required|max:250',
             'categories' => 'required',
@@ -56,6 +59,7 @@ class BlublogPostsController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize('blublog_edit_post', Post::findOrFail($id));
         $rules = [
             'title' => 'required|max:250',
             'categories' => 'required',

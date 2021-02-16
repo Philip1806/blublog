@@ -15,7 +15,7 @@ class BlublogListImages extends Component
 
     public function render()
     {
-        $images = File::whereNull('parent_id')->latest()->paginate(6);
+        $images = File::whereNull('parent_id')->latest()->paginate(12);
 
         return view('blublog::livewire.images.blublog-list-images')->with('images', $images);
     }

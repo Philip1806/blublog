@@ -42,23 +42,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                {{ Form::model($user, ['route' => ['blublog.panel.users.update', $user->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data']) }}
-
-                                                {{ Form::label('name', 'Role name') }}
-                                                {{ Form::text('name', null, ['class' => 'form-control']) }}
-
-                                                {{ Form::label('email', 'Email') }}
-                                                {{ Form::text('email', null, ['class' => 'form-control']) }}
-
-                                                {{ Form::label('new_password', 'New password') }}
-                                                {{ Form::password('new_password', ['class' => 'form-control']) }}
-
-                                                {{ Form::label('role_id', 'Role:') }}
-                                                {{ Form::select('role_id', $all_roles, null, ['class' => 'form-control']) }}
-
-                                                {{ Form::submit('Edit', ['class' => 'btn btn-primary btn-block mt-2']) }}
-
-                                                {!! Form::close() !!}
+                                                @include('blublog::panel.users._editUser')
                                             </div>
                                         </div>
                                     </div>
@@ -72,8 +56,7 @@
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                                         @if (blublog_is_admin())
                                             @if (isset($user->blublogRoles->first()->name))
-                                                <button wire:click="banFromBlog('{{ $user->id }}')"
-                                                    class="btn btn-warning">
+                                                <button wire:click="banFromBlog('{{ $user->id }}')" class="btn btn-warning">
                                                     <span class="oi oi-ban"></span> Remove Access
                                                 </button>
                                             @endif

@@ -57,9 +57,8 @@ class BlublogCreateEditPost extends Component
             $tags2[$tag->id] = $tag->title;
         }
 
-        $images = File::whereNull('parent_id')->latest()->paginate(12);
 
-        return view('blublog::livewire.posts.blublog-create-edit-post')->with('images', $images)->with('categories', $categories2)->with('tags', $tags2);
+        return view('blublog::livewire.posts.blublog-create-edit-post')->with('categories', $categories2)->with('tags', $tags2);
     }
     public function createTag()
     {

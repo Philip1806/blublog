@@ -2,10 +2,12 @@
 @section('nav')
     <ul class="nav nav-pills nav-fill bg-light m-2">
         <li class="nav-item">
-            <a class="nav-link" href="#"><span class="oi oi-pencil"></span> Add Post</a>
+            <a class="nav-link" href="{{ route('blublog.panel.posts.create') }}"><span class="oi oi-pencil"></span> Add
+                Post</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('blublog.panel.categories.index') }}"><span class="oi oi-spreadsheet"></span>
+            <a class="nav-link" href="{{ route('blublog.panel.categories.index') }}"><span
+                    class="oi oi-spreadsheet"></span>
                 Categories</a>
         </li>
         <li class="nav-item">
@@ -19,9 +21,7 @@
             @foreach ($categories as $category)
                 <div class="card bg-dark border-dark mb-3">
                     <div class="card-header text-white ">{{ $category->title }}
-
                         @include('blublog::panel.categories._editCategory')
-
                     </div>
 
                     @if ($category->descr)
@@ -29,7 +29,6 @@
                             <p class="card-text">{{ $category->descr }}</p>
                         </div>
                     @endif
-
                     @include('blublog::panel.categories._subCategories')
                 </div>
             @endforeach

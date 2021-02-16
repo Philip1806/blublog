@@ -18,6 +18,10 @@ use Blublog\Blublog\BlublogPanel;
 
 class BlublogServiceProvider extends ServiceProvider
 {
+    protected $commands = [
+        'Blublog\Blublog\Commands\BlublogSetUp',
+        'Blublog\Blublog\Commands\BlublogInstall',
+    ];
     /**
      * Register any application services.
      *
@@ -36,6 +40,7 @@ class BlublogServiceProvider extends ServiceProvider
         app('router')->aliasMiddleware('BlublogPanel', BlublogPanel::class);
         $this->publish_files();
         $this->register_helpers();
+        $this->commands($this->commands);
     }
 
     /**
@@ -150,6 +155,14 @@ class BlublogServiceProvider extends ServiceProvider
             }
             return false;
         });
+
+        // POSTS
+        Gate::define('blublog_create_posts', function ($user) {
+            if ($user->blublogRoles->first()->havePermission('create-posts')) {
+                return true;
+            }
+            return false;
+        });
         Gate::define('blublog_delete_posts', function ($user, $post) {
             if ($user->blublogRoles->first()->havePermission('delete-posts')) {
                 return true;
@@ -158,6 +171,17 @@ class BlublogServiceProvider extends ServiceProvider
                 if ($post->user_id == $user->id) {
                     return true;
                 }
+            }
+            return false;
+        });
+
+        Gate::define('blublog_edit_post', function ($user, $post) {
+            if ($user->blublogRoles->first()->havePermission('edit-posts')) {
+                return true;
+            }
+            //TODO:Custom post status
+            if ($user->blublogRoles->first()->havePermission('edit-own-posts') and $post->user_id == $user->id) {
+                return true;
             }
             return false;
         });

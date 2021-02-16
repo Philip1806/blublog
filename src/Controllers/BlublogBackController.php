@@ -4,7 +4,9 @@ namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Blublog\Blublog\Models\Comment;
 use Blublog\Blublog\Models\File;
+use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Session;
 
@@ -18,7 +20,12 @@ class BlublogBackController extends Controller
 
     public function index()
     {
-        return view('blublog::panel.index');
+        return view("blublog::panel.index", [
+            'total_images' => File::all()->count(),
+            'total_comments' => Comment::all()->count(),
+            'total_posts' => Post::all()->count(),
+            'my_posts' => Post::where('user_id', '=', auth()->user()->id)->count(),
+        ]);
     }
     public function tags()
     {

@@ -27,6 +27,7 @@ class BlublogUserController extends Controller
         $rules = [
             'name' => 'required|max:250',
             'email' => 'required|email',
+            'password' => 'min:8|max:150',
         ];
         $this->validate($request, $rules);
 
@@ -37,8 +38,10 @@ class BlublogUserController extends Controller
             $user->new_password = Hash::make($request->password);
         }
         $user->save();
-        if ($request->role_id) {
-            $user->blublogRoles()->sync($request->role_id);
+        if ($request->role_id and blublog_is_admin()) {
+            if (auth()->user()->id != $user->id) {
+                $user->blublogRoles()->sync($request->role_id);
+            }
         }
 
         Session::flash('success', "User edited.");
@@ -51,7 +54,7 @@ class BlublogUserController extends Controller
         }
         $rules = [
             'name' => 'required|max:250',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:' . config('blublog.userModel') . ',email',
             'password' => 'required|min:8|max:150',
         ];
         $this->validate($request, $rules);

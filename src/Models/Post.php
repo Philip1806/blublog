@@ -5,11 +5,6 @@ namespace Blublog\Blublog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Tag;
-use Blublog\Blublog\Models\BlublogUser;
-use Carbon\Carbon;
-
-use Session;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +15,7 @@ class Post extends Model
     protected $guarded = ['status', 'created_at'];
     public function user()
     {
-        return $this->belongsTo(BlublogUser::class);
+        return $this->belongsTo(blublog_user_model());
     }
     public function categories()
     {
@@ -41,6 +36,44 @@ class Post extends Model
         } else {
             $this->img = 'no-image.jpg';
         }
+    }
+
+    public static function withStatus($status)
+    {
+        $list_of_status = config('blublog.post_status');
+        $list_of_status_access = config('blublog.post_status_access');
+        $user = auth()->user();
+
+        if (!in_array($status, $list_of_status)) {
+            return null;
+        }
+        for ($i = 0; $i < count(--$list_of_status); $i++) {
+            if ($list_of_status[$i] != $status) {
+                continue;
+            }
+            $user = auth()->user();
+
+
+            if ($list_of_status_access[$i] == 3 and $user->blublogRoles->first()->havePermission('edit-' . $status)) {
+                return Post::Where('status', '=',  $status);
+            } elseif ($list_of_status_access[$i] == 2) {
+                return Post::where([
+                    ['user_id', '=', $user->id],
+                    ['status', '=', $status],
+                ]);
+            } elseif ($list_of_status_access[$i] == 1 and blublog_is_mod()) {
+
+                return Post::where([
+                    ['status', '=', $status],
+                ]);
+            } elseif ($list_of_status_access[$i] == 0) {
+                return Post::Where('status', '=',  $status);
+            }
+            abort(403);
+            break;
+        }
+
+        return null;
     }
     public function setPostStatus($status)
     {
@@ -82,6 +115,7 @@ class Post extends Model
         $post->user_id = auth()->user()->id;
         $post->title = $request->title;
         $post->content = $request->content;
+        $post->save();
 
         $post->tags()->sync($request->tags, false);
         $post->categories()->sync($request->categories, false);

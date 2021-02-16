@@ -58,9 +58,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="{{ route('blublog.panel.users.roles.edit', $role->id) }}"
-                                        class="btn btn-primary btn-sm btn-block" role="button" aria-pressed="true"><span
-                                            class="oi oi-pencil"></span> Edit</a>
+                                    @include('blublog::panel.users.roles.edit')
                                 </td>
                                 <td>
                                     {!! Form::open(['route' => ['blublog.panel.users.roles.destroy', $role->id], 'method' =>
@@ -95,7 +93,7 @@
                         <!-- Modal -->
                         <div class="modal fade" id="editpermissions" tabindex="-1" aria-labelledby="editpermissionsLabel"
                             aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editpermissions">Assign Permission To New Role</h5>

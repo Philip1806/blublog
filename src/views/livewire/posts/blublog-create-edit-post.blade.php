@@ -97,21 +97,24 @@
 
                 </div>
             </div>
-            <button type="button" class="btn btn-secondary btn-block my-2" data-toggle="collapse" href="#postSettings"
-                role="button" aria-expanded="false"><span class="oi oi-cog"></span> Settings</button>
+            <div wire:ignore>
+                <button type="button" class="btn btn-secondary btn-block my-2" data-toggle="collapse"
+                    href="#postSettings" role="button" aria-expanded="false"><span class="oi oi-cog"></span>
+                    Settings</button>
 
-            <div class="collapse" id="postSettings">
-                URL
-                {{ Form::text('slug', null, ['class' => 'form-control mb-2']) }}
-                {{ Form::checkbox('comments', null) }} Enable comments<br>
-                {{ Form::checkbox('front', null) }} Front Page Post<br>
-                {{ Form::checkbox('recommended', null) }} Recommended<br>
-                Seo title
-                {{ Form::text('seo_title', null, ['class' => 'form-control mb-2']) }}
-                Seo description
-                {{ Form::text('seo_descr', null, ['class' => 'form-control mb-2']) }}
-                Excerpt
-                {{ Form::text('excerpt', null, ['class' => 'form-control mb-2']) }}
+                <div class="collapse" id="postSettings">
+                    URL
+                    {{ Form::text('slug', null, ['class' => 'form-control mb-2']) }}
+                    {{ Form::checkbox('comments', null) }} Enable comments<br>
+                    {{ Form::checkbox('front', null) }} Front Page Post<br>
+                    {{ Form::checkbox('recommended', null) }} Recommended<br>
+                    Seo title
+                    {{ Form::text('seo_title', null, ['class' => 'form-control mb-2']) }}
+                    Seo description
+                    {{ Form::text('seo_descr', null, ['class' => 'form-control mb-2']) }}
+                    Excerpt
+                    {{ Form::text('excerpt', null, ['class' => 'form-control mb-2']) }}
+                </div>
             </div>
         </div>
 

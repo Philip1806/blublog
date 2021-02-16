@@ -20,13 +20,9 @@ class PostTable extends Component
         $this->resetPage();
     }
 
-
     public function render()
     {
-        $posts = Post::where(function ($query) {
-            $query->where('status', '=', $this->status)
-                ->Where('title', 'like', '%' . $this->search . '%');
-        })->latest()->paginate(5);
+        $posts = Post::withStatus($this->status)->Where('title', 'like', '%' . $this->search . '%')->paginate(5);
         return view('blublog::livewire.posts.post-table')->with('posts', $posts);
     }
 

@@ -50,7 +50,7 @@ class Role extends Model
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public function permissionsBySections()

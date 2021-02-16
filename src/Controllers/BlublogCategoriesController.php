@@ -43,9 +43,17 @@ class BlublogCategoriesController extends Controller
             'title' => 'required|max:250',
         ];
         $this->validate($request, $rules);
+
         $id = $request['parent_id'];
         unset($request['parent_id']);
-        $category = Category::create($request->all());
+
+        $category = Category::create([
+            'title' => $request->title,
+            'img' => $request->img,
+            'descr' => $request->descr,
+            'slug' => $request->slug ? $request->slug : blublog_create_slug($request->title),
+        ]);
+
         if ($id) {
             $category->parent_id = $id;
             $category->save();
@@ -64,8 +72,10 @@ class BlublogCategoriesController extends Controller
         $category->update($request->all());
         if ($id) {
             $category->parent_id = $id;
-            $category->save();
+        } else {
+            $category->parent_id = null;
         }
+        $category->save();
         Session::flash('success', "Category edited.");
         return back();
     }

@@ -6,7 +6,7 @@
     @endif
     @foreach ($role->permissionsBySections() as $sections)
         @if ($sections)
-            <div class="card border-dark my-2">
+            <div class="card text-white bg-dark my-2">
                 <div class="card-header">
                     Section {{ $sections[0]->section }}
                 </div>
@@ -21,6 +21,5 @@
             </div>
         @endif
     @endforeach
-
 
 </div>

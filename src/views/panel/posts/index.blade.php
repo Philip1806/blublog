@@ -6,7 +6,8 @@
                 Post</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('blublog.panel.categories.index') }}"><span class="oi oi-spreadsheet"></span>
+            <a class="nav-link" href="{{ route('blublog.panel.categories.index') }}"><span
+                    class="oi oi-spreadsheet"></span>
                 Categories</a>
         </li>
         <li class="nav-item">

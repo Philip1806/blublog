@@ -33,7 +33,7 @@ class BlublogTags extends Component
 
     public function render()
     {
-        $tags = Tag::where('title', 'like', '%' . $this->search . '%')->paginate(5);
+        $tags = Tag::where('title', 'like', '%' . $this->search . '%')->latest()->paginate(5);
         return view('blublog::livewire.blublog-tags')->with('tags', $tags);
     }
 
@@ -45,11 +45,10 @@ class BlublogTags extends Component
         $this->validate();
         Tag::create([
             'title' => $this->tagTitle,
-            'slug' => $this->tagSlug,
+            'slug' => $this->tagSlug ? $this->tagSlug : blublog_create_slug($this->tagTitle),
             'img' => $this->tagImg,
         ]);
-
-        session()->flash('success', 'Tag deleted.');
+        session()->flash('success', 'Tag created.');
     }
     public function delete($id)
     {
