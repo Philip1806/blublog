@@ -65,7 +65,6 @@ class BlublogRolesController extends Controller
 
 
         $permissions = Role::find(1)->permissions;
-
         foreach ($permissions as $permission) {
             $newPermission = new RolePermission;
 

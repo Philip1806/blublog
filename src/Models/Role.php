@@ -59,7 +59,7 @@ class Role extends Model
             ['section', 'asc']
         ]);
         $sections = array();
-        for ($i = 0; $i < $permissions->last()->section; $i++) {
+        for ($i = 0; $i < $permissions->last()->section + 1; $i++) {
             $options = array();
             foreach ($permissions as $permission) {
                 if ($permission->section == $i) {

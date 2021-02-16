@@ -21,9 +21,6 @@ class BlublogUserController extends Controller
 
     public function update(Request $request, $user_id)
     {
-        if ($request->user()->cannot('blublog_edit_users')) {
-            abort(403);
-        }
         $rules = [
             'name' => 'required|max:250',
             'email' => 'required|email',
@@ -32,6 +29,9 @@ class BlublogUserController extends Controller
         $this->validate($request, $rules);
 
         $user = blublog_user_model()::findOrFail($user_id);
+        if ($request->user()->cannot('blublog_edit_users', $user)) {
+            abort(403);
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         if ($request->new_password) {

@@ -25,7 +25,7 @@
                         </th>
                         <th>{{ $user->email }}</th>
                         <td>
-                            @can('blublog_edit_users')
+                            @can('blublog_edit_users', $user)
                                 <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal"
                                     data-target="#edituser{{ $user->id }}">
                                     <span class="oi oi-pencil"></span> Edit

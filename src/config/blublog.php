@@ -23,7 +23,9 @@ return [
     // Array of permissions used only for installing blublog (DB seeding)
     'default_permissions' => array(
         array('is-admin', 1, 1, 'User is admin'),
-        array('id-mod', 1, 1, 'User is moderator'),
+        array('is-mod', 1, 1, 'User is moderator'),
+        array('no-html', 0, 1, 'Only plain text output.'),
+        array('restrict-html', 0, 1, 'Restrict html output'),
         array('create-posts', 1, 2, 'User can create posts'),
         array('edit-posts', 1, 2, 'User can edit posts'),
         array('delete-posts', 1, 2, 'User can delete posts'),
@@ -31,7 +33,7 @@ return [
         array('delete-own-posts', 1, 2, 'User can delete own posts'),
         array('post-stats', 1, 2, 'User can view posts stats'),
         array('own-post-stats', 1, 2, 'User can view stats for own posts'),
-        array('wait-for-approve', 1, 2, 'Users posts wait for approval'),
+        array('wait-for-approve', 0, 2, 'Users posts wait for approval'),
         array('create-comments', 1, 3, 'User can create comments'),
         array('edit-comments', 1, 3, 'User can edit comments'),
         array('delete-comments', 1, 3, 'User can delete comments'),

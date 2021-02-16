@@ -81,9 +81,14 @@ class BlublogServiceProvider extends ServiceProvider
     }
     public function define_gates()
     {
-        Gate::define('blublog_edit_users', function ($user) {
+        Gate::define('blublog_edit_users', function ($user, $edided) {
             if ($user->blublogRoles->first()->havePermission('edit-users')) {
                 return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('edit-profile')) {
+                if ($user->id == $edided->id) {
+                    return true;
+                }
             }
             return false;
         });

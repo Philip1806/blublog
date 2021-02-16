@@ -42,7 +42,6 @@ class BlublogPostsController extends Controller
     }
     public function store(Request $request)
     {
-        dd($request->categories);
         $this->authorize('blublog_create_posts');
         $rules = [
             'title' => 'required|max:250',

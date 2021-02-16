@@ -12,8 +12,16 @@
                 </form>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="modal" data-target="#exampleModal"><span class="oi oi-person"></span>
-                    Profile</a>
+                @if (Auth::user()
+        ->blublogRoles->first()
+        ->havePermission('edit-profile'))
+                    <a class="nav-link" data-toggle="modal" data-target="#exampleModal"><span
+                            class="oi oi-person"></span>
+                        {{ Auth::user()->name }} ({{ Auth::user()->blublogRoles()->first()->name }})</a>
+                @else
+                    <a class="nav-link"><span class="oi oi-person"></span>
+                        {{ Auth::user()->name }}</a>
+                @endif
                 <div class="modal fade text-dark" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">

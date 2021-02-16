@@ -92,6 +92,22 @@ class Post extends Model
         $this->delete();
         return true;
     }
+    public static function cleanInput($content)
+    {
+        if (auth()->user()->blublogRoles->first()->havePermission('no-html')) {
+            $content = preg_replace('@<(script|style)[^>]*?>.*?@si', '', $content);
+            $content = strip_tags($content);
+
+            return nl2br(trim($content));
+        } elseif (auth()->user()->blublogRoles->first()->havePermission('restrict-html')) {
+            if (class_exists('Mews\Purifier\Facades\Purifier')) {
+                return \Mews\Purifier\Facades\Purifier::clean($content);
+            }
+            return e($content);
+        } else {
+            return $content;
+        }
+    }
     public static function createPost(Request $request)
     {
         $post = new Post;
@@ -114,7 +130,7 @@ class Post extends Model
 
         $post->user_id = auth()->user()->id;
         $post->title = $request->title;
-        $post->content = $request->content;
+        $post->content = Post::cleanInput($request->content);
         $post->save();
 
         $post->tags()->sync($request->tags, false);
@@ -129,7 +145,7 @@ class Post extends Model
         $post->update([
             'title' => $request->title,
             'excerpt' => $request->excerpt,
-            'content' => $request->content,
+            'content' => Post::cleanInput($request->content),
             'slug' => $request->slug,
             'seo_title' => $request->seo_title,
             'seo_descr' => $request->seo_descr,

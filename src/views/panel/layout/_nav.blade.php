@@ -19,12 +19,15 @@
                     <a class="nav-link" href="{{ route('blublog.panel.users.index') }}"><span
                             class="oi oi-people"></span> Users</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-cog"></span> Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-lock-locked"></span> Security</a>
-                </li>
+                @if (blublog_is_admin())
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span class="oi oi-cog"></span> Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span class="oi oi-lock-locked"></span> Security</a>
+                    </li>
+                @endif
+
             </ul>
         </div>
     </div>
