@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Comment;
 use Blublog\Blublog\Models\File;
+use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Session;
@@ -42,5 +43,14 @@ class BlublogBackController extends Controller
     public function images()
     {
         return view('blublog::panel.images');
+    }
+    public function logs()
+    {
+        return view('blublog::panel.logs.index');
+    }
+    public function logsShow($id)
+    {
+        $log = Log::findOrFail($id);
+        return view('blublog::panel.logs.show')->with('log', $log);
     }
 }

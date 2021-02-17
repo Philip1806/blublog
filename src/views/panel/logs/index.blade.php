@@ -1,11 +1,10 @@
 @extends('blublog::panel.layout.main')
 @section('nav')
-    @include('blublog::panel.posts._nav')
 @endsection
 
 
 @section('content')
 
-    @livewire('post-table')
+    @livewire('blublog-logs-table')
 
 @endsection

@@ -8,7 +8,10 @@ use Blublog\Blublog\Models\Role;
 
 trait ManageBlublog
 {
-
+    public function blublogLogs()
+    {
+        return $this->hasMany(Log::class, 'user_id');
+    }
     public function blublogPosts()
     {
         return $this->hasMany(Post::class, 'user_id');

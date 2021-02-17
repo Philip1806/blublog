@@ -15,7 +15,8 @@
                     @forelse ($posts as $post)
                         <tr>
                             <th><img src="{{ $post->thumbnailUrl() }}" class="img-fluid"></th>
-                            <th>{{ $post->title }}</th>
+                            <th><a href="{{ route('blublog.panel.posts.show', $post->id) }}"> {{ $post->title }} </a>
+                            </th>
                             <th>{{ $post->user->name }}</th>
                             <td>
                                 @can('blublog_edit_post', $post)

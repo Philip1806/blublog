@@ -21,10 +21,9 @@
                 </li>
                 @if (blublog_is_admin())
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="oi oi-cog"></span> Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="oi oi-lock-locked"></span> Security</a>
+                        <a class="nav-link" href="{{ route('blublog.panel.logs') }}"><span
+                                class="oi oi-lock-locked"></span>
+                            Logs</a>
                     </li>
                 @endif
 

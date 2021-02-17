@@ -12,6 +12,7 @@ use Blublog\Blublog\Livewire\BlublogUploadFile;
 use Blublog\Blublog\Livewire\BlublogImageSection;
 use Blublog\Blublog\Livewire\BlublogCreateEditPost;
 use Blublog\Blublog\Livewire\BlublogListImages;
+use Blublog\Blublog\Livewire\BlublogLogsTable;
 use Blublog\Blublog\BlublogAdmin;
 use Blublog\Blublog\BlublogPanel;
 
@@ -79,6 +80,7 @@ class BlublogServiceProvider extends ServiceProvider
         \Livewire::component('blublog-img-section', BlublogImageSection::class);
         \Livewire::component('blublog-create-edit-post', BlublogCreateEditPost::class);
         \Livewire::component('blublog-list-images', BlublogListImages::class);
+        \Livewire::component('blublog-logs-table', BlublogLogsTable::class);
     }
     public function define_gates()
     {
@@ -192,7 +194,17 @@ class BlublogServiceProvider extends ServiceProvider
             }
             return false;
         });
-
+        Gate::define('blublog_view_stats_posts', function ($user, $post) {
+            if ($user->blublogRoles->first()->havePermission('post-stats')) {
+                return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('own-post-stats')) {
+                if ($post->user_id == $user->id) {
+                    return true;
+                }
+            }
+            return false;
+        });
         Gate::define('blublog_edit_post', function ($user, $post) {
             if ($user->blublogRoles->first()->havePermission('edit-posts')) {
                 return true;

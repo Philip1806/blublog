@@ -1,14 +1,5 @@
 @extends('blublog::panel.layout.main')
 
-@section('nav')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{ route('blublog.panel.users.index') }}">Users</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Roles</li>
-        </ol>
-    </nav>
-@endsection
-
 @section('content')
 
     <div class="row">

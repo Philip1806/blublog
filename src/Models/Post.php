@@ -26,6 +26,22 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class, 'blublog_posts_tags');
     }
+    public function registerView()
+    {
+        if (!Log::userSeenPost($this->id)) {
+            Log::add($this->id, "visit");
+            $this->views++;
+            $this->save();
+        }
+    }
+    public function like()
+    {
+        if (!Log::postLiked($this->id)) {
+            Log::add($this->id, "like", "Post liked.");
+            $this->likes++;
+            $this->save();
+        }
+    }
     public function imageUrl()
     {
         if (config('blublog.post_image_size') === false) {

@@ -23,6 +23,7 @@ Route::group(
                 Route::get('/posts/create', 'BlublogPostsController@create')->name('blublog.panel.posts.create');
                 Route::post('/posts/create', 'BlublogPostsController@store')->name('blublog.panel.posts.store');
                 Route::get('/posts/{id}/edit', 'BlublogPostsController@edit')->name('blublog.panel.posts.edit');
+                Route::get('/posts/{id}', 'BlublogPostsController@show')->name('blublog.panel.posts.show');
 
                 Route::put('/posts/{id}/update', 'BlublogPostsController@update')->name('blublog.panel.posts.update');
 
@@ -46,6 +47,8 @@ Route::group(
                 Route::put('/users/{id}/edit', 'BlublogUserController@update')->name('blublog.panel.users.update');
                 Route::delete('/users/{id}/delete', 'BlublogUserController@destroy')->name('blublog.panel.users.destroy');
 
+                Route::get('/logs', 'BlublogBackController@logs')->name('blublog.panel.logs')->middleware('BlublogAdmin');
+                Route::get('/logs/{id}', 'BlublogBackController@logsShow')->name('blublog.panel.logs.show')->middleware('BlublogAdmin');
 
 
                 Route::get('/users/roles', 'BlublogRolesController@roles')->name('blublog.panel.users.roles')->middleware('BlublogAdmin');

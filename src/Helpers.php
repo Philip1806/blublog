@@ -1,13 +1,20 @@
 <?php
 
-use Blublog\Blublog\Models\Setting;
-use Blublog\Blublog\Exceptions\BlublogViewNotFound;
-use Illuminate\Support\Facades\Storage;
-use Blublog\Blublog\Models\MenuItem;
-use Illuminate\Support\Facades\Cache;
-use Blublog\Blublog\Models\Menu;
-
-
+if (!function_exists('blublog_get_user')) {
+    function blublog_get_user($id)
+    {
+        return blublog_user_model()::findOrFail($id);
+    }
+}
+if (!function_exists('blublog_is_bot')) {
+    function blublog_is_bot()
+    {
+        if (strpos(\Request::header('User-Agent'), "bot") or !\Request::header('accept-language')) {
+            return true;
+        }
+        return false;
+    }
+}
 if (!function_exists('blublog_user_model')) {
     function blublog_user_model($model = true)
     {

@@ -40,5 +40,7 @@
                 </div>
             </li>
         </ul>
+
+        <a href="https://github.com/Philip1806/blublog/">BLUblog</a> - Blog package for Laravel
     </div>
 </footer>

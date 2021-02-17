@@ -70,10 +70,9 @@ In bold are new for verison 2.
 - Comments can be allowed or forbidden.+
 - Post have status. **You can add or remove status. Post status tells who can view/edit post in panel (published, private...)**+.
 - Excerpt of content. Could be empty.+
-- Basic search for posts.
-- You can likes/dislike post.
+- You can likes/dislike post.+
 - Similar posts.
-- Views statistics.
+- Views statistics.+
 - **Post revisions.**
 - Auto generate sitemap (RSS).
 - You can select posts to be recommended or in front page.+
@@ -85,7 +84,6 @@ In bold are new for verison 2.
 - Anti-spam modul.
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
-- Basic search for comments.
 
 3. Categories (CRUD)+
 
@@ -101,12 +99,12 @@ In bold are new for verison 2.
 
 5. Image manager+
 
-- Browse and upload images. All images have different sizes. On upload Blublog will create the sizes set in config file.
+- Browse and upload images.
+- All images have different sizes. On upload Blublog will create the sizes set in config file.
 
-6. Admin
+6. Admin+
 
-- BAN option. You can ban users from the blog or from commenting.
-- Very basic settings page.
+- You can ban users from the blog or from commenting.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 
 ## Big New things in version 2
@@ -135,7 +133,7 @@ Revision setting:
 
 2. More appropriate for users you don't trust.
 
-With roles and permissions you can make sure that posts from some users WILL wait to be approved. Also you can restrict html output of some roles or totaly disable it.
+With roles and permissions you can make sure that posts from some users WILL wait to be approved. Also you **can restrict html output of some roles or totaly disable it**.
 
 3. Extending your user model.
 
