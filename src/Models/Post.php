@@ -26,6 +26,10 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class, 'blublog_posts_tags');
     }
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
+    }
     public function registerView()
     {
         if (!Log::userSeenPost($this->id)) {

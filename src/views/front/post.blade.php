@@ -22,6 +22,12 @@
     <meta property="twitter:title" content="{{ $post->title }}">
     <meta property="twitter:description" content="{{ $post->seo_descr }}">
     <meta property="twitter:image" content="{{ $post->imageURL() }}">
+    <style>
+        .display-comment .display-comment {
+            margin-left: 40px
+        }
+
+    </style>
 @endsection
 
 
@@ -65,4 +71,7 @@
             @endforeach
         </div>
     </div>
+
+
+    @include('blublog::front.comments._comments')
 @endsection

@@ -12,8 +12,12 @@ Route::group(
                 Route::get('/{blogPostSlug}', 'BlublogFrontController@show')->name('blublog.front.single');
                 Route::get('/category/{slug}', 'BlublogFrontController@category')->name('blublog.front.category');
                 Route::get('/tag/{slug}', 'BlublogFrontController@tag')->name('blublog.front.tag');
-                Route::get('/like/{slug}', 'BlublogFrontController@like')->name('blublog.front.like');
-                Route::post('/search', 'BlublogFrontController@search')->name('blublog.front.search');
+                Route::group(['middleware' => 'throttle:7,1'], static function () {
+                    Route::get('/like/{slug}', 'BlublogFrontController@like')->name('blublog.front.like');
+                    Route::post('/search', 'BlublogFrontController@search')->name('blublog.front.search');
+                    Route::post('/comments/add', 'BlublogFrontController@comment_store')->name('blublog.front.comments.store');
+                    Route::post('/comment/reply/add', 'BlublogFrontController@comment_store')->name('blublog.front.comments.reply.store');
+                });
             }
         );
 
@@ -35,6 +39,9 @@ Route::group(
 
                 Route::get('/images', 'BlublogBackController@images')->name('blublog.panel.images');
 
+
+                Route::get('/comments', 'BlublogCommentController@index')->name('blublog.panel.comments.index');
+                Route::put('/comments/{id}/edit', 'BlublogCommentController@update')->name('blublog.panel.comments.update');
 
 
                 Route::get('/tags', 'BlublogBackController@tags')->name('blublog.panel.tags');

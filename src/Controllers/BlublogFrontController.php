@@ -6,12 +6,14 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Category;
+use Blublog\Blublog\Models\Comment;
 use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Session;
+use Auth;
 
 class BlublogFrontController extends Controller
 {
@@ -67,7 +69,8 @@ class BlublogFrontController extends Controller
     {
         $post = Post::bySlug($slug);
         $post->registerView();
-        return view('blublog::front.post')->with('post', $post);
+        $comments = $post->comments()->where('public', '=', true)->get();
+        return view('blublog::front.post')->with('post', $post)->with('comments', $comments);
     }
     public function like($slug)
     {
@@ -116,5 +119,25 @@ class BlublogFrontController extends Controller
             }
         }
         return view('blublog::front.search')->with('posts', $result)->with('tags', $similar_tags);
+    }
+    public function comment_store(Request $request)
+    {
+
+        $rules = [
+            'name' => 'required|max:50',
+            'comment_body' => 'required|max:9200',
+            'email' => 'required|email',
+        ];
+        $this->validate($request, $rules);
+
+        if (!Auth::check()) {
+            if ($request->get('question_answer') != config('blublog.spam-question-answer')) {
+                Session::flash('error', 'Wrong answer.');
+                return back();
+            }
+        }
+        Comment::addComment($request);
+
+        return back();
     }
 }

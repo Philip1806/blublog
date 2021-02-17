@@ -2,7 +2,7 @@
 
 return [
 
-    'version' => "2.0.1",
+    'version' => "2.0.0",
     'key' => "",
     /*
         Very important settings
@@ -107,8 +107,10 @@ return [
         ],
     ],
 
-
-
+    'spam-question' => "What is 2 * 6?",
+    'spam-question-answer' => 12,
+    // Users who have approved comments will not wait for approving 
+    'auto-approve' => true,
     // IGNORE
     // Array of permissions used only for installing blublog (DB seeding)
     'default_permissions' => array(

@@ -13,6 +13,8 @@ use Blublog\Blublog\Livewire\BlublogImageSection;
 use Blublog\Blublog\Livewire\BlublogCreateEditPost;
 use Blublog\Blublog\Livewire\BlublogListImages;
 use Blublog\Blublog\Livewire\BlublogLogsTable;
+use Blublog\Blublog\Livewire\BlublogCommentsTable;
+
 use Blublog\Blublog\BlublogAdmin;
 use Blublog\Blublog\BlublogPanel;
 
@@ -81,6 +83,7 @@ class BlublogServiceProvider extends ServiceProvider
         \Livewire::component('blublog-create-edit-post', BlublogCreateEditPost::class);
         \Livewire::component('blublog-list-images', BlublogListImages::class);
         \Livewire::component('blublog-logs-table', BlublogLogsTable::class);
+        \Livewire::component('blublog-comments-table', BlublogCommentsTable::class);
     }
     public function define_gates()
     {
@@ -223,6 +226,47 @@ class BlublogServiceProvider extends ServiceProvider
                 }
             } elseif ($edit_rules[$position] == 0) {
                 return true;
+            }
+            return false;
+        });
+
+        // Comments
+        Gate::define('blublog_edit_comments', function ($user, $comment) {
+            if ($user->blublogRoles->first()->havePermission('edit-comments')) {
+                return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('edit-own-comments')) {
+                if ($comment->author_id == $user->id) {
+                    return true;
+                }
+            }
+            if ($user->blublogRoles->first()->havePermission('moderate-comments-from-own-posts')) {
+                if ($comment->post->user_id == $user->id) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        Gate::define('blublog_delete_comments', function ($user, $comment) {
+            if ($user->blublogRoles->first()->havePermission('delete-comments')) {
+                return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('delete-own-comments')) {
+                if ($comment->author_id == $user->id) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        Gate::define('blublog_approve_comments', function ($user, $comment) {
+            if ($user->blublogRoles->first()->havePermission('approve-comments')) {
+                return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('moderate-comments-from-own-posts')) {
+                if ($comment->post->user_id == $user->id) {
+                    return true;
+                }
             }
             return false;
         });

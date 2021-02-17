@@ -11,4 +11,9 @@
     <li class="nav-item">
         <a class="nav-link" href="{{ route('blublog.panel.tags') }}"><span class="oi oi-tags"></span> Tags</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('blublog.panel.comments.index') }}"><span
+                class="oi oi-comment-square"></span>
+            Comments</a>
+    </li>
 </ul>
