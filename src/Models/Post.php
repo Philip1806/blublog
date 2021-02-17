@@ -161,7 +161,7 @@ class Post extends Model
         if ($request->seo_descr) {
             $post->seo_descr = $request->seo_descr;
         } else {
-            $post->seo_descr = mb_strimwidth(strip_tags($request->content), 0, 155, "...");
+            $post->seo_descr = mb_strimwidth(strip_tags($request->content), 0, 100, "...");
         }
         if ($request->slug) {
             $post->slug = $request->slug;
@@ -223,7 +223,24 @@ class Post extends Model
 
         $post->save();
     }
-
+    public static function recommended()
+    {
+        return Post::where([
+            ['status', '=', 'publish'],
+            ['recommended', '=', true],
+        ])->latest()->get();
+    }
+    public static function bySlug($slug)
+    {
+        $post = Post::where([
+            ['status', '=', 'publish'],
+            ['slug', '=', $slug],
+        ])->first();
+        if (!$post) {
+            abort(404);
+        }
+        return $post;
+    }
     public static function getIp()
     {
         foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {

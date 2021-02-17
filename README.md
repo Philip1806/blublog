@@ -67,6 +67,7 @@ In bold are new for verison 2.
 - Summernote - WYSIWYG HTML Editor.+
 - **Easy adding and removing custom image sizes and settings.**+
 - Custom SEO post title and description (It's auto generated if not specified).+
+- Search.+
 - Comments can be allowed or forbidden.+
 - Post have status. **You can add or remove status. Post status tells who can view/edit post in panel (published, private...)**+.
 - Excerpt of content. Could be empty.+

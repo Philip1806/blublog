@@ -7,7 +7,7 @@ return [
     /*
         Very important settings
     */
-
+    'setting_cache' => 3800,
     'blog_prefix' => "blog",  // example.com/blog - Location of the blog 
     'panel_prefix' => "panel", // example.com/panel - Location of the blog panel 
 

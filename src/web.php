@@ -6,9 +6,14 @@ Route::group(
     static function () {
 
         Route::group(
-            ['prefix' => config('blublog.blog_prefix', 'blog'), 'middleware' => 'throttle:60,1'],
+            ['prefix' => config('blublog.blog_prefix', 'blog')],
             static function () {
                 Route::get('/', 'BlublogFrontController@index')->name('blublog.index');
+                Route::get('/{blogPostSlug}', 'BlublogFrontController@show')->name('blublog.front.single');
+                Route::get('/category/{slug}', 'BlublogFrontController@category')->name('blublog.front.category');
+                Route::get('/tag/{slug}', 'BlublogFrontController@tag')->name('blublog.front.tag');
+                Route::get('/like/{slug}', 'BlublogFrontController@like')->name('blublog.front.like');
+                Route::post('/search', 'BlublogFrontController@search')->name('blublog.front.search');
             }
         );
 
