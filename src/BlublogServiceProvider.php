@@ -58,6 +58,7 @@ class BlublogServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/public' => public_path('/'),
+            __DIR__ . '/Config/blublog.php'        => config_path('blublog.php'),
             __DIR__ . '/views' => base_path('resources/views/vendor/blublog'),
         ]);
     }
@@ -130,16 +131,28 @@ class BlublogServiceProvider extends ServiceProvider
             return false;
         });
 
-        Gate::define('blublog_edit_tags', function ($user) {
+        Gate::define('blublog_edit_tags', function ($user, $tag) {
             if ($user->blublogRoles->first()->havePermission('edit-tags')) {
                 return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('moderate-tags-within_set_time')) {
+                $current = \Carbon\Carbon::now();
+                if (config('blublog.moderate-tags-within') > \Carbon\Carbon::parse($tag->created_at)->diffInHours($current)) {
+                    return true;
+                }
             }
             return false;
         });
 
-        Gate::define('blublog_delete_tags', function ($user) {
+        Gate::define('blublog_delete_tags', function ($user, $tag) {
             if ($user->blublogRoles->first()->havePermission('delete-tags')) {
                 return true;
+            }
+            if ($user->blublogRoles->first()->havePermission('moderate-tags-within_set_time')) {
+                $current = \Carbon\Carbon::now();
+                if (config('blublog.moderate-tags-within') > \Carbon\Carbon::parse($tag->created_at)->diffInHours($current)) {
+                    return true;
+                }
             }
             return false;
         });
@@ -184,8 +197,19 @@ class BlublogServiceProvider extends ServiceProvider
             if ($user->blublogRoles->first()->havePermission('edit-posts')) {
                 return true;
             }
-            //TODO:Custom post status
             if ($user->blublogRoles->first()->havePermission('edit-own-posts') and $post->user_id == $user->id) {
+                return true;
+            }
+            if (!in_array($post->status, config('blublog.post_status'))) {
+                return false;
+            }
+            $position = array_search($post->status, config('blublog.post_status'));
+            $edit_rules = config('blublog.post_status_edit');
+            if ($edit_rules[$position] == 2) {
+                if ($user->blublogRoles->first()->havePermission('edit-' . $post->status)) {
+                    return true;
+                }
+            } elseif ($edit_rules[$position] == 0) {
                 return true;
             }
             return false;

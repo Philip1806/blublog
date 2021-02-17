@@ -46,11 +46,7 @@
         <div class="col-lg-3">
             <input wire:model="imageFilename" name="img" type="hidden" class="form-control">
 
-            <select name="status" class="form-control">
-                <option>publish</option>
-                <option>private</option>
-                <option>co-op</option>
-            </select>
+            {{ Form::select('status', blublog_list_status(), null, ['class' => 'form-control mb-2']) }}
 
             <button class="btn btn-success btn-block my-2" role="button"><span class="oi oi-circle-check"></span>
                 @if ($post)

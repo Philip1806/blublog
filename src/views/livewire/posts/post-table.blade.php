@@ -4,6 +4,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col"></th>
                         <th scope="col">Title</th>
                         <th scope="col">Author</th>
                         <th scope="col"></th>
@@ -13,6 +14,7 @@
                 <tbody>
                     @forelse ($posts as $post)
                         <tr>
+                            <th><img src="{{ $post->thumbnailUrl() }}" class="img-fluid"></th>
                             <th>{{ $post->title }}</th>
                             <th>{{ $post->user->name }}</th>
                             <td>
@@ -49,15 +51,22 @@
                 <input wire:model="search" type="search" class="form-control" id="inlineFormInputGroup"
                     placeholder="Search...">
             </div>
-
+            <button wire:click="myPosts()" class="btn btn-dark btn-sm btn-block {{ $status == 'my' ? 'active' : '' }}">
+                @if ($status == 'my')
+                    <span class="oi oi-arrow-right"></span>
+                @endif
+                My posts
+            </button>
             @foreach (config('blublog.post_status') as $post_status)
-                <button wire:click="showOnly('{{ $post_status }}')"
-                    class="btn btn-primary btn-sm btn-block {{ $status == $post_status ? 'active' : '' }}">
-                    @if ($status == $post_status)
-                        <span class="oi oi-arrow-right"></span>
-                    @endif
-                    {{ $post_status }}
-                </button>
+                @if (blublog_can_view_status($post_status))
+                    <button wire:click="showOnly('{{ $post_status }}')"
+                        class="btn btn-primary btn-sm btn-block {{ $status == $post_status ? 'active' : '' }}">
+                        @if ($status == $post_status)
+                            <span class="oi oi-arrow-right"></span>
+                        @endif
+                        {{ $post_status }}
+                    </button>
+                @endif
             @endforeach
 
         </div>

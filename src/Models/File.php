@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Auth;
+use Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 
@@ -74,14 +75,24 @@ class File extends Model
             //$size['crop'];
             $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $img_number . '.' . $info['extension'];
 
-            $img = Image::make($original_file);
-            $img->fit($size['w'], $size['h'], function ($constraint) {
-                $constraint->upsize();
-            })->interlace();
-
-            $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $newfilename, 80);
-            File::addImage($newfilename, $original->id);
-
+            try {
+                $img = Image::make($original_file);
+                if ($size['crop']) {
+                    $img->fit($size['w'], $size['h'], function ($constraint) {
+                        $constraint->upsize();
+                    })->interlace();
+                } else {
+                    $img->widen($size['w'], function ($constraint) {
+                        $constraint->upsize();
+                    });
+                }
+                $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $newfilename, config('blublog.image_quality'));
+                File::addImage($newfilename, $original->id);
+            } catch (\Exception $e) {
+                Session::flash('error', $e->getMessage());
+                //TODO:LOG
+                break;
+            }
             $img_number++;
         }
 

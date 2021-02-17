@@ -27,7 +27,7 @@ class Tag extends Model
     }
     public function removeTag()
     {
-        if (!Gate::allows('blublog_delete_tags')) {
+        if (!Gate::allows('blublog_delete_tags', $this)) {
             abort(403);
         }
         $this->posts()->detach();

@@ -20,7 +20,37 @@ if (!function_exists('blublog_user_model')) {
         }
     }
 }
-
+if (!function_exists('blublog_can_view_status')) {
+    function blublog_can_view_status($post_status)
+    {
+        $pos = array_search($post_status, config('blublog.post_status'));
+        if (config('blublog.post_status_access')[$pos] == 3) {
+            if (auth()->user()->blublogRoles->first()->havePermission('edit-' . $post_status)) {
+                return true;
+            }
+            return false;
+        } elseif (config('blublog.post_status_access')[$pos] == 1) {
+            if (blublog_is_mod()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+if (!function_exists('blublog_list_status')) {
+    function blublog_list_status()
+    {
+        $status = array();
+        foreach (config('blublog.post_status') as $stat) {
+            if (blublog_can_view_status($stat)) {
+                array_push($status, $stat);
+            }
+        }
+        return $status;
+    }
+}
 if (!function_exists('blublog_is_admin')) {
     function blublog_is_admin()
     {

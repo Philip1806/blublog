@@ -31,13 +31,14 @@ class BlublogPostsController extends Controller
     }
     public function create()
     {
-
+        $this->authorize('blublog_create_posts');
         return view('blublog::panel.posts.create');
     }
     public function edit($id)
     {
         $post =  Post::findOrFail($id);
         $this->authorize('blublog_edit_post', $post);
+        $post->status = array_search($post->status, config('blublog.post_status'));
         return view('blublog::panel.posts.edit')->with('post', $post);
     }
     public function store(Request $request)

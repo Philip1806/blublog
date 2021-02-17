@@ -25,7 +25,7 @@ class BlublogCreateEditPost extends Component
     {
         if ($this->post) {
             $this->imageFilename  = $this->post->img;
-            $this->imageUrl  = $this->post->imageUrl();
+            $this->imageUrl  = $this->post->thumbnailUrl();
         }
     }
 

@@ -33,8 +33,8 @@ class BlublogBackController extends Controller
     }
     public function tagsUpdate(Request $request, $id)
     {
-        $this->authorize('blublog_edit_tags');
         $tag = Tag::findOrFail($id);
+        $this->authorize('blublog_edit_tags', $tag);
         $tag->update($request->all());
         Session::flash('success', "Tag edited.");
         return back();

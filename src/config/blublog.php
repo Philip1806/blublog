@@ -8,18 +8,108 @@ return [
         Very important settings
     */
 
-    'blog_prefix' => "blog",
-    'panel_prefix' => "panel",
+    'blog_prefix' => "blog",  // example.com/blog - Location of the blog 
+    'panel_prefix' => "panel", // example.com/panel - Location of the blog panel 
+
     // >>>>> By default Blublog will searh for User model in \App\Models like is in Laravel 8
     'userModel' => "\\App\\Models\\User",
+
+
     /*
-        What disk from app/filesystems.php blublog should use for file uploads
+        What disk from app/filesystems.php blublog should use for file uploads?
         By default you need to create new disk with name blublog in that file.
+        Blublog gets image url from the disk, so you need to make sure it provides the right link. 
     */
     'files_disk' => "blublog",
 
+    /*
+        Post Settings
+    */
 
 
+    /* 
+        All settings starting with post_status must have the same number of elements.
+        Here you can add and remove post's status codes.
+        ---> Status "waits" and publish is reserved and must be present.
+    */
+    'post_status' => array(
+        'publish',
+        'private',
+        'co-op',
+        'waits',
+    ),
+    /* 
+        Access codes:
+        0 - public. Post with that status code can be seen by all.
+        1 - Restricted. Only seen by mods and admin.
+        2 - Private. Only seen by the author.
+        3 - Custom. Blublog will check if user have permission "view-{your-post-status}"
+
+    */
+    'post_status_access' => array(
+        0, // By default its for publish post status
+        2,
+        2,
+        1,
+    ),
+    /* 
+        Edit codes:
+        0 - Can be edited by all users. 
+        1 - Restricted. Post author, mods and admin can edit post.
+        2 - Custom. Blublog will check if user have permission "edit-{your-post-status}"
+    */
+    'post_status_edit' => array(
+        1,
+        1,
+        0,
+        1,
+    ),
+    /* 
+        Revision setting for all post status.
+        - true - blublog will keep revisions of post with that status.
+        - false - blublog will NOT keep revisions of post with that status.
+    */
+    'post_status_revisions' => array(
+        true,
+        false,
+        true,
+        false,
+    ),
+
+    // If they have that permission, user can edit and delete tags created within that period. It's in hours.
+    'moderate-tags-within' => 1,
+
+    /*
+        Image Settings
+    */
+
+    // false - Use original image. 0 - Use first size 1 - Use second size ...
+    'post_image_size' => false,
+
+    'image_quality' => 80,
+
+    // Image sizes. Names does not matter.
+    // You can add as many you want. More sizes, more database records and more disk usage.
+    // Must have at least one for thumbnail
+    'image_sizes' => [
+        [
+            // First size
+            'w' => 600,
+            'h' => 350,
+            'crop' => false,
+        ],
+        // Blublog uses the last image size as image thumbnail
+        [
+            // Second size
+            'w' => 300,
+            'h' => 175,
+            'crop' => true,
+        ],
+    ],
+
+
+
+    // IGNORE
     // Array of permissions used only for installing blublog (DB seeding)
     'default_permissions' => array(
         array('is-admin', 1, 1, 'User is admin'),
@@ -57,78 +147,5 @@ return [
         array('delete-own-files', 1, 7, 'User can delete own files'),
         array('delete-files', 1, 7, 'User can delete files'),
     ),
-
-    /*
-        Post Settings
-    */
-    // !!!! All settings starting with post_status must have the same number of elements.
-    'post_status' => array(
-        'publish',
-        'private',
-        'co-op',
-        'waits',
-    ),
-    /* 
-        Access codes:
-        0 - public. Post with that status code can be seen by all.
-        1 - Restricted. Only seen by mods and admin.
-        2 - Private. Only seen by the author.
-        3 - Custom. Blublog will check if user have permission "view-{your-post-status}"
-
-    */
-    'post_status_access' => array(
-        0, // By default its for publish post status
-        2,
-        2,
-        1,
-    ),
-    /* 
-        Edit codes:
-        0 - Can be edited by all users. 
-        1 - Restricted. Post author, mods and admin can edit post.
-        2 - Custom. Blublog will check if user have permission "edit-{your-post-status}"
-    */
-    'post_status_edit' => array(
-        1,
-        1,
-        0,
-        1,
-    ),
-    'post_status_revisions' => array(
-        true,
-        false,
-        true,
-        false,
-    ),
-
-
-
-
-
-    /*
-        Image Settings
-    */
-
-    // 0 - Use original image. 1 - Use first size (Medium) 2 - Use second size (thumbnail)...
-    'post_image_size' => 0,
-
-    'image_quality' => 80,
-
-    // Image sizes. Names does not matter.
-    'image_sizes' => [
-        'Medium' => [
-
-            'w' => 600,
-            'h' => 350,
-            'crop' => false,
-        ],
-        // Blublog uses the last image size as image thumbnail
-        'thumbnail' => [
-
-            'w' => 300,
-            'h' => 175,
-            'crop' => true,
-        ],
-    ],
 
 ];

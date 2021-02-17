@@ -6,14 +6,17 @@ Route::group(
     static function () {
 
         Route::group(
-            ['prefix' => config('blublog.blog_prefix'), 'middleware' => 'throttle:60,1'],
+            ['prefix' => config('blublog.blog_prefix', 'blog'), 'middleware' => 'throttle:60,1'],
             static function () {
                 Route::get('/', 'BlublogFrontController@index')->name('blublog.index');
             }
         );
 
         Route::group(
-            ['prefix' => config('blublog.panel_prefix'), 'middleware' => 'BlublogPanel'],
+            [
+                'prefix'     => config('blublog.panel_prefix', 'panel'),
+                'middleware' => 'BlublogPanel',
+            ],
             static function () {
                 Route::get('/', 'BlublogBackController@index')->name('blublog.panel.index');
                 Route::get('/posts', 'BlublogPostsController@index')->name('blublog.panel.posts.index');

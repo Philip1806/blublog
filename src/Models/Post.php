@@ -8,6 +8,7 @@ use Blublog\Blublog\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Session;
 
 class Post extends Model
 {
@@ -27,7 +28,22 @@ class Post extends Model
     }
     public function imageUrl()
     {
-        return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($this->img);
+        if (config('blublog.post_image_size') === false) {
+            return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($this->img);
+        }
+        $number = config('blublog.post_image_size') + 1;
+        $info = pathinfo($this->img);
+        $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $number . '.' . $info['extension'];
+
+        return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($newfilename);
+    }
+    public function thumbnailUrl()
+    {
+        $number = (int)array_key_last(config('blublog.image_sizes')) + 1;
+        $info = pathinfo($this->img);
+        $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $number . '.' . $info['extension'];
+
+        return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($newfilename);
     }
     public function changeImage($filename)
     {
@@ -79,6 +95,15 @@ class Post extends Model
     {
         if (auth()->user()->blublogRoles->first()->havePermission('wait-for-approve')) {
             $this->status = 'waits';
+            return true;
+        }
+        if (!in_array($status, blublog_list_status())) {
+            Session::flash('warning', "Unvalid post status.");
+            return false;
+        }
+        if (auth()->user()->id != $this->user_id and !blublog_is_mod()) {
+            Session::flash('warning', "You are not post author or moderator. You can NOT change post status.");
+            return false;
         }
         $this->status = $status;
     }
@@ -136,7 +161,11 @@ class Post extends Model
         $post->tags()->sync($request->tags, false);
         $post->categories()->sync($request->categories, false);
         $post->changeImage($request->img);
-        $post->setPostStatus($request->status);
+        if (isset(blublog_list_status()[$request->status])) {
+            $post->setPostStatus(blublog_list_status()[$request->status]);
+        } else {
+            Session::flash('warning', "Unvalid post status.");
+        }
         $post->save();
     }
     public static function updatePost(Request $request, $id)
@@ -154,7 +183,11 @@ class Post extends Model
         $post->tags()->sync($request->tags);
         $post->categories()->sync($request->categories);
         $post->changeImage($request->img);
-        $post->setPostStatus($request->status);
+        if (isset(blublog_list_status()[$request->status])) {
+            $post->setPostStatus(blublog_list_status()[$request->status]);
+        } else {
+            Session::flash('warning', "Unvalid post status.");
+        }
 
         if ($request->comments) {
             $post->comments = true;

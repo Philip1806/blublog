@@ -71,6 +71,10 @@ class BlublogCategoriesController extends Controller
         unset($request['parent_id']);
         $category->update($request->all());
         if ($id) {
+            if ($category->id == $id) {
+                Session::flash('error', "Category can not be parent to itself.");
+                return back();
+            }
             $category->parent_id = $id;
         } else {
             $category->parent_id = null;

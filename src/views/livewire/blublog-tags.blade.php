@@ -13,7 +13,7 @@
                     @forelse ($tags as $tag)
                         <tr>
                             <th>{{ $tag->title }}</th>
-                            @can('blublog_edit_tags')
+                            @can('blublog_edit_tags', $tag)
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal"
                                         data-target="#edituser{{ $tag->id }}">
@@ -51,7 +51,7 @@
                                     </div>
                                 </td>
                             @endcan
-                            @can('blublog_delete_tags')
+                            @can('blublog_delete_tags', $tag)
                                 <td>
                                     <button wire:click="delete('{{ $tag->id }}')" class="btn btn-danger btn-sm btn-block">
                                         <span class="oi oi-circle-x"></span> Delete</button>
