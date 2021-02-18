@@ -51,7 +51,7 @@ class BlublogFrontController extends Controller
         if (!$category) {
             abort(404);
         }
-        $posts = $category->getPosts()->paginate(3);
+        $posts = $category->getPosts()->paginate(5);
         return view('blublog::front.category')->with('category', $category)->with('posts', $posts);
     }
     public function tag($slug)
@@ -62,7 +62,7 @@ class BlublogFrontController extends Controller
         if (!$tag) {
             abort(404);
         }
-        $posts = $tag->posts()->where('status', '=', 'publish')->paginate(3);
+        $posts = $tag->getPosts()->paginate(5);
         return view('blublog::front.tag')->with('tag', $tag)->with('posts', $posts);
     }
     public function show($slug)

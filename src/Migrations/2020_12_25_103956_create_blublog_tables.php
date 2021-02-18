@@ -30,6 +30,7 @@ class CreateBlublogTables extends Migration
             $table->boolean('front')->default(0);
             $table->boolean('recommended')->default(0);
             $table->integer('likes')->default(0);
+            $table->integer('views')->default(0);
             $table->string('data', 250)->nullable();;
             $table->timestamps();
         });

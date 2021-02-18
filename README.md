@@ -29,7 +29,7 @@ Check below if you don't have authentication.
 0. Make sure you have the requirements above. Download BLUblog with:
 
 ```
-composer require blublog/blublog:newversion
+composer require blublog/blublog
 ```
 
 1. In your User model you need to add this trait:
@@ -71,8 +71,6 @@ Cool. Everything should work now. By default you can visit your blog panel in ex
 
 ## Features
 
-**Not all features below are ready.**
-
 In bold are new for verison 2.
 
 1. Posts (CRUD)
@@ -90,7 +88,7 @@ In bold are new for verison 2.
 - Similar posts.
 - Views statistics.
 - **Post revisions.**
-- Auto generate sitemap (RSS).
+- Generate sitemap (RSS).
 - You can select posts to be recommended or in front page.
 - You can upload images for the post you create/edit.
 - "On this topic" - Select a tag to show other post from the same topic.
@@ -178,12 +176,6 @@ $user->blublogRoles->first()->havePermission('delete-posts')
 You also have access to user's images and posts with blublogImages and blublogPosts. More to be added.
 
 4. Blublog drops support for pages, menu and star rating.
-
-## TODO
-
-- Add "On this topic".
-- Add RSS.
-- Cache public views.
 
 ## License
 

@@ -56,13 +56,23 @@ class BlublogSetUp extends Command
             $this->error('> Create a user and try again.');
             return 0;
         }
+        if (!method_exists(blublog_user_model()::first(), 'blublogPosts')) {
+            $this->error('User model trait not added!');
+            $this->error('You need to add use ManageBlublog to your user model.');
+            $this->error('> See the installation instructions.');
+            return 0;
+        }
+        if (!class_exists('Livewire\Component')) {
+            $this->error('Livewire not found!');
+            $this->error('> You can install it with composer require livewire/livewire');
+            return 0;
+        }
         try {
             Storage::disk(config('blublog.files_disk', 'blublog'));
         } catch (Exception $e) {
             $this->error('Looks like the setting files_disk in blublog confing is wrong. Did you add file disk for blublog?');
             $this->error('Not fatal error. You will not be able to upload images. Continuing with the installation.');
         }
-
         if (!RolePermission::first()) {
             $this->line("Adding permissions and admin role for blublog.");
 

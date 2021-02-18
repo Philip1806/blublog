@@ -44,7 +44,9 @@
 
         </div>
         <div class="col-lg-3">
-            <input wire:model="imageFilename" name="img" type="hidden" class="form-control">
+            <input wire:model="imageFilename" name="img" type="hidden">
+
+            <input wire:model="maintag_id" name="maintag_id" type="hidden">
 
             {{ Form::select('status', blublog_list_status(), null, ['class' => 'form-control mb-2']) }}
 
@@ -93,26 +95,43 @@
 
                 </div>
             </div>
-            <div wire:ignore>
-                <button type="button" class="btn btn-secondary btn-block my-2" data-toggle="collapse"
-                    href="#postSettings" role="button" aria-expanded="false"><span class="oi oi-cog"></span>
-                    Settings</button>
-
-                <div class="collapse" id="postSettings">
-                    URL
-                    {{ Form::text('slug', null, ['class' => 'form-control mb-2']) }}
-                    {{ Form::checkbox('comments', null) }} Enable comments<br>
-                    {{ Form::checkbox('front', null) }} Front Page Post<br>
-                    {{ Form::checkbox('recommended', null) }} Recommended<br>
-                    Seo title
-                    {{ Form::text('seo_title', null, ['class' => 'form-control mb-2']) }}
-                    Seo description
-                    {{ Form::text('seo_descr', null, ['class' => 'form-control mb-2']) }}
-                    Excerpt
-                    {{ Form::text('excerpt', null, ['class' => 'form-control mb-2']) }}
+            <div class="input-group my-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text"><span class="oi oi-magnifying-glass"></span></div>
                 </div>
+                <input wire:model="search" type="search" class="form-control" id="inlineFormInputGroup"
+                    placeholder="Search for tag...">
+            </div>
+
+            @if ($maintag_id)
+                <div class="alert alert-info" role="alert">
+                    'On this topic' is set for this post. <span wire:click="unsetTag()"
+                        class="badge badge-dark">UNSET</span>
+                </div>
+            @endif
+
+            @foreach ($list_tags as $main_tag)
+                <span wire:click="setMaintag('{{ $main_tag->id }}')"
+                    class="badge badge-dark">{{ $main_tag->title }}</span>
+            @endforeach
+
+
+            <button wire:ignore type="button" class="btn btn-secondary btn-block my-2" data-toggle="collapse"
+                href="#postSettings" role="button" aria-expanded="false"><span class="oi oi-cog"></span>
+                Settings</button>
+            <div wire:ignore class="collapse" id="postSettings">
+                URL
+                {{ Form::text('slug', null, ['class' => 'form-control mb-2']) }}
+                {{ Form::checkbox('comments', null) }} Enable comments<br>
+                {{ Form::checkbox('front', null) }} Front Page Post<br>
+                {{ Form::checkbox('recommended', null) }} Recommended<br>
+                Seo title
+                {{ Form::text('seo_title', null, ['class' => 'form-control mb-2']) }}
+                Seo description
+                {{ Form::text('seo_descr', null, ['class' => 'form-control mb-2']) }}
+                Excerpt
+                {{ Form::text('excerpt', null, ['class' => 'form-control mb-2']) }}
             </div>
         </div>
-
     </div>
 </div>

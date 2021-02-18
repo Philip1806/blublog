@@ -171,6 +171,14 @@ class Post extends Model
         }
         $this->status = $status;
     }
+    public function onThisTopic()
+    {
+        if ($this->tag_id) {
+            $tag = Tag::findOrFail($this->tag_id);
+            return $tag->getPosts();
+        }
+        return false;
+    }
     public function remove()
     {
         if (!Gate::allows('blublog_delete_posts', $this)) {
@@ -216,7 +224,9 @@ class Post extends Model
         } else {
             $post->slug = blublog_create_slug($request->title);
         }
-
+        if ($request->maintag_id) {
+            $post->tag_id = $request->maintag_id;
+        }
         $post->user_id = auth()->user()->id;
         $post->title = $request->title;
         $post->content = Post::cleanInput($request->content);
@@ -242,6 +252,7 @@ class Post extends Model
         $post->slug = $request->slug;
         $post->seo_title = $request->seo_title;
         $post->seo_descr = $request->seo_descr;
+        $post->tag_id = $request->maintag_id;
 
         $post->tags()->sync($request->tags);
         $post->categories()->sync($request->categories);
@@ -251,7 +262,6 @@ class Post extends Model
         } else {
             Session::flash('warning', "Unvalid post status.");
         }
-
         if ($request->comments) {
             $post->comments = true;
         } else {

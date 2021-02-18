@@ -4,6 +4,7 @@ namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Blublog\Blublog\Models\Comment;
 use Blublog\Blublog\Models\File;
 use Blublog\Blublog\Models\Log;

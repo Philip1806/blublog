@@ -34,4 +34,8 @@ class Tag extends Model
         $this->delete();
         return redirect()->back();
     }
+    public function getPosts()
+    {
+        return $this->posts()->where('status', '=', 'publish')->latest();
+    }
 }

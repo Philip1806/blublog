@@ -59,7 +59,6 @@ class BlublogPostsController extends Controller
             'content' => 'min:1',
         ];
         $this->validate($request, $rules);
-
         Post::createPost($request);
 
         Session::flash('success', "Post added.");

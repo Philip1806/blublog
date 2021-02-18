@@ -13,6 +13,8 @@ class BlublogCreateEditPost extends Component
     public $imageFilename;
     public $imageUrl;
     public $post;
+    public $search;
+    public $maintag_id;
     public $tagName;
 
 
@@ -24,6 +26,7 @@ class BlublogCreateEditPost extends Component
     public function mount()
     {
         if ($this->post) {
+            $this->maintag_id  = $this->post->tag_id;
             $this->imageFilename  = $this->post->img;
             $this->imageUrl  = $this->post->thumbnailUrl();
         }
@@ -57,8 +60,13 @@ class BlublogCreateEditPost extends Component
             $tags2[$tag->id] = $tag->title;
         }
 
+        if ($this->search) {
+            $list_tags = Tag::where('title', 'like', '%' . $this->search . '%')->get();
+        } else {
+            $list_tags = array();
+        }
 
-        return view('blublog::livewire.posts.blublog-create-edit-post')->with('categories', $categories2)->with('tags', $tags2);
+        return view('blublog::livewire.posts.blublog-create-edit-post')->with('list_tags', $list_tags)->with('categories', $categories2)->with('tags', $tags2);
     }
     public function createTag()
     {
@@ -66,5 +74,14 @@ class BlublogCreateEditPost extends Component
             Tag::createTag($this->tagName);
         }
         $this->tagName = '';
+    }
+    public function setMaintag($tag_id)
+    {
+        $this->search = '';
+        $this->maintag_id = $tag_id;
+    }
+    public function unsetTag()
+    {
+        $this->maintag_id = '';
     }
 }
