@@ -9,7 +9,6 @@
     <meta name="og:title" property="og:title" content="Site name">
     <meta name="og:site_name" property="og:site_name" content="Site name">
     <meta name="og:url" property="og:url" content="{{ route('blublog.index') }}" />
-    <meta name="og:locale" property="og:locale" content="bg_BG" />
     <meta name="robots" content="index, follow">
     <!-- Twitter -->
     <meta property="twitter:card" content="summary">

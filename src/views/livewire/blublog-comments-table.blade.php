@@ -8,6 +8,7 @@
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -17,6 +18,9 @@
                         <td>{{ $comment->email }}</td>
                         <td><a data-toggle="modal" data-target="#editComment{{ $comment->id }}"
                                 class="btn btn-primary btn-sm"><span class="oi oi-eye"></span> Details</a>
+                        </td>
+                        <td><a href="{{ route('blublog.panel.posts.show', $comment->post->id) }}"
+                                class="btn btn-primary btn-sm"><span class="oi oi-eye"></span> Post</a>
                         </td>
                         @can('blublog_approve_comments', $comment)
                             <td><a wire:click="togglePublic('{{ $comment->id }}')"

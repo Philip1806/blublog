@@ -6,15 +6,12 @@
 </head>
 
 <body>
-
-
     <div class="bg-dark p-2">
         <div class="container h4">
             <a href="{{ route('blublog.index') }}" class="text-light" style="text-decoration: none;">
                 BLUblog</a>
         </div>
     </div>
-
     @yield('header')
 
     <div class="container">
@@ -23,12 +20,6 @@
                 @if (Session::has('success'))
                     <div class="alert alert-dismissible alert-success" role="alert">
                         {{ Session::get('success') }}
-                    </div>
-                @endif
-
-                @if (Session::has('warning'))
-                    <div class="alert alert-dismissible alert-warning" role="alert">
-                        {{ Session::get('warning') }}
                     </div>
                 @endif
 

@@ -75,23 +75,23 @@ In bold are new for verison 2.
 
 1. Posts (CRUD)
 
-- Multible categories **with nesting**.
-- Multible tags.
+- Multible categories **with nesting** and multible tags.
 - Summernote - WYSIWYG HTML Editor.
 - **Easy adding and removing custom image sizes and settings.**
 - Custom SEO post title and description (It's auto generated if not specified).
 - Search.
 - Comments can be allowed or forbidden.
 - Posts have status and type. **You can add or remove status. Post status tells who can view/edit post in panel (published, private...)**.
-- Excerpt of content. Could be empty.
-- You can like post.
+- **Permissions for displaying HTML**. You can set for a role 3 options for this - no HTML, restricted and no filter. Restricted option will use mewebstudio/Purifier if installed, if not a custom filter.
+- Posts can be liked.
 - Similar posts.
-- Views statistics.
-- **Post revisions.**
+- Views statistics for views and likes.
+- **Post revisions**. You can select post with what status to have revisions and how many.
+- **Create post with other users**. Author can change post status to co-op and give edit link to other user and edit together.
 - Generate sitemap (RSS).
 - You can select posts to be recommended or in front page.
 - You can upload images for the post you create/edit.
-- "On this topic" - Select a tag to show other post from the same topic.
+- "On this topic" - Select a tag to show other post from the same topic. Then you can use $post->onThisTopic->get() to get all posts on the same topic as the current one.
 
 2. Comments (CRUD)
 
@@ -121,6 +121,8 @@ In bold are new for verison 2.
 - You can ban users from the blog or from commenting.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
 
+And more...
+
 ## If you don't have authentication and with user model
 
 You can use laravel ui. You can install it like this for Laravel 8:
@@ -136,46 +138,6 @@ And like this for Laravel 7:
 composer require laravel/ui "2.0"
 php artisan ui bootstrap --auth
 ```
-
-## Big New things in version 2
-
-1.  Post status
-
-In config file you can set up what status types you gonna use.
-Every status have access code, edit code and revision setting.
-
-Access codes:
-
-- 0 - public. Post with that status code can be seen by all.
-- 1 - Restricted. Only seen by mods and admin.
-- 2 - Private. Only seen by the author.
-- 3 - Custom. Blublog will check if user have permission "view-{your-post-status}"
-
-Edit codes:
-
-- 0 - Can be edited by all users.
-- 1 - Restricted. Post author, mods and admin can edit post.
-- 2 - Custom. Blublog will check if user have permission "edit-{your-post-status}"
-
-Revision setting:
-
-- With true or false for every status you set if you want blublog to keep revisions for post with that status.
-
-2. More appropriate for users you don't trust.
-
-With roles and permissions you can make sure that posts from some users WILL wait to be approved. Also you **can restrict html output of some roles or totaly disable it**.
-
-3. Extending your user model.
-
-You can check for blog permission of your users like this:
-
-```
-$user->blublogRoles->first()->havePermission('delete-posts')
-```
-
-You also have access to user's images and posts with blublogImages and blublogPosts. More to be added.
-
-4. Blublog drops support for pages, menu and star rating.
 
 ## License
 

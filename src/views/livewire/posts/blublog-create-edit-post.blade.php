@@ -21,11 +21,9 @@
                 <div class="card-header"><span class="oi oi-tags"></span> Tags</div>
                 <div class="card-body text-primary">
                     <div class="input-group">
-                        <div class="custom-file">
 
-                            {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multi', 'multiple' => 'multiple']) }}
+                        {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multi', 'multiple' => 'multiple']) }}
 
-                        </div>
                         @can('blublog_create_tags')
                             <div class="input-group-append">
                                 <input wire:model="tagName" type="text" class="form-control  rounded-0"

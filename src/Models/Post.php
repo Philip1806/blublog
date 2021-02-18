@@ -3,6 +3,7 @@
 namespace Blublog\Blublog\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Models\Revision;
@@ -78,6 +79,8 @@ class Post extends Model
     {
         if (!Log::userSeenPost($this->id)) {
             Log::add($this->id, "visit");
+            unset($this->fromThisTopic);
+            unset($this->similar);
             $this->views++;
             $this->save();
         }
@@ -86,8 +89,11 @@ class Post extends Model
     {
         if (!Log::postLiked($this->id)) {
             Log::add($this->id, "like", "Post liked.");
+            unset($this->fromThisTopic);
+            unset($this->similar);
             $this->likes++;
             $this->save();
+            Cache::forget('blublog.post.' . $this->slug);
         }
     }
     public function imageUrl()
@@ -293,6 +299,7 @@ class Post extends Model
             ['status', '=', 'publish'],
             ['slug', '=', $slug],
         ])->first();
+        $post->similar = $post->similarPosts();
         if (!$post) {
             abort(404);
         }

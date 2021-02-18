@@ -64,14 +64,12 @@
                         class="badge m-1 p-2 badge-primary badge-{{ $category->id }} rounded-pill"><span
                             class="oi oi-spreadsheet"></span> {{ $category->title }}</span></a>
             @endforeach
-            @foreach ($post->tags as $tag)
-                <a href="{{ route('blublog.front.tag', $tag->slug) }}"><span
-                        class="badge m-1 p-2 badge-dark rounded-pill"><span class="oi oi-tags"></span>
-                        {{ $tag->title }}</span></a>
-            @endforeach
+            @include('blublog::front.layout._listTags', ['tags' =>$post->tags])
         </div>
     </div>
+    @include('blublog::front.comments._comments',['tags'=>$post->tags])
+    @if ($post->similar)
+        @include('blublog::front.layout._listPosts',['posts'=>$post->similar,'noPagination'=>true])
 
-
-    @include('blublog::front.comments._comments')
+    @endif
 @endsection

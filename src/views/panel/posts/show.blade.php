@@ -92,7 +92,7 @@
                     post:{{ $post->recommended }}</span>
             </p>
             <hr>
-            @forelse ($post->revisions as $revision)
+            @foreach ($post->revisions as $revision)
                 <div class="row">
                     <div class="col-sm-8">
                         {{ $revision->user->name }} edited this post {{ $revision->created_at->diffForHumans() }}
@@ -104,7 +104,6 @@
                         </a>
                     </div>
                 </div>
-
                 <div class="modal fade" id="revision{{ $revision->id }}" tabindex="-1"
                     aria-labelledby="revision{{ $revision->id }}Label" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
@@ -128,10 +127,7 @@
                         </div>
                     </div>
                 </div>
-
-            @empty
-
-            @endforelse
+            @endforeach
         </div>
     </div>
 @endsection

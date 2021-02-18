@@ -9,8 +9,6 @@
     @if ($posts->nextPageUrl())
         <link rel="next" href="{{ $posts->nextPageUrl() }}" />
     @endif
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
     @if (isset($category->img))
         <meta name="og:image" property="og:image" content="{{ $category->img }}" />
     @endif

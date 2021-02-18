@@ -81,7 +81,6 @@
                             data-target="#editpermissions">
                             <span class="oi oi-task"></span> Assign Permissions
                         </button>
-                        <!-- Modal -->
                         <div class="modal fade" id="editpermissions" tabindex="-1" aria-labelledby="editpermissionsLabel"
                             aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
