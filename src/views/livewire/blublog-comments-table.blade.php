@@ -20,10 +20,11 @@
                         </td>
                         @can('blublog_approve_comments', $comment)
                             <td><a wire:click="togglePublic('{{ $comment->id }}')"
-                                    class="btn btn-{{ $comment->public ? 'success' : 'danger' }} btn-sm" role="button"
+                                    class="btn btn-{{ $comment->public ? 'success' : 'warning' }} btn-sm" role="button"
                                     aria-pressed="true">
-                                    {!! $comment->public ? '<span class="oi oi-thumb-down"></span> Hide' : '<span
-                                        class="oi oi-thumb-up"></span> Approve' !!}</a>
+                                    {!! $comment->public
+                                    ? '<span class="oi oi-thumb-down"></span> Hide'
+                                    : '<span class="oi oi-thumb-up"></span> Approve' !!}</a>
                             </td>
                         @endcan
                         @can('blublog_delete_comments', $comment)

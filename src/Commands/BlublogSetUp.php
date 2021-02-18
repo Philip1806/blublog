@@ -3,12 +3,13 @@
 namespace Blublog\Blublog\Commands;
 
 use Illuminate\Console\Command;
-use Blublog\Blublog\Models\Setting;
+use Illuminate\Support\Facades\Storage;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Role;
 use Blublog\Blublog\Models\RolePermission;
 use Illuminate\Support\Facades\Cache;
+use Exception;
 
 class BlublogSetUp extends Command
 {
@@ -45,20 +46,28 @@ class BlublogSetUp extends Command
     {
         $this->info('BLUblog Firts Time Set Up');
         if (!class_exists(config('blublog.userModel'))) {
-            $this->error('The path to User Model IS NOT correct. You need to edit blublog config file with the path to your user model.');
+            $this->error('The path to User Model IS NOT correct!');
+            $this->error('> You need to edit blublog config file with the path to your user model.');
             return 0;
         }
         if (!blublog_user_model()::first()) {
-            $this->error('You first need to have at least one user, so that we can give them a permission for the blog. Create a user and try again.');
+            $this->error('No user found!');
+            $this->error('You need to have at least one user, so that we can give them a permission for the blog.');
+            $this->error('> Create a user and try again.');
             return 0;
         }
-
+        try {
+            Storage::disk(config('blublog.files_disk', 'blublog'));
+        } catch (Exception $e) {
+            $this->error('Looks like the setting files_disk in blublog confing is wrong. Did you add file disk for blublog?');
+            $this->error('Not fatal error. You will not be able to upload images. Continuing with the installation.');
+        }
 
         if (!RolePermission::first()) {
             $this->line("Adding permissions and admin role for blublog.");
 
             $admin_role = new Role;
-            $admin_role->name = "Administrator";
+            $admin_role->name = "Administrators";
             $admin_role->descr = "Blog Admin";
             $admin_role->save();
 

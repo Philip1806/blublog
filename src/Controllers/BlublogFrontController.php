@@ -51,7 +51,7 @@ class BlublogFrontController extends Controller
         if (!$category) {
             abort(404);
         }
-        $posts = $category->posts()->where('status', '=', 'publish')->paginate(3);
+        $posts = $category->getPosts()->paginate(3);
         return view('blublog::front.category')->with('category', $category)->with('posts', $posts);
     }
     public function tag($slug)

@@ -5,7 +5,9 @@ namespace Blublog\Blublog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Tag;
+use Blublog\Blublog\Models\Revision;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Session;
@@ -14,9 +16,22 @@ class Post extends Model
 {
     protected $table = 'blublog_posts';
     protected $guarded = ['status', 'created_at'];
+
+
+    public static function boot()
+    {
+        parent::boot();
+        static::updating(function ($post) {
+            $post->recordRevision();
+        });
+    }
     public function user()
     {
         return $this->belongsTo(blublog_user_model());
+    }
+    public function revisions()
+    {
+        return $this->hasMany(Revision::class, 'post_id')->latest('updated_at');
     }
     public function categories()
     {
@@ -29,6 +44,35 @@ class Post extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
+    }
+    protected function recordRevision()
+    {
+        if (!isset($this->getDirty()['content'])) {
+            return false;
+        }
+        $keyOfStatus = array_keys(config('blublog.post_status'), $this->status)[0];
+        $revisionSetting = config('blublog.post_status_revisions')[$keyOfStatus];
+
+        if (!$revisionSetting) {
+            return false;
+        }
+
+        if ($revisionSetting !== true) {
+            if ($this->revisions()->count() >= $revisionSetting) {
+                $this->revisions->last()->delete();
+            }
+        }
+
+        $revision = new Revision;
+        $revision->user_id = Auth::id();
+        $revision->post_id = $this->id;
+        $revision->before = $this->fresh()->toArray()['content'];
+        $revision->after = $this->getDirty()['content'];
+        $revision->save();
+        /*
+            'before' => json_encode(array_intersect_key($post->fresh()->toArray(), $post->getDirty())),
+            'after' => json_encode($post->getDirty()),
+        */
     }
     public function registerView()
     {
@@ -191,15 +235,14 @@ class Post extends Model
     public static function updatePost(Request $request, $id)
     {
         $post = Post::findORfail($id);
-        $post->update([
-            'title' => $request->title,
-            'excerpt' => $request->excerpt,
-            'content' => Post::cleanInput($request->content),
-            'slug' => $request->slug,
-            'seo_title' => $request->seo_title,
-            'seo_descr' => $request->seo_descr,
 
-        ]);
+        $post->title = $request->title;
+        $post->excerpt = $request->excerpt;
+        $post->content = Post::cleanInput($request->content);
+        $post->slug = $request->slug;
+        $post->seo_title = $request->seo_title;
+        $post->seo_descr = $request->seo_descr;
+
         $post->tags()->sync($request->tags);
         $post->categories()->sync($request->categories);
         $post->changeImage($request->img);
@@ -245,6 +288,37 @@ class Post extends Model
         }
         return $post;
     }
+    public function similarPosts()
+    {
+        $needed_similar_posts = config('blublog.similar-posts');
+
+        // Check if post do not have tags
+        $category_posts = $this->categories[0]->getPosts()->limit($needed_similar_posts)->get()->shuffle();
+        if (!isset($this->tags[0]->id)) {
+            return $category_posts;
+        }
+
+        // Make collection
+        $similarpost = collect(new Post);
+
+        // Add all posts from all tags in the collection
+        foreach ($this->tags as $tag) {
+            foreach ($tag->posts as $post) {
+                $similarpost->push($post);
+            }
+        }
+        // Add some post from the same category in the collection
+        foreach ($category_posts as $post) {
+            $similarpost->push($post);
+        }
+
+        // Filter the collection. No duplicates.
+        // TODO: Remove main post from collection.
+        $similarpost = $similarpost->unique('id')->shuffle();
+
+        return $similarpost->take($needed_similar_posts);
+    }
+
     public static function getIp()
     {
         foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {

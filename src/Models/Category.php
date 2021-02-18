@@ -20,6 +20,10 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
+    public function getPosts()
+    {
+        return $this->posts()->where('status', '=', 'publish')->latest();
+    }
 
     public function children()
     {

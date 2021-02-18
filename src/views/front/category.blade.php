@@ -25,7 +25,11 @@
     <div class="jumbotron p-2">
         <div class="container text-center">
             <h1>{{ $category->title }}</h1>
-            <p>All posts from that category.</p>
+            @if ($category->descr)
+                <p>{{ $category->descr }}</p>
+            @else
+                <p>All posts from that category.</p>
+            @endif
         </div>
     </div>
 @endsection

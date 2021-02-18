@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-9">
         <table class="table">
             <thead class="thead bg-{{ $color }}">
                 <tr>
@@ -30,7 +30,7 @@
         </table>
         {{ $logs->links() }}
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <button wire:click="showOnly('visit')"
             class="btn btn-primary btn-block {{ $type == 'visit' ? 'active' : '' }}">
             @if ($type == 'visit')

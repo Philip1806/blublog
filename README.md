@@ -4,20 +4,35 @@
 
 **This is the 2.0 version dev branch. The package is been rewritten. It's still in alpha.**
 
-BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation.
+BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
 
 ## Require
 
-- **Require Livewire**
-- Require laravelcollective/html (probably will be removed in the future)
-- Require intervention/image
-- Require user model with auth.
+- Laravel 7 or newer. It's build on Laravel 8.
+- **Livewire**.
+- laravelcollective/html
+- intervention/image
+- user model with auth.
+
+You can install all you need with:
+
+```
+composer require livewire/livewire
+composer require laravelcollective/html
+composer require intervention/image
+```
+
+Check below if you don't have authentication.
 
 ## Instaling
 
-1. Make sure you have the requirements above.
+0. Make sure you have the requirements above. Download BLUblog with:
 
-In your User model you need to add this trait:
+```
+composer require blublog/blublog:newversion
+```
+
+1. In your User model you need to add this trait:
 
 ```
 ...
@@ -29,7 +44,7 @@ class User extends Authenticatable
     ...
 ```
 
-If your User model is not in App\Models, edit blublog config file.
+**If your User model is not in App\Models, edit blublog config file** in src/Config/blublog.php.
 
 2. You need to add this in filesystems.php from config folder:
 
@@ -52,32 +67,32 @@ Or you can use blublog:setup if you already run migrations and don't wan't to pu
 
 Blublog will check for common errors and do all it needs. **Only the first user** of your user model will have access to blog panel and they will be admin. You can give access to others and set up blog roles and permisions from the panel.
 
-Cool. Everything should work now.
+Cool. Everything should work now. By default you can visit your blog panel in example.com/panel and your blog in example.com/blog.
 
 ## Features
 
-**Not all features below are ready.** With + are done but may not be tested enough.
+**Not all features below are ready.**
 
 In bold are new for verison 2.
 
 1. Posts (CRUD)
 
-- Multible categories **with nesting**.+
-- Multible tags.+
-- Summernote - WYSIWYG HTML Editor.+
-- **Easy adding and removing custom image sizes and settings.**+
-- Custom SEO post title and description (It's auto generated if not specified).+
-- Search.+
-- Comments can be allowed or forbidden.+
-- Post have status. **You can add or remove status. Post status tells who can view/edit post in panel (published, private...)**+.
-- Excerpt of content. Could be empty.+
-- You can likes/dislike post.+
+- Multible categories **with nesting**.
+- Multible tags.
+- Summernote - WYSIWYG HTML Editor.
+- **Easy adding and removing custom image sizes and settings.**
+- Custom SEO post title and description (It's auto generated if not specified).
+- Search.
+- Comments can be allowed or forbidden.
+- Posts have status and type. **You can add or remove status. Post status tells who can view/edit post in panel (published, private...)**.
+- Excerpt of content. Could be empty.
+- You can like post.
 - Similar posts.
-- Views statistics.+
+- Views statistics.
 - **Post revisions.**
 - Auto generate sitemap (RSS).
-- You can select posts to be recommended or in front page.+
-- You can upload images for the post you create/edit.+
+- You can select posts to be recommended or in front page.
+- You can upload images for the post you create/edit.
 - "On this topic" - Select a tag to show other post from the same topic.
 
 2. Comments (CRUD)
@@ -86,27 +101,43 @@ In bold are new for verison 2.
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
 
-3. Categories (CRUD)+
+3. Categories (CRUD)
 
 - Background image.
 - Description.
 - **Infinite category nesting.** This means that one category can have multiple sub categories.
 
-4. Users+
+4. Users (CRUD)
 
 - **Exend and use your User with traid.**
 - **Add blog roles to your user model.**
 - You can create new roles and **new permissions**.
 
-5. Image manager+
+5. Image manager
 
 - Browse and upload images.
 - All images have different sizes. On upload Blublog will create the sizes set in config file.
 
-6. Admin+
+6. Panel
 
 - You can ban users from the blog or from commenting.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
+
+## If you don't have authentication and with user model
+
+You can use laravel ui. You can install it like this for Laravel 8:
+
+```
+composer require laravel/ui
+php artisan ui bootstrap --auth
+```
+
+And like this for Laravel 7:
+
+```
+composer require laravel/ui "2.0"
+php artisan ui bootstrap --auth
+```
 
 ## Big New things in version 2
 
@@ -147,6 +178,12 @@ $user->blublogRoles->first()->havePermission('delete-posts')
 You also have access to user's images and posts with blublogImages and blublogPosts. More to be added.
 
 4. Blublog drops support for pages, menu and star rating.
+
+## TODO
+
+- Add "On this topic".
+- Add RSS.
+- Cache public views.
 
 ## License
 

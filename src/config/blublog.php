@@ -65,12 +65,14 @@ return [
         1,
     ),
     /* 
-        Revision setting for all post status.
-        - true - blublog will keep revisions of post with that status.
-        - false - blublog will NOT keep revisions of post with that status.
+        Revision setting for post status.
+        Set number of max revisions per post status.
+        - true - blublog will keep ALL revisions of post with that status.
+        - INT - The number of revisions that should be keeped for that status.
+        - false/0 - blublog will NOT keep revisions of post with that status.
     */
     'post_status_revisions' => array(
-        true,
+        5,
         false,
         true,
         false,
@@ -78,6 +80,8 @@ return [
 
     // If they have that permission, user can edit and delete tags created within that period. It's in hours.
     'moderate-tags-within' => 1,
+
+    'similar-posts' => 6,
 
     /*
         Image Settings
@@ -133,7 +137,6 @@ return [
         array('edit-own-comments', 1, 3, 'User can edit own comments'),
         array('delete-own-comments', 1, 3, 'User can delete own comments'),
         array('approve-comments', 1, 3, 'User can approve comments'),
-        array('ban-from-comments', 1, 3, 'User can ban others from making comments'),
         array('create-tags', 1, 4, 'User can create tags'),
         array('edit-tags', 1, 4, 'User can edit tags'),
         array('delete-tags', 1, 4, 'User can delete tags'),

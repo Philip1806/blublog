@@ -71,7 +71,6 @@
                     </div>
                 </div>
             @endcan
-
             <p><b>Seo title: </b>{{ $post->seo_title }}</p>
             <p><b>Seo description: </b>{{ $post->seo_descr }}</p>
             @if ($post->excerpt)
@@ -92,6 +91,47 @@
                 <span class="badge badge-{{ $post->recommended ? 'success' : 'secondary' }}">Recommended
                     post:{{ $post->recommended }}</span>
             </p>
+            <hr>
+            @forelse ($post->revisions as $revision)
+                <div class="row">
+                    <div class="col-sm-8">
+                        {{ $revision->user->name }} edited this post {{ $revision->created_at->diffForHumans() }}
+                    </div>
+                    <div class="col-sm-4">
+                        <a type="button" class="btn btn-primary my-1" data-toggle="modal"
+                            data-target="#revision{{ $revision->id }}">
+                            Compare
+                        </a>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="revision{{ $revision->id }}" tabindex="-1"
+                    aria-labelledby="revision{{ $revision->id }}Label" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="revision{{ $revision->id }}Label">Compare revision</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        {!! $revision->before !!}
+                                    </div>
+                                    <div class="col-sm">
+                                        {!! $revision->after !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            @empty
+
+            @endforelse
         </div>
     </div>
 @endsection

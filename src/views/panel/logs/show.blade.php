@@ -49,13 +49,16 @@
                 <td>{{ $log->message }}</td>
             </tr>
             <tr>
-                <th>Data</th>
-                <td>{{ $log->data }}</td>
-            </tr>
-            <tr>
                 <th>created_at</th>
                 <td>{{ $log->created_at }}</td>
             </tr>
         </tbody>
     </table>
+    <div class="card my-2">
+        <div class="card-body">
+            <h4>Data</h4>
+            {{ $log->data }}
+        </div>
+    </div>
+
 @endsection
