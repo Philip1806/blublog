@@ -1,8 +1,9 @@
 <?php
+
 namespace Blublog\Blublog;
 
 use Closure;
-use Blublog\Blublog\Models\BlublogUser;
+use Illuminate\Support\Facades\Auth;
 
 class BlublogPanel
 {
@@ -15,16 +16,9 @@ class BlublogPanel
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()){
-            $user = BlublogUser::where([
-                ['user_id', '=', $request->user()->id],
-            ])->first();
-            if($user){
-                return $next($request);
-            }
-            return abort(403);
+        if (Auth::user()->blublogRoles->count()) {
+            return $next($request);
         }
-
-        return abort(404);
+        return abort(403);
     }
 }

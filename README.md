@@ -1,56 +1,52 @@
-<p align="center"><img src="https://demo.blublog.info/blublog-uploads/posts/4-admin-panel-index.jpg"></p>
+<p align="center"><img src="https://demo.blublog.info/blublog-uploads/files/40blogcreate.jpg"></p>
 
 ## About BLUBLOG
 
-**The package is been rewritten for second version in dev branch**
+**This is the 2.0 version dev branch. The package is been rewritten. It's still in alpha.**
 
-BLUblog is simple laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for basic functionality of a blog after installation. It's made simple with mostly blade and a little basic javascript.
+BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
 
-Front end demo and documentation at http://demo.blublog.info/blog
+## Require
 
-## Requirements And Important Notice
+- Laravel 7 or newer. It's build on Laravel 8.
+- **Livewire**.
+- laravelcollective/html
+- intervention/image
+- user model with auth.
 
-1. Your app must have a laravel/ui or the same authentication with User model in App folder that have property "name".
-   BLUblog imports users from that User model to BlublogUser model and gives them other properties independent of your application. If logged in user is not imported to BlublogUser, they will not have access to the panel.
-
-2. It's **recommended** for trusted users, because posts outputs HTML. But there is option author not to be able to make his posts public until someone approve specified number of posts.
-
-3. BLUblog is made as independent blog. You can extend your laravel application with it.
-   Or if you just want a blog on Laravel, you will need to make a front page (or copy blog front page) and then you will have a complete Laravel App. BLUblog does not assume you have build anything more than authentication (with laravel/ui). It provides all the basic things you will need.
-
-## Instaling
-
-The package requires three other packages - intervention image, laravelcollective/html and laravel/ui.
-You can install them with:
+You can install all you need with:
 
 ```
-composer require laravel/ui
+composer require livewire/livewire
 composer require laravelcollective/html
 composer require intervention/image
 ```
 
-1. Add package to laravel with:
+Check below if you don't have authentication.
+
+## Instaling
+
+0. Make sure you have the requirements above. Download BLUblog with:
 
 ```
 composer require blublog/blublog
 ```
 
-- Make sure in app.php from config folder, under providers this is there:
+1. In your User model you need to add this trait:
 
 ```
-Blublog\Blublog\BlublogServiceProvider::class,
+...
+use Blublog\Blublog\Traits\ManageBlublog;
+...
+class User extends Authenticatable
+{
+    use ManageBlublog;
+    ...
 ```
 
-2. login into your app without going to the blog and run this:
+**If your User model is not in App\Models, edit blublog config file** in src/Config/blublog.php.
 
-```
-php artisan blublog:install
-```
-
-You will be ask if you want express install. Unless you get errors, you should use express install.
-
-3. Cool. Everything except uploading/deleting files should work.
-   You need to add this in filesystems.php from config folder:
+2. You need to add this in filesystems.php from config folder:
 
 ```
 'blublog' => [
@@ -61,36 +57,40 @@ You will be ask if you want express install. Unless you get errors, you should u
 ],
 ```
 
-You can set up where all files from the package go.
+3. Make sure you have at least one user and run this:
 
-By default you can access the blog from /blog and panel from /panel.
+```
+php artisan blublog:install
+```
 
-**If you get 404 error, make sure you're logged in. If you get 403 error, make sure you have run blublog:setup or blublog:install**;
+Or you can use blublog:setup if you already run migrations and don't wan't to publish files.
 
-**If post images don't show, make sure you have configured blublog file driver. If you use the one above, make sure your APP_URL in .env file is correct.**
+Blublog will check for common errors and do all it needs. **Only the first user** of your user model will have access to blog panel and they will be admin. You can give access to others and set up blog roles and permisions from the panel.
+
+Cool. Everything should work now. By default you can visit your blog panel in example.com/panel and your blog in example.com/blog.
 
 ## Features
 
+In bold are new for verison 2.
+
 1. Posts (CRUD)
 
-- Multible categories.
+- Multible categories **with nesting**.
 - Multible tags.
-- Open Graph.
-- CKeditor - WYSIWYG HTML Editor.
-- Post image can be uploaded or choosen by pop-up modal from already uploaded images. You can define the image dimensions and quality.
+- Summernote - WYSIWYG HTML Editor.
+- **Easy adding and removing custom image sizes and settings.**
 - Custom SEO post title and description (It's auto generated if not specified).
+- Search.
 - Comments can be allowed or forbidden.
-- Post can be public, private or draft. Private posts are seen only from post author. Drafts are seen by all users with access to the panel.
+- Posts have status and type. **You can add or remove status. Post status tells who can view/edit post in panel (published, private...)**.
 - Excerpt of content. Could be empty.
-- Basic search for posts.
-- Rating system with five stars. You can use it as likes/dislikes.
+- You can like post.
 - Similar posts.
 - Views statistics.
-- Auto generate sitemap (RSS).
-- Custom html in header, footer and posts comments.
-- Post types: Post, Video and custom.
-- You can select posts to be recommended and for a slider. Default theme do not take advantage of this for now.
-- You can upload images for the post you create/edit. All of them will be shown when you view the post in the panel.
+- **Post revisions.**
+- Generate sitemap (RSS).
+- You can select posts to be recommended or in front page.
+- You can upload images for the post you create/edit.
 - "On this topic" - Select a tag to show other post from the same topic.
 
 2. Comments (CRUD)
@@ -98,73 +98,84 @@ By default you can access the blog from /blog and panel from /panel.
 - Anti-spam modul.
 - Support nesting (can have replies to replies).
 - Author comments have "Author" title.
-- Basic search for comments by username, part of the comment or IP address.
 
 3. Categories (CRUD)
 
 - Background image.
 - Description.
-- Color code.
+- **Infinite category nesting.** This means that one category can have multiple sub categories.
 
-4. Pages (CRUD)
+4. Users (CRUD)
 
-- CKeditor - WYSIWYG HTML Editor.
-- With sidebar or not.
-- Background image.
-- Public or not.
+- **Exend and use your User with traid.**
+- **Add blog roles to your user model.**
+- You can create new roles and **new permissions**.
 
-5. Users
+5. Image manager
 
-- Import users from Laravel UI (/App/User model).
-- They are three built in roles - Administrator, Moderator and Author.
-- You can control roles permissions and create new roles.
+- Browse and upload images.
+- All images have different sizes. On upload Blublog will create the sizes set in config file.
 
-6. File manager
+6. Panel
 
-- Upload files that are public and hiden.
-
-7. Admin
-
-- BAN option. You can ban users from the blog or from commenting.
-- Very basic settings page for now.
-- Very basic menu options. You can make links and dropdowns. There are html templates for the links and dropdowns, so that you can change it if your theme do not use bootstrap.
+- You can ban users from the blog or from commenting.
 - Logs. They are Errors, Alerts, Info, Visits and Bots visits.
-- Maintenance mode.
-- Check for BLUblog update.
 
-8. API
-   Simple API for getting posts, categories, comments, tags and others. It's a public API, so for actions requiring authorization, you will need to use the panel. You can write your own custom api calls for your theme.
+## If you don't have authentication and with user model
 
-## Design Customization
+You can use laravel ui. You can install it like this for Laravel 8:
 
-Creating your own desing/theme for BLUblog is easy. Look at the documentation at WIKI page.
-Basically, you put your theme files (blade.php) in here: \resources\views\vendor\blublog\your_theme_name and from settings page change theme field from "blublog" to "your_theme_name".
-Default theme is in \resources\views\vendor\blublog\blublog. You can edit it.
+```
+composer require laravel/ui
+php artisan ui bootstrap --auth
+```
 
-## TODO
+And like this for Laravel 7:
 
-1. General
+```
+composer require laravel/ui "2.0"
+php artisan ui bootstrap --auth
+```
 
-- Improve API.
-- Make the code better - more compact, reduce repetition...
-- Add comments for most of the code.
-- Testing, testing, testing...
-- Improve documentation.
+## Big New things in version 2
 
-2. Planed extension/packages
+1.  Post status
 
-- Statistics - Learn whats most seen posts in different time period or/and category. Monitor Authors and Moderators actions. And many others.
-- Gallery - For all posts you can make multiple galleries.
-- Calendar - Add events and posts to calendar.
+In config file you can set up what status types you gonna use.
+Every status have access code, edit code and revision setting.
 
-## ROADMAP
+Access codes:
 
-- October 2020 - First BLUblog theme/design (package).
-- Q1 of 2021 - First extension (Gallery or Statistics package for BLUblog).
+- 0 - public. Post with that status code can be seen by all.
+- 1 - Restricted. Only seen by mods and admin.
+- 2 - Private. Only seen by the author.
+- 3 - Custom. Blublog will check if user have permission "view-{your-post-status}"
 
-## Package Support
+Edit codes:
 
-I'm using it for my projects, so it's gonna be updated (probably not very often). If you decide to use it and find problems/bugs or you want some new functionality, add new issue on github.
+- 0 - Can be edited by all users.
+- 1 - Restricted. Post author, mods and admin can edit post.
+- 2 - Custom. Blublog will check if user have permission "edit-{your-post-status}"
+
+Revision setting:
+
+- With true or false for every status you set if you want blublog to keep revisions for post with that status.
+
+2. More appropriate for users you don't trust.
+
+With roles and permissions you can make sure that posts from some users WILL wait to be approved. Also you **can restrict html output of some roles or totaly disable it**.
+
+3. Extending your user model.
+
+You can check for blog permission of your users like this:
+
+```
+$user->blublogRoles->first()->havePermission('delete-posts')
+```
+
+You also have access to user's images and posts with blublogImages and blublogPosts. More to be added.
+
+4. Blublog drops support for pages, menu and star rating.
 
 ## License
 

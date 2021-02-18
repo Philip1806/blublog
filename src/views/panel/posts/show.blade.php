@@ -1,135 +1,137 @@
-@extends('blublog::panel.main')
-
-@section('navbar')
-<nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{{ url('/panel') }}">{{ __('blublog.home') }}</a></li>
-                  <li class="breadcrumb-item"><a href="{{ url('/panel/posts') }}">{{ __('blublog.posts') }}</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">{{ $post->title }}</li>
-                </ol>
-</nav>
+@extends('blublog::panel.layout.main')
+@section('nav')
+    @include('blublog::panel.posts._nav')
 @endsection
 
+
 @section('content')
-@can('update', $post)
-<div class="row">
-    <div class="col-lg">
-    <a href="{{ route('blublog.posts.edit', $post->id) }}" class="btn btn-warning btn-block">{{__('blublog.edit')}}</a>
-    </div>
-    @can('delete', $post)
-    <div class="col-lg">
-            {!! Form::open(['route' => ['blublog.posts.destroy', $post->id], 'method' => 'DELETE']) !!}
-            {!! form::submit(__('blublog.delete'), ['class' => 'btn btn-danger btn-block ' ]) !!}
-            {!! Form::close() !!}
-    </div>
-    @endcan
-    <div class="col-lg">
-    <a href="{{ route('blublog.front.post_show', $post->slug) }}" class="btn btn-success btn-block">{{__('blublog.view_frontend')}}</a>
-    </div>
-    @can('view_stats', $post)
-    <div class="col-lg">
-        <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ModalLong">
-        {{__('blublog.stats')}}
-        </button>
-        <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ModalLongTitle">{{__('blublog.stats')}}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        {!! blublog_draw_stars(5) !!} ({{$post->rating_votes['five_star']}})<br>
-                        {!! blublog_draw_stars(4) !!} ({{$post->rating_votes['four_star']}})<br>
-                        {!! blublog_draw_stars(3) !!} ({{$post->rating_votes['three_star']}})<br>
-                        {!! blublog_draw_stars(2) !!} ({{$post->rating_votes['two_star']}})<br>
-                        {!! blublog_draw_stars(1) !!} ({{$post->rating_votes['one_star']}})
-                        <hr>
-                        <h3>{{__('blublog.views')}} ({{$post->views()->count()}})</h3>
-                        @foreach ($post->views()->latest()->get() as $view)
-                        <div class="alert alert-info" role="alert">
-                        {{$view->ip}} | <i>{{$view->agent}}</i> | <b> {{$view->created_at}}</b>
+    <p class="display-4">{{ $post->title }}</p>
+    <div class="row">
+        <div class="col-lg-8">
+            <img src="{{ $post->imageUrl() }}" class="img-fluid mb-2">
+            {!! $post->content !!}
+        </div>
+        <div class="col-lg-4">
+            @can('blublog_edit_post', $post)
+                <a href="{{ route('blublog.panel.posts.edit', $post->id) }}" class="btn btn-primary btn-block btn-sm mb-2"
+                    role="button" aria-pressed="true"><span class="oi oi-pencil"></span> Edit</a>
+            @endcan
+            @can('blublog_delete_posts', $post)
+                <a wire:click="delete('{{ $post->id }}')" class="btn btn-danger btn-block btn-sm mb-2" role="button"><span
+                        class="oi oi-circle-x"></span> Delete</a>
+            @endcan
+            @can('blublog_view_stats_posts', $post)
+                <button type="button" class="btn btn-info btn-block mb-2" data-toggle="modal" data-target="#postStats">
+                    Post stats
+                </button>
+
+                <div class="modal fade" id="postStats" tabindex="-1" aria-labelledby="postStatsLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="postStatsLabel">Stats</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-info" role="alert">
+                                    Post have {{ $post->views }} views, for {{ $post->viewsLogs->count() }} of them still
+                                    have
+                                    logs below.
+                                </div>
+                                <div class="alert alert-info" role="alert">
+                                    Post have {{ $post->likes }} likes.
+                                </div>
+
+
+                                <table class="table table-hover">
+                                    <tbody>
+                                        @foreach ($post->viewsLogs as $view)
+                                            <tr>
+                                                @if ($view->user_id)
+                                                    <th>{{ blublog_get_user($view->user_id)->name }}</th>
+                                                @else
+                                                    <th>{{ $view->ip }}</th>
+                                                @endif
+                                                <td>{{ $view->created_at }}</td>
+                                                @if (blublog_is_admin())
+                                                    <th> <a href="{{ route('blublog.panel.logs.show', $view->id) }}"
+                                                            class="btn btn-primary btn-block btn-sm mb-2" role="button"
+                                                            aria-pressed="true"><span class="oi oi-eye"></span> Details</a>
+                                                    </th>
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+
+                            </div>
                         </div>
-                        @endforeach
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    @endcan
-</div>
-@endcan
+            @endcan
+            <p><b>Seo title: </b>{{ $post->seo_title }}</p>
+            <p><b>Seo description: </b>{{ $post->seo_descr }}</p>
+            @if ($post->excerpt)
+                <p><b>Excerpt: </b>{{ $post->excerpt }}</p>
+            @endif
+            <p><b>Post status: </b>{{ $post->status }}</p>
+            <p><b>Post type: </b>{{ $post->type }}</p>
 
-
-
-<br>
-<div class="row">
-    <div class="col-xl-5 col-lg-6">
-        <div class="card shadow">
-            <img class="card-img-top" src="{{$post->img_thumb_url}}"  alt="Card image cap">
-        </div>
-    </div>
-    <div class="col-xl-7 col-lg-6">
-        <div class="card shadow">
-            <div class="card-body">
-                <h3>{{ $post->title }}</h3>
-                <p><b>{{__('blublog.posted')}}</b>: {{ $post->user->name }} <b>{{__('blublog.type')}}</b>: {{$post->type}}</p>
-                <span class="badge badge-success">{{__('blublog.on')}} {{ $post->created_at }}</span> <span class="badge badge-success">{{__('blublog.lastedit')}} {{ $post->updated_at }}</span>
-
-                @if ($post->status == "publish")
-                <span class="badge badge-success">{{__('blublog.public')}}</span>
-                @else
-                <span class="badge badge-warning">{{__('blublog.private')}}</span>
-                @endif
-
-                @if ($post->front)
-                <span class="badge badge-success">{{__('blublog.onfrontpage')}}</span>
-                @else
-                <span class="badge badge-warning">{{__('blublog.notonfrontpage')}}</span>
-                @endif
-
-                @if ($post->slider)
-                <span class="badge badge-success">{{__('blublog.inslider')}}</span>
-                @else
-                <span class="badge badge-warning">{{__('blublog.notinslider')}}</span>
-                @endif
-
-                @if (!is_null($post->tag_id))
-                <span class="badge badge-success">{{__('blublog.maintag')}}</span>
-                @else
-                <span class="badge badge-warning">{{__('blublog.nomaintag')}}</span>
-                @endif
-
-                @foreach ( $post->categories as  $category)
-                <span class="badge badge-primary">{{ $category->title }} </span>
-                @endforeach
-
-                @foreach ( $post->tags as  $tag)
-                <span class="badge badge-info">{{ $tag->title }} </span>
-                @endforeach
-
-                <blockquote class="blockquote">
-                <p class="mb-0">{{ $post->headlight }}</p>
-                </blockquote>
-            </div>
-        </div>
-    </div>
-</div>
-@if (!empty($images[0]->id))
-@include('blublog::panel.files._table', ['files'=>$images,'no_title'=>true])
-@endif
-
-<div class="col-xl-12" style="margin-top:50px;">
-        <div class="card shadow">
-
-                <div class="card-body">
-                                {!! $post->content !!}
+            <p>
+                <span class="badge badge-{{ $post->comments ? 'success' : 'danger' }}">Allow comments:
+                    {{ $post->comments }}</span>
+            </p>
+            <p>
+                <span class="badge badge-{{ $post->front ? 'success' : 'secondary' }}">Front page post:
+                    {{ $post->front }}</span>
+            </p>
+            <p>
+                <span class="badge badge-{{ $post->recommended ? 'success' : 'secondary' }}">Recommended
+                    post:{{ $post->recommended }}</span>
+            </p>
+            <hr>
+            @forelse ($post->revisions as $revision)
+                <div class="row">
+                    <div class="col-sm-8">
+                        {{ $revision->user->name }} edited this post {{ $revision->created_at->diffForHumans() }}
+                    </div>
+                    <div class="col-sm-4">
+                        <a type="button" class="btn btn-primary my-1" data-toggle="modal"
+                            data-target="#revision{{ $revision->id }}">
+                            Compare
+                        </a>
+                    </div>
                 </div>
+
+                <div class="modal fade" id="revision{{ $revision->id }}" tabindex="-1"
+                    aria-labelledby="revision{{ $revision->id }}Label" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="revision{{ $revision->id }}Label">Compare revision</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        {!! $revision->before !!}
+                                    </div>
+                                    <div class="col-sm">
+                                        {!! $revision->after !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            @empty
+
+            @endforelse
         </div>
-</div>
+    </div>
 @endsection

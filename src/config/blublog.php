@@ -1,130 +1,156 @@
 <?php
 
 return [
-    // LOW LEVEL SETTING
-    'version' => "1.0.1",
-    'blog_prefix' => "blog", //Don't change, probably won't work.
-    'panel_prefix' => "panel", //Don't change, probably won't work.
+
+    'version' => "2.0.0",
+    'key' => "",
+    /*
+        Very important settings
+    */
+    'setting_cache' => 3800,
+    'blog_prefix' => "blog",  // example.com/blog - Location of the blog 
+    'panel_prefix' => "panel", // example.com/panel - Location of the blog panel 
+
+    // >>>>> By default Blublog will searh for User model in \App\Models like is in Laravel 8
+    'userModel' => "\\App\\Models\\User",
+
+
+    /*
+        What disk from app/filesystems.php blublog should use for file uploads?
+        By default you need to create new disk with name blublog in that file.
+        Blublog gets image url from the disk, so you need to make sure it provides the right link. 
+    */
     'files_disk' => "blublog",
 
-    // Int Settings
-    'img_height' => 600,
-    'img_height_type' => "int",
-    'img_width' => 350,
-    'img_width_type' => "int",
-    'img_quality' => 50,
-    'img_quality_type' => "int",
-    'big_img_height' => 1200,
-    'big_img_height_type' => "int",
-    'big_img_width' => 700,
-    'big_img_width_type' => "int",
-    'big_img_quality' => 50,
-    'big_img_quality_type' => "int",
+    /*
+        Post Settings
+    */
 
-    'blur_img_height' => 300,
-    'blur_img_height_type' => "int",
-    'blur_img_width' => 175,
-    'blur_img_width_type' => "int",
 
-    'setting_cache' => 28800,
-    'setting_cache_type' => "int",
-    'index_posts_per_page' => "10",
-    'index_posts_per_page_type' => "int",
-    'category_posts_per_page' => "10",
-    'category_posts_per_page_type' => "int",
-    'tags_posts_per_page' => "10",
-    'tags_posts_per_page_type' => "int",
-    'number_main_tag_posts' => "4",
-    'number_main_tag_posts_type' => "int",
-    'number_of_similar_post' => "10",
-    'number_of_similar_post_type' => "int",
-    'max_unaproved_comments' => "3",
-    'max_unaproved_comments_type' => "int",
-    'number_of_approved_post' => "5",
-    'number_of_approved_post_type' => "int",
+    /* 
+        All settings starting with post_status must have the same number of elements.
+        Here you can add and remove post's status codes.
+        ---> Status "waits" and publish is reserved and must be present.
+    */
+    'post_status' => array(
+        'publish',
+        'private',
+        'co-op',
+        'waits',
+    ),
+    /* 
+        Access codes:
+        0 - public. Post with that status code can be seen by all.
+        1 - Restricted. Only seen by mods and admin.
+        2 - Private. Only seen by the author.
+        3 - Custom. Blublog will check if user have permission "view-{your-post-status}"
 
-    // String Settings
-    'site_name' => "BLUblog",
-    'site_name_type' => "string",
-    'site_descr' => "This is simple blog with BLUblog!",
-    'site_descr_type' => "string",
-    'maintenance_massage' => "Site is under maintenance.",
-    'maintenance_massage_type' => "string",
-    'theme' => "blublog",
-    'theme_type' => "string",
-    'ignore_ip' => "",
-    'ignore_ip_type' => "string",
-    'date_format' => "d.m.Y",
-    'date_format_type' => "string",
+    */
+    'post_status_access' => array(
+        0, // By default its for publish post status
+        2,
+        2,
+        1,
+    ),
+    /* 
+        Edit codes:
+        0 - Can be edited by all users. 
+        1 - Restricted. Post author, mods and admin can edit post.
+        2 - Custom. Blublog will check if user have permission "edit-{your-post-status}"
+    */
+    'post_status_edit' => array(
+        1,
+        1,
+        0,
+        1,
+    ),
+    /* 
+        Revision setting for post status.
+        Set number of max revisions per post status.
+        - true - blublog will keep ALL revisions of post with that status.
+        - INT - The number of revisions that should be keeped for that status.
+        - false/0 - blublog will NOT keep revisions of post with that status.
+    */
+    'post_status_revisions' => array(
+        5,
+        false,
+        true,
+        false,
+    ),
 
-    'comment_spam_question' => "",
-    'comment_spam_question_type' => "string",
-    'comment_spam_question_answer' => "",
-    'comment_spam_question_answer_type' => "string",
+    // If they have that permission, user can edit and delete tags created within that period. It's in hours.
+    'moderate-tags-within' => 1,
 
-    // Text Settings
-    'footer_html' => "Based on Bootstrap. Icons from Font Awesome. Web fonts from Google.<br>Blog made with <a href='https://blublog.info'>BLUblog</a>.",
-    'footer_html_type' => "text",
-    'head_html' => "<h1>Welcome to BLUblog!</h1><p>This is info panel for front page that can be edited or removed.<p>",
-    'head_html_type' => "text",
-    'sidebar_html' => "<div class='alert alert-primary' role='alert'>This is sidebar html area. Could be edited or removed.</div>",
-    'sidebar_html_type' => "text",
-    'global_header_html' => "",
-    'global_header_html_type' => "text",
-    'global_footer_html' => "",
-    'global_footer_html_type' => "text",
-    'post_header_html' => "",
-    'post_header_html_type' => "text",
-    'post_additional_html' => "",
-    'post_additional_html_type' => "text",
-    'author_message_html' => "",
-    'author_message_html_type' => "text",
-    'moderator_message_html' => "",
-    'moderator_message_html_type' => "text",
-    'menu_link_template' => '<li class="nav-item"><a class="nav-link" href="((LINK))">((LABEL))</a></li>',
-    'menu_link_template_type' => "text",
-    'menu_dropdown_template' => '<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="((LINK))" id="navbarDropdown"
-    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">((LABEL))</a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    ((SUBLINKS))
-    </div></li>',
-    'menu_dropdown_template_type' => "text",
-    'menu_dropdown_link_template' => '<a class="dropdown-item" href="((LINK))">((LABEL))</a>',
-    'menu_dropdown_link_template_type' => "text",
+    'similar-posts' => 6,
 
-    // Bool Settings
-    'post_editor' => true,
-    'post_editor_type' => "bool",
-    'enable_public_api' => true,
-    'enable_public_api_type' => "bool",
-    'do_not_convert_post_img' => true,
-    'do_not_convert_post_img_type' => "bool",
-    'make_blur_img' => true,
-    'make_blur_img_type' => "bool",
-    'keep_filename' => true,
-    'keep_filename_type' => "bool",
+    /*
+        Image Settings
+    */
 
-    'disable_comments_modul' => false,
-    'disable_comments_modul_type' => "bool",
-    'approve_comments_from_users_with_approved_comments' => true,
-    'approve_comments_from_users_with_approved_comments_type' => "bool",
-    'no_ratings' => false,
-    'no_ratings_type' => "bool",
-    'disable_search_modul' => false,
-    'disable_search_modul_type' => "bool",
-    'main_menu_name' => "Main",
-    'main_menu_name_type' => "string",
-    'front_page_posts_only' => false,
-    'front_page_posts_only_type' => "bool",
-    'add_front_page_posts' => false,
-    'add_front_page_posts_type' => "bool",
-    'under_attack' => false,
-    'under_attack_type' => "bool",
-    'comment_ask_question' => false,
-    'comment_ask_question_type' => "bool",
-    'use_rating_module_as_likes_and_dislikes' => false,
-    'use_rating_module_as_likes_and_dislikes_type' => "bool",
-    'do_not_track_visits' => false,
-    'do_not_track_visits_type' => "bool",
+    // false - Use original image. 0 - Use first size 1 - Use second size ...
+    'post_image_size' => false,
+
+    'image_quality' => 80,
+
+    // Image sizes. Names does not matter.
+    // You can add as many you want. More sizes, more database records and more disk usage.
+    // Must have at least one for thumbnail
+    'image_sizes' => [
+        [
+            // First size
+            'w' => 600,
+            'h' => 350,
+            'crop' => false,
+        ],
+        // Blublog uses the last image size as image thumbnail
+        [
+            // Second size
+            'w' => 300,
+            'h' => 175,
+            'crop' => true,
+        ],
+    ],
+
+    'spam-question' => "What is 2 * 6?",
+    'spam-question-answer' => 12,
+    // Users who have approved comments will not wait for approving 
+    'auto-approve' => true,
+    // IGNORE
+    // Array of permissions used only for installing blublog (DB seeding)
+    'default_permissions' => array(
+        array('is-admin', 1, 1, 'User is admin'),
+        array('is-mod', 1, 1, 'User is moderator'),
+        array('no-html', 0, 1, 'Only plain text output.'),
+        array('restrict-html', 0, 1, 'Restrict html output'),
+        array('create-posts', 1, 2, 'User can create posts'),
+        array('edit-posts', 1, 2, 'User can edit posts'),
+        array('delete-posts', 1, 2, 'User can delete posts'),
+        array('edit-own-posts', 1, 2, 'User can edit own posts'),
+        array('delete-own-posts', 1, 2, 'User can delete own posts'),
+        array('post-stats', 1, 2, 'User can view posts stats'),
+        array('own-post-stats', 1, 2, 'User can view stats for own posts'),
+        array('wait-for-approve', 0, 2, 'Users posts wait for approval'),
+        array('create-comments', 1, 3, 'User can create comments'),
+        array('edit-comments', 1, 3, 'User can edit comments'),
+        array('delete-comments', 1, 3, 'User can delete comments'),
+        array('moderate-comments-from-own-posts', 1, 3, 'User can edit and hide comments from own post.'),
+        array('edit-own-comments', 1, 3, 'User can edit own comments'),
+        array('delete-own-comments', 1, 3, 'User can delete own comments'),
+        array('approve-comments', 1, 3, 'User can approve comments'),
+        array('create-tags', 1, 4, 'User can create tags'),
+        array('edit-tags', 1, 4, 'User can edit tags'),
+        array('delete-tags', 1, 4, 'User can delete tags'),
+        array('moderate-tags-within_set_time', 1, 4, 'User can edit and delete tags within set time'),
+        array('create-categories', 1, 5, 'User can create categories'),
+        array('edit-categories', 1, 5, 'User can edit categories'),
+        array('delete-categories', 1, 5, 'User can delete categories'),
+        array('create-users', 1, 6, 'User can create users'),
+        array('edit-profile', 1, 6, 'User can edit own profile'),
+        array('edit-users', 1, 6, 'User can edit all users'),
+        array('delete-users', 1, 6, 'User can delete users'),
+        array('upload-files', 1, 7, 'User can upload files'),
+        array('delete-own-files', 1, 7, 'User can delete own files'),
+        array('delete-files', 1, 7, 'User can delete files'),
+    ),
+
 ];

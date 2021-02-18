@@ -40,20 +40,6 @@ class BlublogInstall extends Command
     public function handle()
     {
         $this->info('Installing BLUblog');
-
-        if ($this->ask('Do not use express install? ("y" for yes)') == "y") {
-            if ($this->ask('Create migrations? ("y" for yes)') == "y") {
-                $this->call('migrate');
-            }
-            if ($this->ask('Publish files? ("y" for yes)') == "y") {
-                $this->call('vendor:publish', ['--provider' => 'Blublog\Blublog\BlublogServiceProvider']);
-            }
-            if ($this->ask('Run BLUblog Set up? ("y" for yes)') == "y") {
-                $this->call('blublog:setup');
-            }
-            return;
-        }
-        $this->info('Installing BLUblog');
         $this->call('migrate');
         $this->call('vendor:publish', ['--provider' => 'Blublog\Blublog\BlublogServiceProvider']);
         $this->call('blublog:setup');

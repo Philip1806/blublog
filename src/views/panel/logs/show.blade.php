@@ -1,33 +1,64 @@
-@extends('blublog::panel.main')
+@extends('blublog::panel.layout.main')
+@section('nav')
+@endsection
+
 
 @section('content')
-<br>
-<div class="card">
-    @if ($log->type == "error")
-    <div class="card-header text-white bg-danger">
-    @elseif($log->type == "alert")
-    <div class="card-header text-white bg-warning">
-    @else
-    <div class="card-header text-white bg-primary">
-    @endif
-    {{ __('blublog.event') }} №{{ $log->id }} {{ __('blublog.type') }}: {{ $log->type }}
-    </div>
-    <ul class="list-group list-group-flush">
-    <li class="list-group-item"><strong>{{$log->message}}</strong></li>
-    <li class="list-group-item">{{$log->ip}} ({{blublog_get_username_from_id($log->user_id,true)}})</li>
-    <li class="list-group-item">{{$log->user_agent}}</li>
-    <li class="list-group-item">{{urldecode($log->request_url)}}</li>
-    <li class="list-group-item">{{urldecode($log->referer)}}</li>
-    <li class="list-group-item">{{$log->lang}}</li>
-    <li class="list-group-item">
-        <p><a class="btn btn-primary" data-toggle="collapse" href="#Collapse1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">{{ __('blublog.show_all_data') }}</a></p>
-        <div class="collapse multi-collapse" id="Collapse1">
-            <div class="card card-body">
-                {{$log->data}}
-            </div>
+    <table class="table table-hover ">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Log details</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>User ID</th>
+                @if ($log->user_id)
+                    <td>{{ $log->user_id }} ({{ blublog_get_user($log->user_id)->name }})</td>
+                @else
+                    <td>Log is not created from user.</td>
+                @endif
+            </tr>
+            <tr>
+                <th>IP</th>
+                <td>{{ $log->ip }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ $log->type }}</td>
+            </tr>
+            <tr>
+                <th>User Agent</th>
+                <td>{{ $log->user_agent }}</td>
+            </tr>
+            <tr>
+                <th>Request URL</th>
+                <td>{{ $log->request_url }}</td>
+            </tr>
+            <tr>
+                <th>Referer</th>
+                <td>{{ $log->referer }}</td>
+            </tr>
+            <tr>
+                <th>Lang</th>
+                <td>{{ $log->lang }}</td>
+            </tr>
+            <tr>
+                <th>Message</th>
+                <td>{{ $log->message }}</td>
+            </tr>
+            <tr>
+                <th>created_at</th>
+                <td>{{ $log->created_at }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="card my-2">
+        <div class="card-body">
+            <h4>Data</h4>
+            {{ $log->data }}
         </div>
-    </li>
-    </ul>
-</div>
+    </div>
 
 @endsection
