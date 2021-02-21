@@ -25,15 +25,17 @@ class Comment extends Model
     }
     public static function addComment($request, $notpublic = 1)
     {
+        /*
+            TODO:Rewrite
+        */
         $comment = new Comment;
-        if ($notpublic) {
-            $comment->public = false;
-        } else {
-            $comment->public = true;
-        }
-
+        $notpublic ? $comment->public = false : $comment->public = true;
         $post = Post::findOrFail($request->get('post_id'));
-
+        if (!$post->comments) {
+            Session::flash('warning', 'Comments not allowed.');
+            Log::add($request, "alert", "Trying to add comment for a post that do not allow commenting.");
+            return back();
+        }
         if (Auth::check()) {
             $user = Auth::user();
             if (!$user->blublogRoles->first()->havePermission('create-comments')) {
@@ -46,36 +48,24 @@ class Comment extends Model
             $comment->author_id = $user->id;
             if ($post->user_id == $request->user()->id) {
                 $comment->public = true;
-                Session::flash('success', 'Comment added.');
             } elseif (config('blublog.auto-approve')) {
-                if (Comment::where('author_id', '=', $user->id)->latest()->first()) {
-                    $comment->public = true;
-                    Session::flash('success', 'Comment added.');
+                $lastComment = Comment::where('author_id', '=', $user->id)->latest()->first();
+                if ($lastComment) {
+                    $lastComment->public ? $comment->public = true : '';
                 }
-            } else {
-                Session::flash('success',  'Comment waits to be approved.');
             }
         } else {
             $comment->name = $request->name;
             $comment->email = $request->email;
-
-            if ($notpublic) {
-                Session::flash('success',  'Comment waits to be approved.');
-            } else {
-                Session::flash('success', 'Comment added.');
-            }
         }
-
         $comment->body = $request->get('comment_body');
         $comment->parent_id = $request->get('comment_id');
-
-        if (!$post->comments) {
-            Session::flash('warning', 'Comments not allowed.');
-            Log::add($request, "alert", "Trying to add comment for a post that do not allow commenting.");
-            return back();
+        if ($comment->public) {
+            Session::flash('success',  'Comment waits to be approved.');
+        } else {
+            Session::flash('success', 'Comment added.');
         }
         $post->comments()->save($comment);
-
         return back();
     }
 }

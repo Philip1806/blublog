@@ -4,6 +4,7 @@ namespace   Blublog\Blublog\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Session;
 
@@ -16,6 +17,13 @@ class BlublogUserController extends Controller
 
     public function index()
     {
+        if (
+            Gate::denies('blublog_edit_users', blublog_user_model()) and
+            Gate::denies('blublog_create_users', blublog_user_model()) and
+            Gate::denies('blublog_delete_users', blublog_user_model())
+        ) {
+            abort(403);
+        }
         return view('blublog::panel.users.index');
     }
 

@@ -121,8 +121,10 @@
                 URL
                 {{ Form::text('slug', null, ['class' => 'form-control mb-2']) }}
                 {{ Form::checkbox('comments', null) }} Enable comments<br>
+                @if (blublog_is_admin())
                 {{ Form::checkbox('front', null) }} Front Page Post<br>
                 {{ Form::checkbox('recommended', null) }} Recommended<br>
+                @endif
                 Seo title
                 {{ Form::text('seo_title', null, ['class' => 'form-control mb-2']) }}
                 Seo description

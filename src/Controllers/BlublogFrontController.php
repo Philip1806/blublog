@@ -157,7 +157,7 @@ class BlublogFrontController extends Controller
     }
     public function comment_store(Request $request)
     {
-
+        // TODO:Validation, FormRequest
         $rules = [
             'name' => 'required|max:50',
             'comment_body' => 'required|max:9200',
