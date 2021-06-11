@@ -1,0 +1,39 @@
+{
+  "name": "blublog/blublog",
+  "keywords": [
+    "laravel",
+    "blog",
+    "package",
+    "admin",
+    "panel",
+    "posts"
+  ],
+  "description": "BLUblog is simple laravel blog package with admin panel.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Philip Dimitrov",
+      "homepage": "https://blublog.info/",
+      "email": "office@blublog.info"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Blublog\\Blublog\\": "src"
+    }
+  },
+  "require": {
+    "laravel/framework": "~7.0|~8.0",
+    "livewire/livewire": "dev-master",
+    "intervention/image": "2.*"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Blublog\\Blublog\\BlublogServiceProvider"
+      ]
+    }
+  }
+}
