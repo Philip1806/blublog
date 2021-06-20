@@ -70,39 +70,34 @@ class File extends Model
     }
 
 
-
+    /**
+     * Give the disk drive image path to the file.
+     *
+     * @return string
+     */
     public static function getImageDir(): string
     {
         return 'photos/' . Carbon::now()->year . '/' . Carbon::now()->month;
     }
 
-    public static function createSizes(string $filename, int $post_id = 0): int
+    /**
+     * Create images with sizes set at config/blublog.php from uploaded image
+     *
+     * @param string $filename Path to the uploaded image
+     * @return integer Id of the new image
+     */
+    public static function createSizes(string $filename): int
     {
 
         $original_file = Storage::disk(config('blublog.files_disk', 'blublog'))->get($filename);
-
         $info = pathinfo($filename);
-
-        $original = File::addImage($filename, null, $post_id);
-
+        $parent_image = File::addImage($filename);
         $img_number = 1;
-
 
         foreach (config('blublog.image_sizes') as $size) {
             $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $img_number . '.' . $info['extension'];
             try {
-                $img = Image::make($original_file);
-                if ($size['crop']) {
-                    $img->fit($size['w'], $size['h'], function ($constraint) {
-                        $constraint->upsize();
-                    })->interlace();
-                } else {
-                    $img->widen($size['w'], function ($constraint) {
-                        $constraint->upsize();
-                    });
-                }
-                $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $newfilename, config('blublog.image_quality'));
-                File::addImage($newfilename, $original->id);
+                File::createImageSize($original_file, $newfilename, $parent_image, $size);
             } catch (\Exception $e) {
                 Session::flash('error', $e->getMessage());
                 Log::add($e->getMessage(), 'error', 'Could not convert image to sizes.');
@@ -111,17 +106,49 @@ class File extends Model
             $img_number++;
         }
 
-        return $original->id;
+        return $parent_image->id;
     }
-    public static function addImage(string $filename, $parent_id = '', int $post_id = 0): File
+
+    /**
+     * Create a size for a image
+     * Parent image is the original image that was uploaded
+     * and can have from 1 to unlimited number of children (sizes).
+     *
+     * @param string $original_filename
+     * @param string $new_filename
+     * @param File $parent_image
+     * @param array $size
+     * @return void
+     */
+    public static function createImageSize(string $original_filename, string $new_filename, File $parent_image, array $size)
+    {
+        $img = Image::make($original_filename);
+        if ($size['crop']) {
+            $img->fit($size['w'], $size['h'], function ($constraint) {
+                $constraint->upsize();
+            })->interlace();
+        } else {
+            $img->widen($size['w'], function ($constraint) {
+                $constraint->upsize();
+            });
+        }
+        $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $new_filename, config('blublog.image_quality'));
+        File::addImage($new_filename, $parent_image->id);
+    }
+
+    /**
+     * Add image to database.
+     *
+     * @param string $filename Path to the file from the blublog disk
+     * @param string $parent_id Optional. If the image is child, give the id of the parent
+     * @return File
+     */
+    public static function addImage(string $filename, $parent_id = ''): File
     {
 
         $file = new File;
         if ($parent_id) {
             $file->parent_id = $parent_id;
-        }
-        if ($post_id) {
-            $file->post_id = $post_id;
         }
         $file->user_id = Auth::user()->id;
         $file->size = File::get_file_size_from_bytes(Storage::disk(config('blublog.files_disk', 'blublog'))->size($filename));;

@@ -16,7 +16,6 @@ class CreateBlublogImagesTable extends Migration
         Schema::create('blublog_images', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('parent_id')->nullable()->index();
-            $table->integer('post_id')->nullable()->index();
             $table->unsignedBigInteger('user_id')->index();
             $table->string('size', 50)->nullable();
             $table->string('filename', 250);

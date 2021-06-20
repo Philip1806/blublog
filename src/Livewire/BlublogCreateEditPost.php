@@ -42,7 +42,7 @@ class BlublogCreateEditPost extends Component
      */
     public $sim_tags = array();
 
-    protected $listeners = ['imageUploaded' => 'changePos tImage', 'imageSelecred' => 'setImage'];
+    protected $listeners = ['imageUploaded' => 'changePostImage', 'imageSelecred' => 'setImage'];
 
 
     public function dehydrate()
