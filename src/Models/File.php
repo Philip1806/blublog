@@ -23,6 +23,10 @@ class File extends Model
     {
         return $this->belongsTo(File::class, 'parent_id');
     }
+    public function post()
+    {
+        return $this->belongsTo(Post::class, 'filename', 'img');
+    }
     public function children()
     {
         return $this->hasMany(File::class, 'parent_id');

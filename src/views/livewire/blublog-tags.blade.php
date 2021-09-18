@@ -5,6 +5,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Title</th>
+                        <th scope="col">Posts</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -13,6 +14,7 @@
                     @forelse ($tags as $tag)
                         <tr>
                             <th>{{ $tag->title }}</th>
+                            <th>{{ $tag->posts->count() }}</th>
                             @can('blublog_edit_tags', $tag)
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal"

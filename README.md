@@ -1,10 +1,12 @@
-<p align="center"><img src="https://demo.blublog.info/blublog-uploads/files/7935blublogcreatepost.jpg"></p>
+<p align="center"><img src="https://demo.blublog.info/blublog-uploads/photos/2021/9/IWhnvJCW1flbEFIR66YNwyE7uQWtOdnrT11GwcA4.jpg"></p>
 
 ## About BLUBLOG
 
 **The package is close to beta version**
 
 BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
+
+**Demo at [demo.blublog.info](https://demo.blublog.info/)**.
 
 ## Require
 
@@ -71,8 +73,6 @@ Cool. Everything should work now. By default you can visit your blog panel in ex
 
 ## Features
 
-In bold are new for verison 2.
-
 1. Posts (CRUD)
 
 - Multible categories **with nesting** and multible tags.
@@ -89,7 +89,9 @@ In bold are new for verison 2.
 - Views statistics for views and likes.
 - **Post revisions**. You can select post with what status to have revisions and how many.
 - **Create post with other users**. Author can change post status to co-op and give edit link to other user and edit together.
-- Generate sitemap (RSS).
+- Generate sitemap (RSS).\
+- User can change the date that a post is created.
+- User can change author if have permission.
 - You can select posts to be recommended or in front page.
 - You can upload images for the post you create/edit.
 - "On this topic" - Select a tag to show other post from the same topic.

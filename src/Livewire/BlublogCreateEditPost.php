@@ -17,6 +17,7 @@ class BlublogCreateEditPost extends Component
     public $imageFilename;
     public $post;
     public $date;
+    public $author_id;
     public $search;
     public $is_edit;
     /**
@@ -42,12 +43,16 @@ class BlublogCreateEditPost extends Component
      */
     public $sim_tags = array();
 
-    protected $listeners = ['imageUploaded' => 'changePostImage', 'imageSelecred' => 'setImage'];
+    protected $listeners = ['imageUploaded' => 'changePostImage', 'imageSelecred' => 'setImage', 'AuthorChanged'];
 
 
     public function dehydrate()
     {
         $this->emit('tagsUpdated');
+    }
+    public function AuthorChanged($id)
+    {
+        $this->author_id = $id;
     }
 
     public function mount()

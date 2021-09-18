@@ -10,6 +10,7 @@ use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Repositories\PostsRepository;
+use Blublog\Blublog\Repositories\TagsRepository;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -19,9 +20,10 @@ use Throwable;
 class PostService
 {
     private $repository;
-    public function __construct(PostsRepository $post)
+    public function __construct(PostsRepository $post, TagsRepository $tag)
     {
         $this->repository = $post;
+        $this->tagRepository = $tag;
     }
 
     public function findFromUserId($id, $status = null)
@@ -38,7 +40,7 @@ class PostService
 
         $haveAccess = false;
 
-        if ($this->getAccessCodeForStatus($status) == 3 and $user->blublogRoles->first()->havePermission('view-' . $status)) {
+        if ($this->getAccessCodeForStatus($status) == 3 and blublog_have_permission('view-' . $status)) {
             $haveAccess = true;
         } elseif ($this->statusIsPrivate($status)) {
             return $this->repository->searchInUserPosts($string, $user->id, $status, $paginate);
@@ -252,7 +254,7 @@ class PostService
 
         $this->repository->create($post, $request);
 
-        Log::add($post->id, 'info', 'Post created.');
+        Log::add(json_encode($post->toArray()), 'info', 'Post created.');
     }
     public function update($request, $id)
     {
@@ -266,7 +268,7 @@ class PostService
         }
         $this->repository->update($post, $request);
 
-        Log::add($post->id, 'info', 'Post edited.');
+        Log::add(json_encode($post->toArray()), 'info', 'Post edited.');
     }
     public function processPost($post, $request)
     {
@@ -285,6 +287,9 @@ class PostService
         }
         if ($request->type) {
             $post->type = $request->type;
+        }
+        if (blublog_have_permission('change-post-author') and $request->author_id) {
+            $post->user_id = $request->author_id;
         }
         if ($request->new_date) {
             try {
@@ -348,19 +353,30 @@ class PostService
     public function remove($post)
     {
         if (!Gate::allows('blublog_delete_posts', $post)) {
-            Log::add($post->id, 'alert', 'User can not delete this post.');
+            Log::add(json_encode($post->toArray()), 'alert', 'User can not delete this post.');
             abort(403);
         }
-        Log::add($post->id, 'info', 'Post removed.');
+        Log::add(json_encode($post->toArray()), 'info', 'Post removed.');
 
         $this->repository->delete($post);
 
         return true;
     }
+    public function RemoveOnThisTopic($post_id)
+    {
+        $post = $this->findById($post_id);
+        $post->tag_id = null;
+        $post->save();
+        return true;
+    }
     public function onThisTopic($post)
     {
         if ($post->tag_id) {
-            $tag = Tag::findOrFail($post->tag_id);
+            $tag = $this->tagRepository->find($post->tag_id);
+            if (!$tag) {
+                $this->RemoveOnThisTopic($post->id);
+                return array();
+            }
             $posts = $tag->posts()->where('status', '=', 'publish')->latest()->limit(4)->get();
             $post_id = $post->id;
             $posts = $posts->filter(function ($value) use ($post_id) {

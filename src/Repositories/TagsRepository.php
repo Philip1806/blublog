@@ -35,7 +35,7 @@ class TagsRepository
     public function find(int $id)
     {
         return $this->query(true)
-            ->findOrFail($id);
+            ->find($id);
     }
 
     public function all()

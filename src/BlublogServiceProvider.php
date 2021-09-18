@@ -14,10 +14,10 @@ use Blublog\Blublog\Livewire\BlublogCreateEditPost;
 use Blublog\Blublog\Livewire\BlublogListImages;
 use Blublog\Blublog\Livewire\BlublogLogsTable;
 use Blublog\Blublog\Livewire\BlublogCommentsTable;
+use Blublog\Blublog\Livewire\BlublogAuthorChange;
 
 use Blublog\Blublog\BlublogAdmin;
 use Blublog\Blublog\BlublogPanel;
-
 
 class BlublogServiceProvider extends ServiceProvider
 {
@@ -85,6 +85,7 @@ class BlublogServiceProvider extends ServiceProvider
         \Livewire::component('blublog-list-images', BlublogListImages::class);
         \Livewire::component('blublog-logs-table', BlublogLogsTable::class);
         \Livewire::component('blublog-comments-table', BlublogCommentsTable::class);
+        \Livewire::component('blublog-author-change', BlublogAuthorChange::class);
     }
     public function define_gates()
     {

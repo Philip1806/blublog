@@ -29,6 +29,15 @@ if (!function_exists('blublog_user_model')) {
         }
     }
 }
+if (!function_exists('blublog_have_permission')) {
+    function blublog_have_permission($permission)
+    {
+        if (auth()->user()->blublogRoles->first()->havePermission($permission)) {
+            return true;
+        }
+        return false;
+    }
+}
 if (!function_exists('blublog_can_view_status')) {
     function blublog_can_view_status($post_status)
     {

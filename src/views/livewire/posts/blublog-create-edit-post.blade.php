@@ -28,11 +28,10 @@
                         @can('blublog_create_tags')
                             <div class="input-group-append">
                                 <input wire:model.lazy="tagName" type="text" class="form-control  rounded-0"
-                                    placeholder="{{ __('blublog.enter_tag') }}">
+                                    placeholder="New tag name...">
                             </div>
                             <div class="input-group-append">
-                                <a wire:click="createTag()"
-                                    class="btn btn-outline-secondary  rounded-0">{{ __('blublog.create_tag') }}</a>
+                                <a wire:click="createTag()" class="btn btn-outline-secondary  rounded-0">Create</a>
                             </div>
                         @endcan
                     </div>
@@ -55,7 +54,7 @@
         </div>
         <div class="col-lg-3">
             <input wire:model="imageFilename" name="img" type="hidden">
-
+            <input wire:model="author_id" name="author_id" type="hidden">
             <input wire:model="maintag_id" name="maintag_id" type="hidden">
             <input wire:model="show_id" name="show_id" type="hidden">
 
@@ -92,7 +91,8 @@
                                     <h5 class="modal-title" id="staticBackdropLabel">
                                         {{ __('blublog.choose_post_image') }}
                                     </h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -133,7 +133,9 @@
                     @endforeach
                 </div>
             </div>
-
+            @if (blublog_have_permission('change-post-author'))
+                @livewire('blublog-author-change')
+            @endif
             <button wire:ignore type="button" class="btn btn-secondary btn-block my-2" data-toggle="collapse"
                 href="#postSettings" role="button" aria-expanded="false"><span class="oi oi-cog"></span>
                 Settings</button>

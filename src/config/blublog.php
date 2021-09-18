@@ -189,6 +189,7 @@ return [
         array('post-stats', 1, 2, 'User can view posts stats'),
         array('own-post-stats', 1, 2, 'User can view stats for own posts'),
         array('wait-for-approve', 0, 2, 'Users posts wait for approval'),
+        array('change-post-author', 1, 2, 'User can change the author of posts.'),
         array('create-comments', 1, 3, 'User can create comments'),
         array('edit-comments', 1, 3, 'User can edit comments'),
         array('delete-comments', 1, 3, 'User can delete comments'),

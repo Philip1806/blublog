@@ -39,6 +39,10 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class, 'blublog_posts_tags');
     }
+    public function image()
+    {
+        return $this->hasOne(File::class, 'filename', 'img');
+    }
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
