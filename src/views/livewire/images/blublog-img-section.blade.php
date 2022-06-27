@@ -7,7 +7,17 @@
                     <div class="card border border-light my-2">
                         <div class="card-body p-0">
                             <a type="button" data-toggle="modal" data-target="#image{{ $image->id }}">
-                                <img src="{{ $image->url() }}" loading="lazy" class="card-img-top">
+                                <div class="file-type">
+                                    <img src="{{ $image->thumbnailUrl() }}" loading="lazy" class="card-img-top">
+                                    <div class="centered">
+                                        @if ($image->is_video)
+                                            <span class="oi oi-video"></span>
+                                        @else
+                                            <span class="oi oi-image"></span>
+                                        @endif
+                                    </div>
+                                </div>
+
                             </a>
                             @can('blublog_delete_files', $image)
                                 <a wire:click="delete('{{ $image->id }}')"
@@ -37,7 +47,8 @@
                                     <input type="text" class="form-control my-2" value="{{ $image->url() }}">
                                     <p>URL to other sizes</p>
                                     @foreach ($image->children as $versions)
-                                        <input type="text" class="form-control my-2" value="{{ $versions->url() }}">
+                                        <input type="text" class="form-control my-2"
+                                            value="{{ $versions->url() }}">
                                     @endforeach
                                 </div>
                                 <div class="modal-footer">

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Cache;
 use Blublog\Blublog\Services\PostService;
 use Livewire\Component;
 
+use function PHPSTORM_META\type;
+
 class BlublogPostsEdit extends Component
 {
 
@@ -18,18 +20,21 @@ class BlublogPostsEdit extends Component
 
     public $slug;
     public $imageUrl;
-    public $imageDir;
+    public $fileId;
     public $status;
+    public $author_id = null;
 
 
     public $comments = false;
     public $frontPage = false;
     public $recommended = false;
 
+    public $type = "post";
+
     public $categoriesIds = array();
     public $tagsIds = array();
 
-    protected $listeners = ['imageUploaded' => 'setImage', 'videoUploaded' => 'setImage', 'imageSelected' => 'setImage'];
+    protected $listeners = ['imageUploaded' => 'setImage', 'videoUploaded' => 'setImage', 'imageSelected' => 'setImage', 'AuthorChanged'];
 
     protected $rules = [
         'post.title' => 'required|min:6|max:250',
@@ -44,8 +49,8 @@ class BlublogPostsEdit extends Component
 
     public function mount()
     {
-        $this->imageUrl  = $this->post->imageURL();
-        $this->imageDir  = $this->post->img;
+        $this->imageUrl  = $this->post->thumbnailUrl();
+        $this->fileId  = $this->post->file_id;
         $this->status  = $this->post->status;
 
         if ($this->post->comments) {
@@ -66,11 +71,20 @@ class BlublogPostsEdit extends Component
     {
         return view('blublog::livewire.posts.blublog-posts-edit')->with('categories', $categoryService->toSelectArray())->with('tags', Tag::toSelectArray());
     }
+    public function AuthorChanged($id)
+    {
+        $this->author_id = $id;
+    }
     public function setImage($image_id)
     {
         $image = File::findOrFail($image_id);
-        $this->imageUrl = $image->url();
-        $this->imageDir = $image->filename;
+        if ($image->is_video) {
+            $this->type = "video";
+        } else {
+            $this->type = "post";
+        }
+        $this->imageUrl = $image->thumbnailUrl();
+        $this->fileId = $image->id;
         $this->emit('closeModal', "#selectImageModal");
         $this->emit('closeModal', "#uploadFileModal");
 
@@ -83,7 +97,7 @@ class BlublogPostsEdit extends Component
         $myRequest->setMethod('POST');
         $myRequest->request->add(['title' => $this->post->title]);
         $myRequest->request->add(['content' => $this->post->content]);
-        $myRequest->request->add(['img' => $this->imageDir]);
+        $myRequest->request->add(['file_id' => $this->fileId]);
 
         $myRequest->request->add(['seo_title' => $this->post->seo_title]);
         $myRequest->request->add(['seo_descr' => $this->post->seo_descr]);
@@ -97,10 +111,13 @@ class BlublogPostsEdit extends Component
         $myRequest->request->add(['tags' => $this->tagsIds]);
         $myRequest->request->add(['status' => $this->status]);
         $myRequest->request->add(['slug' => $this->post->slug]);
+        $myRequest->request->add(['type' => $this->type]);
+        $myRequest->request->add(['author_id' => $this->author_id]);
 
 
         $postService->update($myRequest, $this->post->id);
         Cache::flush();
+        $this->emit('alert', ['type' => 'success', 'message' => 'Post edited.']);
     }
 
 

@@ -15,6 +15,10 @@ class Post extends Model
     protected $table = 'blublog_posts';
     protected $guarded = ['status', 'created_at'];
 
+    public function file()
+    {
+        return $this->belongsTo(File::class, 'file_id');
+    }
 
     public static function boot()
     {
@@ -84,57 +88,19 @@ class Post extends Model
         */
     }
 
-    /**
-     * Returns image url of the post.
-     * "post_image_size" from BLUblog Settings apply here.
-     *
-     * @return string
-     */
-    public function imageUrl(): string
-    {
-        if (config('blublog.post_image_size') === false) {
-            return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($this->img);
-        }
-        $number = config('blublog.post_image_size') + 1;
-        $info = pathinfo($this->img);
-        $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $number . '.' . $info['extension'];
 
-        return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($newfilename);
-    }
-
-    /**
-     * Returns image url of the post.
-     * Uses the last element of "image_sizes" from BLUblog Settings as thumbnail sizes.
-     *
-     * @return string
-     */
     public function thumbnailUrl()
     {
-        $number = (int)array_key_last(config('blublog.image_sizes')) + 1;
-        $info = pathinfo($this->img);
-
-        if ($info['filename'] == 'no-image') {
-            $newfilename = $this->img;
-        } else {
-
-            $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $number . '.' . $info['extension'];
+        if ($this->file) {
+            return $this->file->thumbnailUrl();
         }
-
-        return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($newfilename);
+        return url('\blublog-uploads\photos\no-image.jpg');
     }
-
-    /**
-     * Changes image of the post.
-     *
-     * @param string $filename
-     * @return void
-     */
-    public function changeImage($filename): void
+    public function getFileUrl()
     {
-        if ($filename) {
-            $this->img = $filename;
-        } else {
-            $this->img = 'photos/no-image.jpg';
+        if ($this->file) {
+            return $this->file->url();
         }
+        return url('\blublog-uploads\photos\no-image.jpg');
     }
 }

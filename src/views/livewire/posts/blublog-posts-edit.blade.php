@@ -67,7 +67,12 @@
                 <div class="collapse" id="uploadImage">
                     @livewire('blublog-upload-img')
                 </div>
+                <div class="mt-3">
+                    @if (blublog_have_permission('change-post-author'))
+                        @livewire('blublog-author-change')
+                    @endif
 
+                </div>
 
                 <hr>
                 <div class="custom-control custom-switch">

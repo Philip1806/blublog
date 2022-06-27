@@ -2,7 +2,7 @@
 
 return [
 
-    'version' => "2.0.0",
+    'version' => "3.0.0",
     'key' => "",
     /*
     |--------------------------------------------------------------------------
@@ -29,6 +29,7 @@ return [
     |
     */
     'files_disk' => "blublog",
+    'video_disk' => "blublog",
 
     /*
     |--------------------------------------------------------------------------
@@ -133,6 +134,8 @@ return [
             'w' => 600,
             'h' => 350,
             'crop' => false,
+            'quality' => 70,
+            'name' => "mid", // Change to 1 for images uploaded from old versions of blublog
         ],
         // Blublog uses the last image size as image thumbnail
         [
@@ -140,6 +143,8 @@ return [
             'w' => 300,
             'h' => 175,
             'crop' => true,
+            'quality' => 70,
+            'name' => "thumb", // Change to 2 for images uploaded from old versions of blublog
         ],
     ],
 

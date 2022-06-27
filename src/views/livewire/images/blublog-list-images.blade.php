@@ -5,8 +5,15 @@
                 <div class="col-md-3 course-block course-block-lessons">
                     <div class="card border border-light my-2">
                         <div class="card-body p-0">
-                            <img src="{{ $image->url() }}" loading="lazy"
+                            <img src="{{ $image->thumbnailUrl() }}" loading="lazy"
                                 wire:click="imageSelected('{{ $image->id }}')" class="card-img-top">
+                            <div class="centered text-white">
+                                @if ($image->is_video)
+                                    <span class="oi oi-video shadow display-4"></span>
+                                @else
+                                    <span class="oi oi-image shadow display-4"></span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

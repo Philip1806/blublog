@@ -36,3 +36,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="uploadVideoFileModal" tabindex="-1" aria-labelledby="uploadVideoFileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadVideoFileModalLabel">Качване на видео</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @livewire('blublog-video-upload')
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отказ</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -45,35 +45,114 @@ class File extends Model
     {
         return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($this->filename);
     }
+    public function isParant()
+    {
+        return ($this->parent_id) ? false : true;
+    }
 
     /**
      * Delete image/file.
      *
-     * @param File $file
      * @return boolean True if successful, false if there was error.
      */
-    public static function deleteImage(File $file): bool
+
+    public function deleteImage()
     {
-        if (!Gate::allows('blublog_delete_files', $file)) {
-            Log::add($file->id, 'alert', 'User do not have permission to delete this image.');
+        if (!Gate::allows('blublog_delete_files', $this)) {
+            Log::add($this->id, 'alert', 'User do not have permission to delete this image.');
             abort(403);
         }
         try {
-            foreach ($file->children as $image) {
+            foreach ($this->children as $image) {
                 Storage::disk(config('blublog.files_disk', 'blublog'))->delete($image->filename);
                 $image->delete();
             }
-            Storage::disk(config('blublog.files_disk', 'blublog'))->delete($file->filename);
-            Log::add($file->id, 'info', 'Image deleted.');
-            $file->delete();
-            return true;
-        } catch (Exception $e) {
+            Storage::disk(config('blublog.files_disk', 'blublog'))->delete($this->filename);
+            Log::add($this->id, 'info', 'Image deleted.');
+
+            $causes = Post::where('file_id', '=', $this->id)->get();
+            foreach ($causes as $cause) {
+                $cause->file_id = null;
+                $cause->save();
+            }
+            $posts = Post::where('file_id', '=', $this->id)->get();
+            foreach ($posts as $post) {
+                $post->file_id = null;
+                $post->save();
+            }
+            $this->delete();
+            if (!$causes->isEmpty() or !$posts->isEmpty()) {
+                return 2;
+            } else {
+                return true;
+            }
+        } catch (\Exception $e) {
             Log::add($e->getMessage(), 'error', 'Can not delete image.');
+            return false;
+        }
+    }
+
+    /**
+     * Returns image url of the last image size in "image_sizes" array.
+     *
+     * @return string
+     */
+    public function thumbnailUrl()
+    {
+        if (!$this->isParant()) {
+            return $this->url();
+        }
+        if ($this->is_video) {
+            return $this->children->last()->url();
+        }
+        $lastSize = last(config('blublog.image_sizes'));
+        return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($this->getFilenameForSize($lastSize['name']));
+    }
+    public function getFilenameForSize(string $size)
+    {
+        if ($this->is_video) {
+            $videoInfo = pathinfo($this->children->last()->filename);
+            $info = pathinfo($this->filename);
+            return $videoInfo['dirname'] . '/' . $info['filename'] . '_' . $size . '.' .  $videoInfo['extension'];
+        } else {
+            $info = pathinfo($this->filename);
+            return $info['dirname'] . '/' . $info['filename'] . '_' . $size . '.' . $info['extension'];
+        }
+    }
+    public function imageSizeUrl(string $sizeName)
+    {
+        if (!$this->isParant()) {
+            return $this->url();
+        }
+        if (File::sizeExist($sizeName)) {
+            return  Storage::disk(config('blublog.files_disk', 'blublog'))->url($this->getFilenameForSize($sizeName));
+        }
+        return $this->url();
+    }
+    /**
+     * Make a Intervention Image Instance
+     *
+     * @param string $original_file
+     */
+    public static function makeImage(string $original_file)
+    {
+        $img = Image::make($original_file);
+        if (extension_loaded('exif')) $img->orientate();
+        return $img;
+    }
+    public static function getImage(string $imagePath)
+    {
+        return Storage::disk(config('blublog.files_disk', 'blublog'))->get($imagePath);
+    }
+    public static function sizeExist($sizeName)
+    {
+        foreach (config('blublog.image_sizes') as $size) {
+            if ($size['name'] == $sizeName) {
+                return true;
+            }
         }
         return false;
     }
-
-
     /**
      * Give the disk drive image path to the file.
      *
@@ -81,108 +160,81 @@ class File extends Model
      */
     public static function getImageDir(): string
     {
-        return 'photos/' . Carbon::now()->year . '/' . Carbon::now()->month;
+        $dir = 'photos/' . Carbon::now()->year . '/' . Carbon::now()->month . '/';
+        if (!Storage::disk(config('blublog.files_disk', 'blublog'))->exists($dir)) {
+            Storage::disk(config('blublog.files_disk', 'blublog'))->makeDirectory($dir, 0777, true, true);
+        }
+        return $dir;
+    }
+    public static function getVideoDir(): string
+    {
+        $dir = 'videos/' . Carbon::now()->year . '/' . Carbon::now()->month . '/';
+        if (!Storage::disk(config('blublog.video_disk'))->exists($dir)) {
+            Storage::disk(config('blublog.video_disk'))->makeDirectory($dir, 0777, true, true);
+        }
+        return $dir;
     }
 
-    /**
-     * Create images with sizes set at config/blublog.php from uploaded image
-     *
-     * @param string $filename Path to the uploaded image
-     * @return integer Id of the new image
-     */
-    public static function createSizes(string $filename): int
+    public static function addImage(string $filename, $parent_id = '', $is_video = false): File
     {
-
-        $original_file = Storage::disk(config('blublog.files_disk', 'blublog'))->get($filename);
-        $info = pathinfo($filename);
-        $parent_image = File::addImage($filename);
-        $img_number = 1;
+        $file = new File;
+        if ($parent_id) {
+            $file->parent_id = $parent_id;
+        }
+        $file->filename = $filename;
+        $file->is_video = $is_video;
+        $file->user_id = auth()->user()->id;
+        $file->save();
+        return $file;
+    }
+    public static function saveVideo(string $videopath, string $imagepath)
+    {
+        $video = File::addImage($videopath, '', true);
+        $original_image = File::getImage($imagepath);
+        $info = pathinfo($imagepath);
+        $videoInfo = pathinfo($videopath);
 
         foreach (config('blublog.image_sizes') as $size) {
-            $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $img_number . '.' . $info['extension'];
-            try {
-                File::createImageSize($original_file, $newfilename, $parent_image, $size);
-            } catch (\Exception $e) {
-                Session::flash('error', $e->getMessage());
-                Log::add($e->getMessage(), 'error', 'Could not convert image to sizes.');
-                break;
-            }
-            $img_number++;
+            $newfilename = $info['dirname'] . '/' . $videoInfo['filename'] . '_' . $size['name'] . '.' . $info['extension'];
+            File::createImageSize($original_image, $newfilename, $video, $size);
+        }
+        Storage::disk(config('blublog.files_disk', 'blublog'))->delete($imagepath);
+        return $video->id;
+    }
+    public static function createSizes(string $filename)
+    {
+        $original_file = File::getImage($filename);
+        $info = pathinfo($filename);
+        $parent_image = File::addImage($filename);
+
+        foreach (config('blublog.image_sizes') as $size) {
+            $newfilename = $info['dirname'] . '/' . $info['filename'] . '_' . $size['name'] . '.' . $info['extension'];
+            File::createImageSize($original_file, $newfilename, $parent_image, $size);
         }
 
         return $parent_image->id;
     }
-
-    /**
-     * Create a size for a image
-     * Parent image is the original image that was uploaded
-     * and can have from 1 to unlimited number of children (sizes).
-     *
-     * @param string $original_filename
-     * @param string $new_filename
-     * @param File $parent_image
-     * @param array $size
-     * @return void
-     */
     public static function createImageSize(string $original_filename, string $new_filename, File $parent_image, array $size)
     {
-        $img = Image::make($original_filename);
+        $img = File::makeImage($original_filename);
         if ($size['crop']) {
             $img->fit($size['w'], $size['h'], function ($constraint) {
                 $constraint->upsize();
             })->interlace();
         } else {
-            $img->widen($size['w'], function ($constraint) {
-                $constraint->upsize();
-            });
+            if ($size['h'] and !$size['w']) {
+                $img->resize(null, $size['h'], function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+            } else {
+                $img->resize($size['w'], null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+            }
         }
-        $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->getAdapter()->getPathPrefix() . $new_filename, config('blublog.image_quality'));
+        $img->save(Storage::disk(config('blublog.files_disk', 'blublog'))->path('/') . $new_filename, $size['quality']);
         File::addImage($new_filename, $parent_image->id);
-    }
-
-    /**
-     * Add image to database.
-     *
-     * @param string $filename Path to the file from the blublog disk
-     * @param string $parent_id Optional. If the image is child, give the id of the parent
-     * @return File
-     */
-    public static function addImage(string $filename, $parent_id = ''): File
-    {
-
-        $file = new File;
-        if ($parent_id) {
-            $file->parent_id = $parent_id;
-        }
-        $file->user_id = Auth::user()->id;
-        $file->size = File::get_file_size_from_bytes(Storage::disk(config('blublog.files_disk', 'blublog'))->size($filename));;
-        $file->filename = $filename;
-        $file->save();
-        Log::add($file->id, 'info', 'Image added.');
-        return $file;
-    }
-    public static function get_file_size_from_bytes(int $bytes): string
-    {
-        if (!$bytes) {
-            return false;
-        }
-        if ($bytes > 1000000000) {
-            $size = File::convert_bytes($bytes, 'G') . " GB";
-        } elseif ($bytes > 1000000) {
-            $size = File::convert_bytes($bytes, 'M') . " MB";
-        } else {
-            $size = File::convert_bytes($bytes, 'K') . " KB";
-        }
-        return $size;
-    }
-
-    public static function convert_bytes(int $bytes, string $to, int $decimal_places = 1): int
-    {
-        $formulas = array(
-            'K' => number_format($bytes / 1024, $decimal_places),
-            'M' => number_format($bytes / 1048576, $decimal_places),
-            'G' => number_format($bytes / 1073741824, $decimal_places)
-        );
-        return isset($formulas[$to]) ? $formulas[$to] : 0;
     }
 }

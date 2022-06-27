@@ -21,6 +21,15 @@ class BlublogImageSection extends Component
     }
     public function delete($id)
     {
-        File::deleteImage(File::findOrFail($id));
+        $image = File::findOrFail($id);
+        $status = $image->deleteImage();
+        if ($status) {
+            $this->emit('alert', ['type' => 'info', 'message' => 'Image removed']);
+        } else {
+            $this->emit('alert', ['type' => 'error', 'message' => 'Cannot remove image.']);
+        }
+        if ($status === 2) {
+            $this->emit('alert', ['type' => 'warning', 'message' => 'Image removed. Post affected.']);
+        }
     }
 }

@@ -21,12 +21,14 @@ class BlublogPostsCreate extends Component
 
     public $slug;
     public $imageUrl;
-    public $imageDir;
-    public $status;
+    public $fileId;
+    public $status = "publish";
 
     public $comments = true;
     public $frontPage = false;
     public $recommended = false;
+
+    public $type = "post";
 
     public $categoriesIds = array();
     public $tagsIds = array();
@@ -37,7 +39,7 @@ class BlublogPostsCreate extends Component
     protected $rules = [
         'title' => 'required|min:6|max:250',
         'content' => 'required',
-        'status' => 'required',
+        'status' => 'max:50',
         'categoriesIds' => 'required',
 
     ];
@@ -56,7 +58,7 @@ class BlublogPostsCreate extends Component
         $myRequest->setMethod('POST');
         $myRequest->request->add(['title' => $this->title]);
         $myRequest->request->add(['content' => $this->content]);
-        $myRequest->request->add(['img' => $this->imageDir]);
+        $myRequest->request->add(['file_id' => $this->fileId]);
 
         $myRequest->request->add(['seo_title' => $this->seoTitle]);
         $myRequest->request->add(['seo_descr' => $this->seoDescr]);
@@ -69,16 +71,22 @@ class BlublogPostsCreate extends Component
         $myRequest->request->add(['categories' => $this->categoriesIds]);
         $myRequest->request->add(['status' => $this->status]);
         $myRequest->request->add(['tags' => $this->tagsIds]);
+        $myRequest->request->add(['type' => $this->type]);
         $postService->create($myRequest);
         Cache::flush();
-        $this->emit('alert', ['type' => 'info', 'message' => 'Post added.']);
+        $this->emit('alert', ['type' => 'success', 'message' => 'Post added.']);
     }
 
     public function setImage($image_id)
     {
         $image = File::findOrFail($image_id);
         $this->imageUrl = $image->url();
-        $this->imageDir = $image->filename;
+        if ($image->is_video) {
+            $this->type = "video";
+        } else {
+            $this->type = "post";
+        }
+        $this->fileId = $image->id;
         $this->emit('closeModal', "#selectImageModal");
         $this->emit('closeModal', "#uploadFileModal");
 

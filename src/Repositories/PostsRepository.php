@@ -168,18 +168,19 @@ class PostsRepository
     }
     public function update(Post $post, $request)
     {
+        $post->type = $request->type;
+        $post->file_id = $request->file_id;
         $post->tags()->sync($request->tags);
         $post->categories()->sync($request->categories);
-        $post->changeImage($request->img);
-
         $post->save();
     }
     public function create(Post $post, $request)
     {
+        $post->type = $request->type;
+        $post->file_id = $request->file_id;
         $post->save();
         $post->tags()->sync($request->tags, false);
         $post->categories()->sync($request->categories, false);
-        $post->changeImage($request->img);
         $post->save();
     }
 }
