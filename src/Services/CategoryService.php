@@ -56,4 +56,13 @@ class CategoryService
     {
         return $category->getPosts()->paginate(config('blublog.posts-per-page-from-category'));
     }
+    public function toSelectArray()
+    {
+        $allCategories = $this->getAll();
+        $categories = array();
+        foreach ($allCategories as $category) {
+            $categories[$category->id] = $category->title;
+        }
+        return $categories;
+    }
 }

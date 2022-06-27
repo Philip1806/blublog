@@ -125,8 +125,8 @@ class PostService
         if (!in_array($status, $list_of_status)) {
             throw new InvalidPostStatusException;
         }
-
-        for ($i = 0; $i < count(--$list_of_status); $i++) {
+        $number_of_codes = count($list_of_status);
+        for ($i = 0; $i < --$number_of_codes; $i++) {
             if ($list_of_status[$i] == $status) {
                 return $list_of_status_access[$i];
             }

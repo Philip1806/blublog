@@ -47,8 +47,20 @@
 
     @include('blublog::panel.layout._footer')
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @livewireScripts
+    <script>
+        window.livewire.on('alert', param => {
+            toastr[param['type']](param['message'], param['title']);
+        });
+        window.livewire.on('closeModal', id => {
+            $(id).modal('hide');
+        })
+        window.livewire.on('showModal', id => {
+            $(id).modal('show');
+        })
+    </script>
+
     @stack('scripts')
 </body>
 

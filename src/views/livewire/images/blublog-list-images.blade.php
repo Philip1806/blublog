@@ -5,9 +5,8 @@
                 <div class="col-md-3 course-block course-block-lessons">
                     <div class="card border border-light my-2">
                         <div class="card-body p-0">
-                            <a type="button" wire:click="selected('{{ $image->id }}')">
-                                <img src="{{ $image->url() }}" loading="lazy" class="card-img-top">
-                            </a>
+                            <img src="{{ $image->url() }}" loading="lazy"
+                                wire:click="imageSelected('{{ $image->id }}')" class="card-img-top">
                         </div>
                     </div>
                 </div>
@@ -15,7 +14,7 @@
         </div>
     @empty
         <div class="alert alert-info" role="alert">
-            There are no uploaded photos. :(
+            Няма качени файлове.
         </div>
     @endforelse
     {{ $images->links() }}

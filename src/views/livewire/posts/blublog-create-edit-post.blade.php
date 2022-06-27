@@ -21,7 +21,7 @@
             <div class="card border">
                 <div class="card-header"><span class="oi oi-tags"></span> Tags</div>
                 <div class="card-body text-primary">
-                    <div class="input-group">
+                    <div class="input-group" wire:ignore>
 
                         {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multi', 'multiple' => 'multiple', 'id' => 'multisel']) }}
 
@@ -91,8 +91,7 @@
                                     <h5 class="modal-title" id="staticBackdropLabel">
                                         {{ __('blublog.choose_post_image') }}
                                     </h5>
-                                    <button type="button" class="close" data-dismiss="modal"
-                                        aria-label="Close">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>

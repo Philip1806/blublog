@@ -5,7 +5,6 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
     <script>
         $(".select2-multi").select2();
-
     </script>
     <script>
         $(document).ready(function() {
@@ -13,7 +12,6 @@
                 height: 400
             });
         });
-
     </script>
     <script>
         window.livewire.on('closeModal', () => {
@@ -28,7 +26,6 @@
 
             $('#multisel').val(oldValue).trigger('change');
         })
-
     </script>
     <script>
         $(function() {
@@ -38,7 +35,6 @@
             });
             $("#datepicker").datepicker("option", "dateFormat", "dd/mm/yy");
         });
-
     </script>
 @endpush
 

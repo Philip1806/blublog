@@ -14,4 +14,13 @@ class Tag extends Model
     {
         return $this->belongsToMany(Post::class, 'blublog_posts_tags');
     }
+    public static function toSelectArray()
+    {
+        $allCategories = self::all();
+        $categories = array();
+        foreach ($allCategories as $category) {
+            $categories[$category->id] = $category->title;
+        }
+        return $categories;
+    }
 }
