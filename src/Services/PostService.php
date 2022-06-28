@@ -284,6 +284,8 @@ class PostService
         $post->front = $request->front ? true :  false;
         if ($request->maintag_id) {
             $post->tag_id = $request->maintag_id;
+        } else {
+            $post->tag_id = null;
         }
         if ($request->type) {
             $post->type = $request->type;

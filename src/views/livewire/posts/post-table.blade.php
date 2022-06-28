@@ -16,7 +16,18 @@
                 <tbody>
                     @forelse ($posts as $post)
                         <tr>
-                            <th><img src="{{ $post->thumbnailUrl() }}" class="img-fluid"></th>
+                            <th>
+                                <div class="file-type">
+                                    <img src="{{ $post->thumbnailUrl() }}" class="img-fluid">
+                                    <div class="centered text-white">
+                                        @if ($post->type == 'video')
+                                            <span class="oi oi-video"></span>
+                                        @else
+                                            <span class="oi oi-image"></span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </th>
                             <th>
                                 @include('blublog::panel.posts._postname')
                             </th>

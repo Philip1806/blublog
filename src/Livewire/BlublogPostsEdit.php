@@ -7,7 +7,7 @@ use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Services\CategoryService;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Blublog\Blublog\Services\PostService;
 use Livewire\Component;
 
@@ -15,6 +15,7 @@ use function PHPSTORM_META\type;
 
 class BlublogPostsEdit extends Component
 {
+    use AuthorizesRequests;
 
     public Post $post;
 
@@ -23,18 +24,18 @@ class BlublogPostsEdit extends Component
     public $fileId;
     public $status;
     public $author_id = null;
-
+    public $maintag_id = null;
 
     public $comments = false;
     public $frontPage = false;
     public $recommended = false;
 
-    public $type = "post";
+    public $type;
 
     public $categoriesIds = array();
     public $tagsIds = array();
 
-    protected $listeners = ['imageUploaded' => 'setImage', 'videoUploaded' => 'setImage', 'imageSelected' => 'setImage', 'AuthorChanged'];
+    protected $listeners = ['TagCreated' => 'addTagToSelect2', 'imageUploaded' => 'setImage', 'videoUploaded' => 'setImage', 'imageSelected' => 'setImage', 'AuthorChanged', 'MainTagSelected' => 'selectMaintag'];
 
     protected $rules = [
         'post.title' => 'required|min:6|max:250',
@@ -49,9 +50,12 @@ class BlublogPostsEdit extends Component
 
     public function mount()
     {
+        $this->tags =  Tag::toSelectArray();
         $this->imageUrl  = $this->post->thumbnailUrl();
         $this->fileId  = $this->post->file_id;
         $this->status  = $this->post->status;
+        $this->type  = $this->post->type;
+        $this->maintag_id  = $this->post->tag_id;
 
         if ($this->post->comments) {
             $this->comments = true;
@@ -62,7 +66,9 @@ class BlublogPostsEdit extends Component
         if ($this->post->recommended) {
             $this->recommended = true;
         }
-
+        foreach ($this->post->tags as $tag) {
+            array_push($this->tagsIds, $tag->id);
+        }
         foreach ($this->post->categories as $category) {
             array_push($this->categoriesIds, $category->id);
         }
@@ -74,6 +80,16 @@ class BlublogPostsEdit extends Component
     public function AuthorChanged($id)
     {
         $this->author_id = $id;
+        $this->emit('alert', ['type' => 'info', 'message' => 'Author Changed.']);
+    }
+    public function selectMaintag($id)
+    {
+        $this->maintag_id = $id;
+        if ($id) {
+            $this->emit('alert', ['type' => 'info', 'message' => 'On This Topic is set.']);
+        } else {
+            $this->emit('alert', ['type' => 'info', 'message' => 'On This Topic is unset.']);
+        }
     }
     public function setImage($image_id)
     {
@@ -92,6 +108,7 @@ class BlublogPostsEdit extends Component
     }
     public function submit(PostService $postService)
     {
+        $this->authorize('blublog_edit_post', $this->post);
         $this->validate();
         $myRequest = new \Illuminate\Http\Request();
         $myRequest->setMethod('POST');
@@ -113,11 +130,12 @@ class BlublogPostsEdit extends Component
         $myRequest->request->add(['slug' => $this->post->slug]);
         $myRequest->request->add(['type' => $this->type]);
         $myRequest->request->add(['author_id' => $this->author_id]);
-
+        $myRequest->request->add(['maintag_id' => $this->maintag_id]);
 
         $postService->update($myRequest, $this->post->id);
         Cache::flush();
-        $this->emit('alert', ['type' => 'success', 'message' => 'Post edited.']);
+        session()->flash('success', 'Post "' . $this->post->title . '" was edited.');
+        return redirect()->route("blublog.panel.posts.index");
     }
 
 
@@ -142,6 +160,11 @@ class BlublogPostsEdit extends Component
         if (($key = array_search($id, $this->categoriesIds)) !== false) {
             unset($this->categoriesIds[$key]);
         }
+    }
+    public function addTagToSelect2($tag)
+    {
+        $this->addTag($tag["id"]);
+        $this->emit("AddNewSelect2Tag", $tag);
     }
     public function addTag($id)
     {

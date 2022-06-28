@@ -17,6 +17,9 @@ class AlterBlublogPostsTable extends Migration
             $table->dropColumn('img');
             $table->unsignedBigInteger('file_id')->nullable()->after('title');
         });
+        Schema::table('blublog_images', function (Blueprint $table) {
+            $table->boolean('is_video')->default(0);
+        });
     }
 
     /**
@@ -28,6 +31,9 @@ class AlterBlublogPostsTable extends Migration
     {
         Schema::table('blublog_posts', function (Blueprint $table) {
             $table->dropColumn('file_id');
+        });
+        Schema::table('blublog_images', function (Blueprint $table) {
+            $table->dropColumn('is_video');
         });
     }
 }

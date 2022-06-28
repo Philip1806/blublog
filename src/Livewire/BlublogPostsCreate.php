@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\Cache;
 use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Services\CategoryService;
 use Blublog\Blublog\Services\PostService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class BlublogPostsCreate extends Component
 {
+    use AuthorizesRequests;
+
     public $title;
     public $content;
 
@@ -18,6 +21,8 @@ class BlublogPostsCreate extends Component
     public $seoDescr;
     public $excerpt;
 
+    public $author_id = null;
+    public $maintag_id = null;
 
     public $slug;
     public $imageUrl;
@@ -33,7 +38,7 @@ class BlublogPostsCreate extends Component
     public $categoriesIds = array();
     public $tagsIds = array();
 
-    protected $listeners = ['imageUploaded' => 'setImage', 'videoUploaded' => 'setImage', 'imageSelected' => 'setImage'];
+    protected $listeners = ['TagCreated' => 'addTagToSelect2', 'imageUploaded' => 'setImage', 'videoUploaded' => 'setImage', 'imageSelected' => 'setImage',  'AuthorChanged', 'MainTagSelected' => 'selectMaintag'];
 
 
     protected $rules = [
@@ -51,8 +56,23 @@ class BlublogPostsCreate extends Component
     {
         return view('blublog::livewire.posts.blublog-posts-create')->with('categories', $categoryService->toSelectArray())->with('tags', Tag::toSelectArray());
     }
+    public function AuthorChanged($id)
+    {
+        $this->author_id = $id;
+        $this->emit('alert', ['type' => 'info', 'message' => 'Author Changed.']);
+    }
+    public function selectMaintag($id)
+    {
+        $this->maintag_id = $id;
+        if ($id) {
+            $this->emit('alert', ['type' => 'info', 'message' => 'On This Topic is set.']);
+        } else {
+            $this->emit('alert', ['type' => 'info', 'message' => 'On This Topic is unset.']);
+        }
+    }
     public function submit(PostService $postService)
     {
+        $this->authorize('blublog_create_posts');
         $this->validate();
         $myRequest = new \Illuminate\Http\Request();
         $myRequest->setMethod('POST');
@@ -72,15 +92,19 @@ class BlublogPostsCreate extends Component
         $myRequest->request->add(['status' => $this->status]);
         $myRequest->request->add(['tags' => $this->tagsIds]);
         $myRequest->request->add(['type' => $this->type]);
+        $myRequest->request->add(['author_id' => $this->author_id]);
+        $myRequest->request->add(['maintag_id' => $this->maintag_id]);
+
         $postService->create($myRequest);
         Cache::flush();
-        $this->emit('alert', ['type' => 'success', 'message' => 'Post added.']);
+        session()->flash('success', 'Post created.');
+        return redirect()->route("blublog.panel.posts.index");
     }
 
     public function setImage($image_id)
     {
         $image = File::findOrFail($image_id);
-        $this->imageUrl = $image->url();
+        $this->imageUrl = $image->thumbnailUrl();
         if ($image->is_video) {
             $this->type = "video";
         } else {
@@ -114,6 +138,11 @@ class BlublogPostsCreate extends Component
         if (($key = array_search($id, $this->categoriesIds)) !== false) {
             unset($this->categoriesIds[$key]);
         }
+    }
+    public function addTagToSelect2($tag)
+    {
+        $this->addTag($tag["id"]);
+        $this->emit("AddNewSelect2Tag", $tag);
     }
     public function addTag($id)
     {

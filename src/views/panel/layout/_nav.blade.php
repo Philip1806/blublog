@@ -12,8 +12,8 @@
                             class="oi oi-justify-left"></span> Posts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('blublog.panel.images') }}"><span class="oi oi-image"></span>
-                        Images</a>
+                    <a class="nav-link" href="{{ route('blublog.panel.images') }}"><span class="oi oi-file"></span>
+                        File Manager</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('blublog.panel.users.index') }}"><span

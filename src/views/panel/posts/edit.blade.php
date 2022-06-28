@@ -22,11 +22,17 @@
                 tabsize: 2,
                 height: 400
             });
-            $(".select2-multitag").select2();
-
         });
         $(".select2-multi").select2();
         $(".select2-multitag").select2();
+        window.livewire.on('AddNewSelect2Tag', array => {
+            var data = {
+                id: array["id"],
+                text: array["title"]
+            };
+            var newOption = new Option(data.text, data.id, true, true);
+            $('.select2-multitag').append(newOption).trigger('change');
+        })
     </script>
 @endPush
 

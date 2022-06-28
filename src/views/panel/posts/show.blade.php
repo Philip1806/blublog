@@ -8,7 +8,16 @@
     <p class="display-4">{{ $post->title }}</p>
     <div class="row">
         <div class="col-lg-8">
-            <img src="{{ $post->imageUrl() }}" class="img-fluid mb-2">
+            @if ($post->file and $post->file->is_video)
+                <div class="embed-responsive embed-responsive-16by9">
+                    <video controls poster="{{ $post->file->imageSizeUrl('mid') }}">
+                        <source src="{{ $post->getFileUrl() }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            @else
+                <img src="{{ $post->getFileUrl() }}" class="img-fluid mb-2" alt="{{ $post->title }} image">
+            @endif
             {!! $post->content !!}
         </div>
         <div class="col-lg-4">

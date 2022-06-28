@@ -1,6 +1,6 @@
 <div>
     <form wire:submit.prevent="submit">
-        <label class="form-label">Видео</label>
+        <label class="form-label">Video</label>
         <div class="custom-file my-2">
             <input type="file" wire:model="video" class="custom-file-input">
             <label class="custom-file-label">Choose video...</label>
@@ -23,7 +23,7 @@
             </div>
         @endif
         <hr>
-        <label class="form-label">Постер</label>
+        <label class="form-label">Thumbnail</label>
         <div class="custom-file my-2">
             <input type="file" wire:model="photo" class="custom-file-input">
             <label class="custom-file-label">Choose image...</label>

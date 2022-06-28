@@ -9,9 +9,9 @@
                                 wire:click="imageSelected('{{ $image->id }}')" class="card-img-top">
                             <div class="centered text-white">
                                 @if ($image->is_video)
-                                    <span class="oi oi-video shadow display-4"></span>
+                                    <span class="oi oi-video"></span>
                                 @else
-                                    <span class="oi oi-image shadow display-4"></span>
+                                    <span class="oi oi-image"></span>
                                 @endif
                             </div>
                         </div>

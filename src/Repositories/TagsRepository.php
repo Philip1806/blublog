@@ -60,6 +60,10 @@ class TagsRepository
     }
     public function createFromTitle($title)
     {
+        $found = $this->byTitle($title);
+        if ($found) {
+            return $found;
+        }
         return Tag::create([
             'title' => $title,
             'slug' => blublog_create_slug($title),

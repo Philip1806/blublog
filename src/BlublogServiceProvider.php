@@ -17,6 +17,8 @@ use Blublog\Blublog\Livewire\BlublogCommentsTable;
 use Blublog\Blublog\Livewire\BlublogAuthorChange;
 use Blublog\Blublog\Livewire\BlublogPostsCreate;
 use Blublog\Blublog\Livewire\BlublogPostsEdit;
+use Blublog\Blublog\Livewire\BlublogSelectMaintag;
+use Blublog\Blublog\Livewire\BlublogCreateTag;
 
 use Blublog\Blublog\BlublogAdmin;
 use Blublog\Blublog\BlublogPanel;
@@ -90,6 +92,8 @@ class BlublogServiceProvider extends ServiceProvider
         \Livewire::component('blublog-posts-create', BlublogPostsCreate::class);
         \Livewire::component('blublog-posts-edit', BlublogPostsEdit::class);
         \Livewire::component('blublog-video-upload', BlublogVideoUpload::class);
+        \Livewire::component('blublog-select-maintag', BlublogSelectMaintag::class);
+        \Livewire::component('blublog-create-tag', BlublogCreateTag::class);
     }
     public function define_gates()
     {

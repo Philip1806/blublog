@@ -26,8 +26,15 @@
                 <div class="card border my-2">
                     <div class="card-header"><span class="oi oi-tags"></span> Tags</div>
                     <div class="card-body text-primary">
-                        <div class="input-group" wire:ignore>
-                            {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multitag', 'multiple' => 'multiple']) }}
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <div class="input-group" wire:ignore>
+                                    {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multitag', 'multiple' => 'multiple']) }}
+                                </div>
+                            </div>
+                            <div class="input-group-append">
+                                @livewire('blublog-create-tag')
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -44,8 +51,6 @@
                     Save
                 </button>
 
-
-                <label class="form-label">Cover</label>
                 @if ($imageUrl)
                     <img src="{{ $imageUrl }}" class="img-fluid w-100 my-2">
                 @endif
@@ -71,10 +76,9 @@
                     @if (blublog_have_permission('change-post-author'))
                         @livewire('blublog-author-change')
                     @endif
-
+                    @livewire('blublog-select-maintag', ['selected' => $maintag_id])
                 </div>
 
-                <hr>
                 <div class="custom-control custom-switch">
                     <input wire:click="toggleComments()" type="checkbox" class="custom-control-input"
                         @if ($comments) checked @endif>
@@ -95,17 +99,26 @@
                         Recommended Post
                     </label>
                 </div>
-                <label class="form-label">SLUG</label>
-                <input type="text" wire:model.lazy="post.slug" class="form-control mb-2">
 
-                <label class="form-label">Seo title</label>
-                <input type="text" wire:model.lazy="post.seo_title" class="form-control">
+                <a class="btn btn-primary btn-block my-2" data-toggle="collapse" href="#optionsCollapse" role="button"
+                    aria-expanded="false" aria-controls="optionsCollapse">
+                    More Options
+                </a>
 
-                <label class="form-label">Seo description</label>
-                <input type="text" wire:model.lazy="post.seo_descr" class="form-control">
+                <div class="collapse" id="optionsCollapse">
+                    <label class="form-label">SLUG</label>
+                    <input type="text" wire:model.lazy="post.slug" class="form-control mb-2">
 
-                <label class="form-label">Excerpt</label>
-                <input type="text" wire:model.lazy="post.excerpt" class="form-control">
+                    <label class="form-label">Seo title</label>
+                    <input type="text" wire:model.lazy="post.seo_title" class="form-control">
+
+                    <label class="form-label">Seo description</label>
+                    <input type="text" wire:model.lazy="post.seo_descr" class="form-control">
+
+                    <label class="form-label">Excerpt</label>
+                    <input type="text" wire:model.lazy="post.excerpt" class="form-control">
+                </div>
+
             </div>
         </div>
     </form>
@@ -119,6 +132,10 @@
             let categoriesIds = @this.categoriesIds;
             $('.select2-multi').val(categoriesIds);
             $('.select2-multi').trigger('change');
+
+            let tagsIds = @this.tagsIds;
+            $('.select2-multitag').val(tagsIds);
+            $('.select2-multitag').trigger('change');
         })
         $('#content').on('summernote.change', function(we, contents, $editable) {
             @this.set('post.content', contents);

@@ -21,8 +21,15 @@
                 <div class="card border my-2">
                     <div class="card-header"><span class="oi oi-tags"></span> Tags</div>
                     <div class="card-body text-primary">
-                        <div class="input-group" wire:ignore>
-                            {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multitag', 'multiple' => 'multiple']) }}
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <div class="input-group" wire:ignore>
+                                    {{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multitag', 'multiple' => 'multiple']) }}
+                                </div>
+                            </div>
+                            <div class="input-group-append">
+                                @livewire('blublog-create-tag')
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -39,7 +46,6 @@
                     <span class="oi oi-circle-check"></span>
                     Create
                 </button>
-                <label class="form-label">Cover</label>
                 @if ($imageUrl)
                     <img src="{{ $imageUrl }}" class="img-fluid w-100 my-2">
                 @endif
@@ -61,9 +67,12 @@
                 <div class="collapse" id="uploadImage">
                     @livewire('blublog-upload-img')
                 </div>
-
-                <hr>
-
+                <div class="mt-3">
+                    @if (blublog_have_permission('change-post-author'))
+                        @livewire('blublog-author-change')
+                    @endif
+                    @livewire('blublog-select-maintag', ['selected' => $maintag_id])
+                </div>
                 <div class="custom-control custom-switch">
                     <input wire:click="toggleComments()" type="checkbox" class="custom-control-input"
                         @if ($comments) checked @endif>
@@ -84,15 +93,24 @@
                         Recommended Post
                     </label>
                 </div>
+                <a class="btn btn-primary btn-block my-2" data-toggle="collapse" href="#optionsCollapse" role="button"
+                    aria-expanded="false" aria-controls="optionsCollapse">
+                    More Options
+                </a>
 
-                <label class="form-label">Seo title</label>
-                <input type="text" wire:model.lazy="seoTitle" class="form-control">
+                <div class="collapse" id="optionsCollapse">
+                    <label class="form-label">Seo title</label>
+                    <input type="text" wire:model.lazy="seoTitle" class="form-control">
 
-                <label class="form-label">Seo description</label>
-                <input type="text" wire:model.lazy="seoDescr" class="form-control">
+                    <label class="form-label">Seo description</label>
+                    <input type="text" wire:model.lazy="seoDescr" class="form-control">
 
-                <label class="form-label">Excerpt</label>
-                <input type="text" wire:model.lazy="excerpt" class="form-control">
+                    <label class="form-label">Excerpt</label>
+                    <input type="text" wire:model.lazy="excerpt" class="form-control">
+                </div>
+
+
+
             </div>
         </div>
     </form>
