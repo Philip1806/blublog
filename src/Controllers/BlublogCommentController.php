@@ -5,7 +5,7 @@ namespace   Blublog\Blublog\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Blublog\Blublog\Models\Comment;
-
+use Blublog\Blublog\Models\Log;
 use Session;
 
 class BlublogCommentController extends Controller

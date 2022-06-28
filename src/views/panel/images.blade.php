@@ -6,7 +6,9 @@
             @livewire('blublog-img-section')
         </div>
         <div class="col-lg-4">
-            <label>Upload:</label>
+            <div class="lead p-2 bg-dark text-white text-center">
+                Upload:
+            </div>
 
             <div class="btn-group btn-block" role="group" wire:ignore>
                 <button type="button" class="btn btn-secondary rounded-0" data-toggle="modal"

@@ -27,7 +27,7 @@ class BlublogUploadFile extends Component
     {
         $this->authorize('blublog_upload_files');
         $this->validate();
-        $this->emit('imageUploaded', File::createSizes($this->photo->store(File::getImageDir(), 'blublog')));
+        $this->emit('imageUploaded', File::createSizes($this->photo->store(File::getImageDir(), config('blublog.files_disk', 'blublog'))));
         $this->reset();
         $this->emit('alert', ['type' => 'info', 'message' => 'Image uploaded and saved to server.']);
     }

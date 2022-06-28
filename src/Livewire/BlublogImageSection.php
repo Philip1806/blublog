@@ -9,6 +9,10 @@ use Livewire\WithPagination;
 class BlublogImageSection extends Component
 {
     use WithPagination;
+
+    public $unused = false;
+    public $videos = false;
+
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ['imageUploaded' => '$refresh'];
@@ -16,6 +20,17 @@ class BlublogImageSection extends Component
     public function render()
     {
         $images = File::whereNull('parent_id')->latest()->paginate(9);
+        if ($this->unused && $this->videos) {
+            $this->reset();
+        }
+        if ($this->unused) {
+            $images = File::whereNull('parent_id')->get()->reject(function ($element) {
+                return $element->usedInPost() != false;
+            });
+        }
+        if ($this->videos) {
+            $images = File::whereNull('parent_id')->where('is_video', '=', true)->paginate(9);
+        }
 
         return view('blublog::livewire.images.blublog-img-section')->with('images', $images);
     }
@@ -31,5 +46,13 @@ class BlublogImageSection extends Component
         if ($status === 2) {
             $this->emit('alert', ['type' => 'warning', 'message' => 'Image removed. Post affected.']);
         }
+    }
+    public function toggleUnused()
+    {
+        ($this->unused) ? $this->unused = false : $this->unused = true;
+    }
+    public function toggleVideos()
+    {
+        ($this->videos) ? $this->videos = false : $this->videos = true;
     }
 }

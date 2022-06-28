@@ -1,4 +1,24 @@
 <div>
+    <div class="row mb-2">
+        <div class="col-sm">
+            <div class="custom-control custom-switch">
+                <input wire:click="toggleUnused()" type="checkbox" class="custom-control-input"
+                    @if ($unused) checked @endif>
+                <label wire:click="toggleUnused()" class="custom-control-label" for="customSwitches">
+                    Only Unused
+                </label>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="custom-control custom-switch">
+                <input wire:click="toggleVideos()" type="checkbox" class="custom-control-input"
+                    @if ($videos) checked @endif>
+                <label wire:click="toggleVideos()" class="custom-control-label" for="customSwitches">
+                    Only Videos
+                </label>
+            </div>
+        </div>
+    </div>
     @foreach ($images->chunk(3) as $chunks)
         <div class="row course-set courses__row">
             @foreach ($chunks as $image)
@@ -46,7 +66,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <p type="button" class="btn btn-primary">
-                                        Size <span class="badge badge-light">{{ $image->size }}</span>
+                                        Uploaded by: {{ $image->user->name }}
+                                    </p>
+                                    <p type="button" class="btn btn-primary">
+                                        Uploaded on: {{ $image->created_at }}
                                     </p>
                                     <p>Original image URL</p>
                                     <input type="text" class="form-control my-2" value="{{ $image->url() }}">
@@ -66,5 +89,7 @@
             @endforeach
         </div>
     @endforeach
-    {{ $images->links() }}
+    @if (method_exists($images, 'links'))
+        {{ $images->links() }}
+    @endif
 </div>

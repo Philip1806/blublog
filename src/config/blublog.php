@@ -165,6 +165,7 @@ return [
     /**
      * Comments Settings
      */
+    'allow-comments' => true,
     'spam-question' => "What is 2 * 6?",
     'spam-question-answer' => 12,
     // Users or guest who have approved comments will not wait for approving 

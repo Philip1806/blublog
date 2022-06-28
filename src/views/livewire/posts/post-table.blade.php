@@ -41,8 +41,9 @@
                             </td>
                             <td>
                                 @can('blublog_delete_posts', $post)
-                                    <a wire:click="delete('{{ $post->id }}')" class="btn btn-danger btn-sm"
-                                        role="button"><span class="oi oi-circle-x"></span> Delete</a>
+                                    <a wire:click="deleteId('{{ $post->id }}')" class="btn btn-danger btn-sm"
+                                        role="button" data-toggle="modal" data-target="#confirmDelete"><span
+                                            class="oi oi-circle-x"></span> Delete</a>
                                 @endcan
                             </td>
                         </tr>
@@ -82,7 +83,26 @@
                 </button>
             @endif
         @endforeach
-
     </div>
-</div>
+    <div wire:ignore.self class="modal fade" id="confirmDelete" tabindex="-1" role="dialog"
+        aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true close-btn">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove this post forever?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Cancel</button>
+                    <button type="button" wire:click.prevent="delete()" class="btn btn-danger close-modal"
+                        data-dismiss="modal">Yes, remove it.</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

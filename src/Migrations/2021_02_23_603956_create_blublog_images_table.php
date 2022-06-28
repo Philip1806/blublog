@@ -17,7 +17,6 @@ class CreateBlublogImagesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('parent_id')->nullable()->index();
             $table->unsignedBigInteger('user_id')->index();
-            $table->string('size', 50)->nullable();
             $table->string('filename', 250);
             $table->timestamps();
         });

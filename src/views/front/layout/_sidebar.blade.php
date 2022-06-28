@@ -1,8 +1,8 @@
 @if (isset($post->tag_id))
     <p class="lead"> On this topic</p>
-    @include('blublog::front.layout._sidebarList',['posts'=>$post->fromThisTopic])
+    @include('blublog::front.layout._sidebarList', ['posts' => $post->fromThisTopic])
 @endif
-{!! Form::open(['route' => 'blublog.front.search', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+{!! Form::open(['route' => 'blublog.front.search', 'method' => 'GET']) !!}
 {{ Form::text('search', null, ['required', 'class' => 'form-control form-control-sm rounded mb-2', 'placeholder' => 'Search for post...']) }}
 {!! Form::close() !!}
 <p class="h4 mb-3">Categories:</p>
@@ -16,7 +16,6 @@
         @include('blublog::front.layout._category')
     </div>
 @empty
-
 @endforelse
 
-@include('blublog::front.layout._sidebarList',['posts'=>$rec_posts])
+@include('blublog::front.layout._sidebarList', ['posts' => $rec_posts])

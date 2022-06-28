@@ -57,7 +57,7 @@ class File extends Model
     /**
      * Delete image/file.
      *
-     * @return boolean True if successful, false if there was error.
+     * @return mixed True if successful, false if there was error. Returns 2 if successful, but posts were affected. 
      */
 
     public function deleteImage()

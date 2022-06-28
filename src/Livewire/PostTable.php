@@ -14,7 +14,7 @@ class PostTable extends Component
 
     protected $paginationTheme = 'bootstrap';
     protected $postservice;
-
+    public $deleteId;
     public $search;
     public $status = "publish";
 
@@ -43,9 +43,13 @@ class PostTable extends Component
         $this->my_posts = false;
         $this->status = $status;
     }
-    public function delete(PostService $postservice, $id)
+    public function deleteId($id)
     {
-        $post = $postservice->findById($id);
+        $this->deleteId = $id;
+    }
+    public function delete(PostService $postservice)
+    {
+        $post = $postservice->findById($this->deleteId);
         $postservice->remove($post);
     }
     public function myPosts()

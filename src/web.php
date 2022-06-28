@@ -8,13 +8,13 @@ Route::group(
         Route::group(
             ['prefix' => config('blublog.blog_prefix', 'blog')],
             static function () {
+                Route::get('/search', 'BlublogFrontController@search')->name('blublog.front.search');
                 Route::get('/', 'BlublogFrontController@index')->name('blublog.index');
                 Route::get('/{blogPostSlug}', 'BlublogFrontController@show')->name('blublog.front.single');
                 Route::get('/category/{slug}', 'BlublogFrontController@category')->name('blublog.front.category');
                 Route::get('/tag/{slug}', 'BlublogFrontController@tag')->name('blublog.front.tag');
                 Route::group(['middleware' => 'throttle:7,1'], static function () {
                     Route::get('/like/{slug}', 'BlublogFrontController@like')->name('blublog.front.like');
-                    Route::post('/search', 'BlublogFrontController@search')->name('blublog.front.search');
                     Route::post('/comments/add', 'BlublogFrontController@comment_store')->name('blublog.front.comments.store');
                     Route::post('/comment/reply/add', 'BlublogFrontController@comment_store')->name('blublog.front.comments.reply.store');
                 });

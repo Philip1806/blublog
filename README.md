@@ -2,7 +2,7 @@
 
 ## About BLUBLOG
 
-** The package is currently being rewritten for version 3.0. Last commits WILL break old versions. **
+**The package is currently being rewritten for version 3.0. Last commits WILL break old versions.**
 
 BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
 
@@ -90,18 +90,18 @@ If somebody is using it, here is what you need to do to upgrade to 3.0.
 - Search.
 - Comments can be allowed or forbidden.
 - Posts have status. **You can add or remove status. Post status tells who can view/edit post in panel (published, private...)**.
-- Post type. By default all posts are with type "post". You can add dropdown with other types in the view file.
+- Post types. If you use video for a post, the post type will be "video", if you use image then it will be "post". You can add dropdown with other types in the view file.
 - **Permissions for displaying HTML**. You can set for a user role 3 options for this - no HTML, restricted and no filter. Restricted option will use mewebstudio/Purifier if installed, if not a custom filter.
 - Posts can be liked.
 - Similar posts.
 - Views statistics for views and likes.
 - **Post revisions**. You can select post with what status to have revisions and how many.
 - **Create post with other users**. Author can change post status to co-op and give edit link to other user and edit together.
-- Generate sitemap (RSS).\
+- Generate sitemap (RSS).
 - User can change the date that a post is created.
 - User can change author if have permission.
 - You can select posts to be recommended or in front page.
-- You can upload images for the post you create/edit.
+- You can upload images or videos for the post you create/edit.
 - "On this topic" - Select a tag to show other post from the same topic.
 
 2. Comments (CRUD)
@@ -122,10 +122,11 @@ If somebody is using it, here is what you need to do to upgrade to 3.0.
 - **Add blog roles to your user model.**
 - You can create new roles and **new permissions**.
 
-5. Image manager
+5. File manager
 
-- Browse and upload images.
+- Browse and upload images and videos.
 - All images have different sizes. On upload Blublog will create the sizes set in config file.
+- All videos have thumbnail image with the sizes set in config file.
 
 6. Panel
 

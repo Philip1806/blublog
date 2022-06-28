@@ -116,14 +116,15 @@ class BlublogFrontController extends Controller
         Session::flash('success', "Post liked.");
         return back();
     }
-    public function search(Request $request)
+    public function search()
     {
-        $rules = [
-            'search' => 'required|min:3|max:150',
-        ];
-        $this->validate($request, $rules);
-        $search =  $request->search;
-        Log::add($request->search, 'info', 'Search used');
+        if (isset($_GET['search'])) {
+            $search = $_GET['search'];
+        } else {
+            abort(404);
+        }
+
+        Log::add($search, 'info', 'Search used');
         $result = collect(new Post);
 
         $posts = $this->postService->search($search, 'publish', false);
@@ -147,17 +148,19 @@ class BlublogFrontController extends Controller
             }
         }
         $similar_tags = $similar_tags->unique('id')->take(20);
-
         return view('blublog::front.search')->with('posts', $result)->with('tags', $similar_tags);
     }
     public function comment_store(CommentRequest $request)
     {
+        if (!config("blublog.allow-comments")) {
+            return abort(403);
+        }
         if (!Auth::check() and ($request->get('question_answer') != config('blublog.spam-question-answer'))) {
             Session::flash('error', 'Wrong answer.');
             return back();
         }
         Comment::addComment($request);
-
+        Cache::flush();
         return back();
     }
 }
