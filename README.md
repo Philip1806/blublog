@@ -1,8 +1,8 @@
-<p align="center"><img src="https://demo.blublog.info/blublog-uploads/photos/2021/9/IWhnvJCW1flbEFIR66YNwyE7uQWtOdnrT11GwcA4.jpg"></p>
+<p align="center"><img src="https://demo.blublog.info/blublog-uploads/photos/2022/6/fmowV0GkHUXwZTjk6cGToq3tQ2s8uGbxAKNuGpZr.jpg"></p>
 
 ## About BLUBLOG
 
-**The package is close to beta version**
+** The package is currently being rewritten for version 3.0. Last commits WILL break old versions. **
 
 BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
 
@@ -70,6 +70,14 @@ Or you can use blublog:setup if you already run migrations and don't wan't to pu
 Blublog will check for common errors and do all it needs. **Only the first user** of your user model will have access to blog panel and they will be admin. You can give access to others and set up blog roles and permisions from the panel.
 
 Cool. Everything should work now. By default you can visit your blog panel in example.com/panel and your blog in example.com/blog.
+
+## Upgrading
+
+If somebody is using it, here is what you need to do to upgrade to 3.0.
+
+- **See** the new migration.
+- Replace blublog config file with the new one. In the array "image_sizes" follow the instructions in the comments for backwards compatibility.
+- Add the new column (file_id) in blublog_posts table. You will need to make a php script that finds the id of a File model given the content of the old column (img).
 
 ## Features
 
