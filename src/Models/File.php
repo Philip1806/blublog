@@ -31,11 +31,15 @@ class File extends Model
     {
         return $this->hasMany(File::class, 'parent_id');
     }
+
     public function childrenRecursive()
     {
         return $this->children()->with('childrenRecursive');
     }
-
+    public function getChildren()
+    {
+        return self::where('parent_id', '=', $this->id)->get();
+    }
     /**
      * Returns URL to the file/image.
      *
@@ -91,7 +95,26 @@ class File extends Model
             return false;
         }
     }
+    public function usedInPost()
+    {
+        $result = true;
+        $posts = Post::where([
+            ['file_id', '=', $this->id],
+        ])->get();
+        if ($posts->isEmpty()) {
+            $result = false;
+        }
+        if (!$result) {
+            $img_in_posts = Post::where([
+                ['content', 'LIKE', '%' . $this->filename . '%'],
+            ])->orWhere('content', 'LIKE', '%' . $this->getChildren()->first()->filename . '%')->latest()->get();
+            if (!$img_in_posts->isEmpty()) {
+                $result = true;
+            }
+        }
 
+        return $result;
+    }
     /**
      * Returns image url of the last image size in "image_sizes" array.
      *

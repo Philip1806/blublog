@@ -25,6 +25,11 @@
                                     Delete
                                 </a>
                             @endcan
+                            @if (!$image->usedInPost())
+                                <span class="btn btn-sm btn-info btn-block rounded-0 m-0 p-0">
+                                    Unused.
+                                </span>
+                            @endif
                         </div>
                     </div>
 

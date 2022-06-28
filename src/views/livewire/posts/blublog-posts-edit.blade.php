@@ -2,7 +2,7 @@
     <form wire:submit.prevent="submit" novalidate>
 
         <div class="row">
-            <div class="col-md">
+            <div class="col-md-9">
 
                 <input type="text" wire:model.lazy="post.title" class="form-control mb-2">
                 @error('title')
@@ -57,8 +57,10 @@
                 <div class="btn-group btn-block" role="group" wire:ignore>
                     <button type="button" class="btn btn-dark" data-toggle="modal"
                         data-target="#selectImageModal">Choose</button>
-                    <button type="button" class="btn btn-primary" data-toggle="collapse"
-                        data-target="#uploadOptionsCollapse">Upload a...</button>
+                    @can('blublog_upload_files')
+                        <button type="button" class="btn btn-primary" data-toggle="collapse"
+                            data-target="#uploadOptionsCollapse">Upload a...</button>
+                    @endcan
                 </div>
                 <div class="collapse p-2" id="uploadOptionsCollapse">
                     <div class="btn-group btn-block" role="group" wire:ignore>

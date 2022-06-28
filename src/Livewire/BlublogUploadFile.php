@@ -3,12 +3,14 @@
 namespace Blublog\Blublog\Livewire;
 
 use Blublog\Blublog\Models\File;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class BlublogUploadFile extends Component
 {
     use WithFileUploads;
+    use AuthorizesRequests;
     public $photo;
 
     protected $rules = [
@@ -23,6 +25,7 @@ class BlublogUploadFile extends Component
 
     public function save()
     {
+        $this->authorize('blublog_upload_files');
         $this->validate();
         $this->emit('imageUploaded', File::createSizes($this->photo->store(File::getImageDir(), 'blublog')));
         $this->reset();

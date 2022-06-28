@@ -4,12 +4,13 @@ namespace Blublog\Blublog\Livewire;
 
 use Blublog\Blublog\Models\File;
 use Livewire\Component;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\WithFileUploads;
 
 class BlublogVideoUpload extends Component
 {
     use WithFileUploads;
-
+    use AuthorizesRequests;
     public $photo;
     public $video;
     protected $rules = [
@@ -23,6 +24,7 @@ class BlublogVideoUpload extends Component
     }
     public function submit()
     {
+        $this->authorize('blublog_upload_files');
         $this->validate();
         $videoPath = $this->video->store(File::getVideoDir(), config('blublog.files_disk', 'blublog'));
         $imagePath = $this->photo->store(File::getImageDir(), config('blublog.video_disk', 'blublog'));

@@ -2,7 +2,7 @@
     <form wire:submit.prevent="submit" novalidate>
 
         <div class="row">
-            <div class="col-md">
+            <div class="col-md-9">
                 <input type="text" wire:model.lazy="title" placeholder="Enter post title..."
                     class="form-control mb-2 @error('title') is-invalid @enderror">
 
