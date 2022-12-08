@@ -8,11 +8,9 @@ use Illuminate\Support\Facades\Gate;
 
 use Blublog\Blublog\Models\Log;
 use Blublog\Blublog\Models\Post;
-use Blublog\Blublog\Models\Tag;
 use Blublog\Blublog\Repositories\PostsRepository;
 use Blublog\Blublog\Repositories\TagsRepository;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Throwable;
@@ -172,31 +170,18 @@ class PostService
     {
         $needed_similar_posts = config('blublog.similar-posts');
 
-        // Check if post do not have tags
-        $category_posts = $post->categories[0]->getPosts()->latest()->limit($needed_similar_posts)->get()->shuffle();
-        if (!$post->tags) {
-            return $this->removePostFromCollection($category_posts, $post);
-        }
+        $tags = $post->tags()->with('posts')->get();
+        $categories = $post->categories[0]->posts()
+            ->where('created_at', '>=', Carbon::now()->subMonths(2))
+            ->latest()->limit($needed_similar_posts)->get();
+        $similar_posts = $tags->flatMap->posts
+            ->concat($categories)
+            ->unique('id')->shuffle()->take($needed_similar_posts);
 
-        // Make collection
-        $similarpost = collect(new Post);
-
-        // Add all posts from all tags in the collection
-        foreach ($post->tags as $tag) {
-            foreach ($tag->posts as $post) {
-                $similarpost->push($post);
-            }
-        }
-        // Add some post from the same category in the collection
-        foreach ($category_posts as $post) {
-            $similarpost->push($post);
-        }
-
-        // Filter the collection. No duplicates.
-        // TODO: Remove main post from collection.
-        $similarpost = $similarpost->unique('id')->shuffle();
-
-        return $this->removePostFromCollection($similarpost, $post)->take($needed_similar_posts);
+        // Filter out the original post
+        return $similar_posts->reject(function ($item) use ($post) {
+            return $item->id === $post->id;
+        });
     }
     public function cleanInput($content)
     {

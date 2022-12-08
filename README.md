@@ -2,8 +2,6 @@
 
 ## About BLUBLOG
 
-**The package is currently being rewritten for version 3.0. Last commits WILL break old versions.**
-
 BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
 
 **Demo at [demo.blublog.info](https://demo.blublog.info/)**.

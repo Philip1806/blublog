@@ -5,10 +5,7 @@ namespace Blublog\Blublog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
-use Auth;
-use Session;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Facades\Gate;
 
 class File extends Model
@@ -57,11 +54,35 @@ class File extends Model
     /**
      * Delete image/file.
      *
-     * @return mixed True if successful, false if there was error. Returns 2 if successful, but posts were affected. 
+     * @return mixed True if successful, false if there was error. Returns 2 if successful, but posts were affected.
      */
 
     public function deleteImage()
     {
+        if (!Gate::allows('blublog_delete_files', $this)) {
+            Log::add($this->id, 'alert', 'User do not have permission to delete this image.');
+            abort(403);
+        }
+
+        $disk = Storage::disk(config('blublog.files_disk', 'blublog'));
+        $posts = Post::where('file_id', '=', $this->id);
+        $foundPosts = $posts->count();
+        $this->children->each(function ($image) use ($disk) {
+            unlink($disk->path($image->filename));
+            $image->delete();
+        })->tap(function () use ($disk, $posts) {
+            unlink($disk->path($this->filename));
+            $posts->update(['file_id' => null]);
+            $this->delete();
+        });
+
+        if ($foundPosts === 0) {
+            return true;
+        } else {
+            return 2;
+        }
+
+        /*
         if (!Gate::allows('blublog_delete_files', $this)) {
             Log::add($this->id, 'alert', 'User do not have permission to delete this image.');
             abort(403);
@@ -74,18 +95,14 @@ class File extends Model
             Storage::disk(config('blublog.files_disk', 'blublog'))->delete($this->filename);
             Log::add($this->id, 'info', 'Image deleted.');
 
-            $causes = Post::where('file_id', '=', $this->id)->get();
-            foreach ($causes as $cause) {
-                $cause->file_id = null;
-                $cause->save();
-            }
+
             $posts = Post::where('file_id', '=', $this->id)->get();
             foreach ($posts as $post) {
                 $post->file_id = null;
                 $post->save();
             }
             $this->delete();
-            if (!$causes->isEmpty() or !$posts->isEmpty()) {
+            if (!$posts->isEmpty()) {
                 return 2;
             } else {
                 return true;
@@ -94,6 +111,7 @@ class File extends Model
             Log::add($e->getMessage(), 'error', 'Can not delete image.');
             return false;
         }
+        */
     }
     public function usedInPost()
     {

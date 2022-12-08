@@ -111,7 +111,6 @@ class BlublogSetUp extends Command
         $post = new Post;
         $post->user_id = blublog_user_model()::first()->id;
         $post->title = "Welcome to BLUblog!";
-        $post->img = "photos/no-image.jpg";
         $post->seo_title = "Welcome to BLUblog!";
         $post->seo_descr = "Thanks for instaling BLUblog!";
         $post->content = "Thanks for instaling BLUblog! You can edit or delete this post. If you have any problems, see the documentation or write to office@blublog.info, or add new issue on github.<br>Do not forget to add blublog driver in filesystems.php from config folder.";

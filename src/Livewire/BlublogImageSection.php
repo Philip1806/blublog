@@ -31,20 +31,20 @@ class BlublogImageSection extends Component
         if ($this->videos) {
             $images = File::whereNull('parent_id')->where('is_video', '=', true)->paginate(9);
         }
-
         return view('blublog::livewire.images.blublog-img-section')->with('images', $images);
     }
     public function delete($id)
     {
         $image = File::findOrFail($id);
         $status = $image->deleteImage();
+        if ($status === 2) {
+            $this->emit('alert', ['type' => 'warning', 'message' => 'Image removed. Post affected.']);
+            return;
+        }
         if ($status) {
             $this->emit('alert', ['type' => 'info', 'message' => 'Image removed']);
         } else {
             $this->emit('alert', ['type' => 'error', 'message' => 'Cannot remove image.']);
-        }
-        if ($status === 2) {
-            $this->emit('alert', ['type' => 'warning', 'message' => 'Image removed. Post affected.']);
         }
     }
     public function toggleUnused()

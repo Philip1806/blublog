@@ -5,12 +5,9 @@ namespace   Blublog\Blublog\Controllers;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Blublog\Blublog\Models\Category;
 use Blublog\Blublog\Models\Comment;
 use Blublog\Blublog\Models\Log;
-use Blublog\Blublog\Models\Post;
 use Blublog\Blublog\Models\Tag;
 use Session;
 use Auth;
@@ -18,6 +15,7 @@ use Blublog\Blublog\Requests\CommentRequest;
 use Blublog\Blublog\Services\CategoryService;
 use Blublog\Blublog\Services\PostService;
 use Blublog\Blublog\Services\TagService;
+use Illuminate\Database\Eloquent\Collection;
 
 class BlublogFrontController extends Controller
 {
@@ -114,41 +112,47 @@ class BlublogFrontController extends Controller
         $post = $this->postService->bySlug($slug);
         $this->postService->like($post);
         Session::flash('success', "Post liked.");
+        Cache::forget('blublog.post.' . $slug);
         return back();
     }
     public function search()
     {
-        if (isset($_GET['search'])) {
-            $search = $_GET['search'];
-        } else {
+        // If no search parameter is provided, abort with a 404 error
+        if (!isset($_GET['search'])) {
             abort(404);
         }
 
+        $search = $_GET['search'];
         Log::add($search, 'info', 'Search used');
-        $result = collect(new Post);
 
-        $posts = $this->postService->search($search, 'publish', false);
-        foreach ($posts as $post) {
-            $result->push($post);
-        }
+        $result = $this->postService->search($search, 'publish', false);
 
-        $posts = $this->postService->searchContent($search, 'publish', false);
-        foreach ($posts as $post) {
-            $result->push($post);
-        }
-
+        // Keep only unique results and take the first 30
         $result = $result->unique('id')->take(30);
 
+        // Get all tags and find the ones that are similar to the search term
         $tags = $this->tagService->getAll();
+        $similar_tags = $this->findSimilarTags($tags, $search);
+
+        // Return the view with the search results and similar tags
+        return view('blublog::front.search')->with('posts', $result)->with('tags', $similar_tags);
+    }
+    private function findSimilarTags(Collection $tags, string $search)
+    {
         $similar_tags = collect(new Tag);
+
         foreach ($tags as $tag) {
+            // Calculate the similarity between the search term and the current tag
             similar_text($tag->title, $search, $percent);
-            if ($percent > 20.0) {
+
+            // If the similarity is above 20%, add the tag to the collection
+            if ($percent > config('blublog.tags-search-similarity', 20.0)) {
                 $similar_tags->push($tag);
             }
         }
-        $similar_tags = $similar_tags->unique('id')->take(20);
-        return view('blublog::front.search')->with('posts', $result)->with('tags', $similar_tags);
+
+        // Keep only unique tags and take the first 20
+        return $similar_tags->unique('id')->take(config('blublog.tags-search-limit', 20));
     }
     public function comment_store(CommentRequest $request)
     {

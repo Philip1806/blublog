@@ -1,7 +1,6 @@
 @extends('blublog::panel.layout.main')
 
 @section('content')
-
     <div class="row">
         <div class="col-lg-8">
             <table class="table">
@@ -68,7 +67,11 @@
             <div class="card border border-dark">
                 <div class="card-body">
                     <h3>Create new role</h3>
-                    {!! Form::open(['route' => 'blublog.panel.users.roles.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                    {!! Form::open([
+                        'route' => 'blublog.panel.users.roles.store',
+                        'method' => 'POST',
+                        'enctype' => 'multipart/form-data',
+                    ]) !!}
 
                     {{ Form::label('name', 'Role name') }}
                     {{ Form::text('name', null, ['class' => 'form-control']) }}
@@ -97,7 +100,7 @@
                                                 <div class="card-body">
                                                     @foreach ($sections as $permission)
                                                         <span
-                                                            class="badge badge-primary">{{ Form::checkbox($permission->permission, true) }}
+                                                            class="badge badge-primary">{{ Form::checkbox($permission->permission, true, true) }}
                                                             {{ $permission->permission_descr }}</span>
                                                     @endforeach
                                                 </div>
@@ -114,5 +117,4 @@
             </div>
         </div>
     </div>
-
 @endsection

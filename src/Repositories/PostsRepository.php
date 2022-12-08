@@ -5,6 +5,7 @@ namespace Blublog\Blublog\Repositories;
 use Blublog\Blublog\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostsRepository
 {
@@ -51,19 +52,13 @@ class PostsRepository
     }
     public function fromUser(int $id, string $status = null)
     {
-        if (!$status) {
-            return $this->query(true)
-                ->where([
-                    ['user_id', '=', $id],
-                ])
-                ->latest()
-                ->paginate(config('blublog.posts-from-user'));
-        }
         return $this->query(true)
             ->where([
-                ['status', '=', $status],
                 ['user_id', '=', $id],
             ])
+            ->when($status, function ($query) use ($status) {
+                return $query->where('status', '=', $status);
+            })
             ->latest()
             ->paginate(config('blublog.posts-from-user'));
     }
@@ -85,25 +80,42 @@ class PostsRepository
         }
         return $result->get();
     }
-    public function search($search, string $status = "publish", $paginate = true)
-    {
-        $result = $this->query(true)
+    public function search(
+        $search,
+        string $status = 'publish',
+        $paginate = false
+    ): LengthAwarePaginator|Collection {
+        $search_results = $this->query(true)
             ->where('title', 'like', '%' . $search . '%')
-            ->where('status', '=', $status)->latest();
-        if ($paginate) {
-            return $result->paginate(config('blublog.posts-per-page-from-search'));
-        }
-        return $result->get();
+            ->orWhere('content', 'like', '%' . $search . '%')
+            ->where('status', '=', $status)
+            ->latest();
+        return $paginate
+            ? $search_results->paginate(config('blublog.posts-per-page-from-search'))
+            : $search_results->get();
+    }
+    public function searchTitle(
+        $search,
+        string $status = 'publish',
+        $paginate = false
+    ): LengthAwarePaginator|Collection {
+        $search_results = $this->query(true)
+            ->where('title', 'like', '%' . $search . '%')
+            ->where('status', '=', $status)
+            ->latest();
+        return $paginate
+            ? $search_results->paginate(config('blublog.posts-per-page-from-search'))
+            : $search_results->get();
     }
     public function searchContent($search, string $status = "publish", $paginate = true)
     {
-        $result = $this->query(true)
+        $search_results = $this->query(true)
             ->where('content', 'like', '%' . $search . '%')
-            ->where('status', '=', $status)->latest();
-        if ($paginate) {
-            return $result->paginate(config('blublog.posts-per-page-from-search'));
-        }
-        return $result->get();
+            ->where('status', '=', $status)
+            ->latest();
+        return $paginate
+            ? $search_results->paginate(config('blublog.posts-per-page-from-search'))
+            : $search_results->get();
     }
     public function recommended()
     {
@@ -129,27 +141,24 @@ class PostsRepository
     public function lastMonthPosts()
     {
         return $this->query(false)
-            ->whereMonth('created_at', '=', --now()->month)->whereYear('created_at', '=', now()->year)->get();
+            ->whereMonth('created_at', '=', now()->subMonth()->month)->whereYear('created_at', '=', now()->year)->get();
     }
 
     public function myLastMonthPosts(): int
     {
         return $this->query(false)
-            ->where([
-                ['user_id', '=', auth()->user()->id],
-            ])
-            ->whereMonth('created_at', '=', --now()->month)
-            ->whereYear('created_at', '=', now()->year)
-            ->get()->count();
+            ->where('user_id', auth()->user()->id)
+            ->whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
     }
     public function myThisMonthPosts(): int
     {
         return $this->query(false)
-            ->where([
-                ['user_id', '=', auth()->user()->id],
-            ])->whereMonth('created_at', '=', now()->month)
-            ->whereYear('created_at', '=', now()->year)
-            ->get()->count();
+            ->where('user_id', auth()->user()->id)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
     }
     public function myPosts(): int
     {

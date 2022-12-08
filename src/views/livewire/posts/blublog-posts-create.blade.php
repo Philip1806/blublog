@@ -41,8 +41,7 @@
                         <option value="{{ $key }}"> {{ $value }}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="btn btn-success btn-block my-2" wire:loading.attr="disabled"
-                    role="button">
+                <button type="submit" class="btn btn-success btn-block my-2" role="button">
                     <span class="oi oi-circle-check"></span>
                     Create
                 </button>

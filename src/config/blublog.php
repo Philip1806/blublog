@@ -11,11 +11,11 @@ return [
     |
     | Cache and prefix settings
     | !---> By default Blublog will searh for User model in \App\Models like is in Laravel 8
-    | 
+    |
     */
     'setting_cache' => 3800,
-    'blog_prefix' => "blog",  // example.com/blog - Location of the blog 
-    'panel_prefix' => "panel", // example.com/panel - Location of the blog panel 
+    'blog_prefix' => "blog",  // example.com/blog - Location of the blog
+    'panel_prefix' => "panel", // example.com/panel - Location of the blog panel
     'userModel' => "\\App\\Models\\User",
 
     /*
@@ -25,7 +25,7 @@ return [
     |
     | What disk from app/filesystems.php blublog should use for file uploads?
     | By default you need to create new disk with name blublog in that file.
-    | !---> Blublog gets image url from the disk, so you need to make sure it provides the right link. 
+    | !---> Blublog gets image url from the disk, so you need to make sure it provides the right link.
     |
     */
     'files_disk' => "blublog",
@@ -71,7 +71,7 @@ return [
     | Post Edit Codes
     |--------------------------------------------------------------------------
     |
-    | 0 - Can be edited by all users. 
+    | 0 - Can be edited by all users.
     | 1 - Restricted. Post author, mods and admin can edit post.
     | 2 - Custom. Blublog will check if user have permission "edit-{your-post-status}"
     |
@@ -114,7 +114,7 @@ return [
     | false - Use original image.
     | 0 - Use first size
     | 1 - Use second size...
-    | 
+    |
     */
     'post_image_size' => false,
     'image_quality' => 80,
@@ -126,7 +126,7 @@ return [
     |
     | You can add as many you want. More sizes, more database records and more disk usage.
     | !---> Must have at least one for thumbnail
-    | 
+    |
     */
     'image_sizes' => [
         [
@@ -157,6 +157,10 @@ return [
     'moderate-tags-within' => 1,
     'posts-form-tag-per-page-with-status' => 5, // Used in list of posts with a tag
     'tags-per-page-from-search' => 8,
+    // If search query is more than 20% similar to the name of the tag, then the tag is shown in search results.
+    'tags-search-similarity' => 20.0,
+    'tags-search-limit' => 10, // Max number of similar tags in search result.
+
     /**
      * Category Settings
      */
@@ -168,7 +172,7 @@ return [
     'allow-comments' => true,
     'spam-question' => "What is 2 * 6?",
     'spam-question-answer' => 12,
-    // Users or guest who have approved comments will not wait for approving 
+    // Users or guest who have approved comments will not wait for approving
     'auto-approve' => true,
     // If logged in, comment will be public
     'approve-if-logged-in' => true,
