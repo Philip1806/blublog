@@ -118,14 +118,15 @@ class Comment extends Model
         if (!$post->comments) {
             return false;
         }
-        $user = Auth::user();
-        if ($user) {
-            if (!$user->blublogRoles->first()->havePermission('create-comments')) {
+
+        if (Auth::check()) {
+            if (!blublog_have_permission('create-comments')) {
                 return false;
             }
-        } elseif (config('blublog.only-logged-in-can-comment')) {
+        } elseif (config('blublog.only-logged-in-can-comment', false)) {
             return false;
         }
+
         return true;
     }
     /**
@@ -134,7 +135,7 @@ class Comment extends Model
      * @param string $ip
      * @return boolean
      */
-    public static function IphaveApprovedComments(string $ip): bool
+    public static function IphaveApprovedComments($ip): bool
     {
         $havelog = Log::where([
             ['type', '=', 'info'],
@@ -160,21 +161,16 @@ class Comment extends Model
     {
         if (config('blublog.approve-if-logged-in')) {
             return true;
-        } else if (config('blublog.auto-approve')) {
-            if (Comment::UserhaveApprovedComments($user)) {
-                return true;
-            }
+        } else if (config('blublog.auto-approve') and Comment::UserhaveApprovedComments($user)) {
+            return true;
         }
         return false;
     }
     public static function UserhaveApprovedComments($user): bool
     {
-        $lastComment = Comment::where('author_id', '=', $user->id)->latest()->first();
-        if ($lastComment) {
-            if ($lastComment->public) {
-                return true;
-            }
-        }
-        return false;
+        return Comment::where('author_id', $user->id)
+            ->latest()
+            ->where('public', true)
+            ->exists();
     }
 }

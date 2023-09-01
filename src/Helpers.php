@@ -11,10 +11,7 @@ if (!function_exists('blublog_get_user')) {
 if (!function_exists('blublog_is_bot')) {
     function blublog_is_bot()
     {
-        if (strpos(\Request::header('User-Agent'), "bot") or !\Request::header('accept-language')) {
-            return true;
-        }
-        return false;
+        return (strpos(\Request::header('User-Agent'), "bot") or !\Request::header('accept-language')) ? true : false;
     }
 }
 if (!function_exists('blublog_user_model')) {
@@ -32,8 +29,11 @@ if (!function_exists('blublog_user_model')) {
 if (!function_exists('blublog_have_permission')) {
     function blublog_have_permission($permission)
     {
-        if (auth()->user()->blublogRoles->first()->havePermission($permission)) {
-            return true;
+        $user = auth()->user();
+        foreach ($user->blublogRoles as $role) {
+            if ($role->havePermission($permission)) {
+                return true;
+            }
         }
         return false;
     }
@@ -41,19 +41,20 @@ if (!function_exists('blublog_have_permission')) {
 if (!function_exists('blublog_can_view_status')) {
     function blublog_can_view_status($post_status)
     {
-        $pos = array_search($post_status, config('blublog.post_status'));
-        if (config('blublog.post_status_access')[$pos] == 3) {
-            if (auth()->user()->blublogRoles->first()->havePermission('edit-' . $post_status)) {
-                return true;
-            }
-            return false;
-        } elseif (config('blublog.post_status_access')[$pos] == 1) {
-            if (blublog_is_mod()) {
-                return true;
-            } else {
-                return false;
-            }
+        $statuses = config('blublog.post_status');
+        $access_levels = config('blublog.post_status_access');
+        $pos = array_search($post_status, $statuses);
+
+        if ($access_levels[$pos] === 3) {
+            $user = auth()->user();
+            $first_role = $user->blublogRoles->first();
+            return $first_role && $first_role->havePermission('edit-' . $post_status);
         }
+
+        if ($access_levels[$pos] === 1) {
+            return blublog_is_mod();
+        }
+
         return true;
     }
 }
@@ -76,10 +77,8 @@ if (!function_exists('blublog_is_admin')) {
             if (Auth::user()->blublogRoles->first()->havePermission('is-admin')) {
                 return true;
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 }
 if (!function_exists('blublog_is_mod')) {
@@ -90,10 +89,8 @@ if (!function_exists('blublog_is_mod')) {
             if ($user->blublogRoles->first()->havePermission('is-admin') or $user->blublogRoles->first()->havePermission('is-mod')) {
                 return true;
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 }
 
@@ -112,10 +109,7 @@ if (!function_exists('blublog_panel_url')) {
 if (!function_exists('blublog_check_access')) {
     function blublog_check_access($action, $resource)
     {
-        if (!Auth::user()->can($action, $resource)) {
-            abort(403);
-        }
-        return true;
+        return (!Auth::user()->can($action, $resource)) ? abort(403) : true;
     }
 }
 

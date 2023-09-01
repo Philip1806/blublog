@@ -40,7 +40,6 @@ class PostTable extends Component
 
     public function showOnly($status)
     {
-        $this->my_posts = false;
         $this->status = $status;
     }
     public function deleteId($id)

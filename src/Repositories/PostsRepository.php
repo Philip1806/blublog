@@ -87,7 +87,7 @@ class PostsRepository
     ): LengthAwarePaginator|Collection {
         $search_results = $this->query(true)
             ->where('title', 'like', '%' . $search . '%')
-            ->orWhere('content', 'like', '%' . $search . '%')
+            ->where('content', 'like', '%' . $search . '%')
             ->where('status', '=', $status)
             ->latest();
         return $paginate
