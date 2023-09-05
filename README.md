@@ -1,6 +1,9 @@
+<p align="center"><img src="https://demo.blublog.info/blublog-uploads/photos/2023/9//Pnt1zTcgL6JwLTnxYBZoPnpoc1XZUBPAOvIcNgik.jpg"></p>
 ## About BLUBLOG
 
 BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
+
+**Demo at [demo.blublog.info](https://demo.blublog.info/blog)**.
 
 ## Require
 
