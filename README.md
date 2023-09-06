@@ -1,4 +1,8 @@
 <p align="center"><img src="https://demo.blublog.info/blublog-uploads/photos/2023/9//Pnt1zTcgL6JwLTnxYBZoPnpoc1XZUBPAOvIcNgik.jpg"></p>
+<p align="center"><img src="https://demo.blublog.info/blublog-uploads/photos/2023/9//JsXVm585AX7D0wu9rInw7rULA8MmKwNYb5dHFhwm.jpg"></p>
+
+**New version for Laravel 10 and Livewire 3 is coming**
+
 ## About BLUBLOG
 
 BLUblog is laravel blog package with admin panel. Includes all views, controllers, routes and everything needed for a blog.
@@ -7,8 +11,8 @@ BLUblog is laravel blog package with admin panel. Includes all views, controller
 
 ## Require
 
-- Laravel 7 or newer. It's build on Laravel 8.
-- **Livewire**.
+- **Laravel 7, 8 or 9.**
+- **Livewire v2**.
 - laravelcollective/html
 - intervention/image
 - user model with auth.
@@ -16,7 +20,7 @@ BLUblog is laravel blog package with admin panel. Includes all views, controller
 You can install all you need with:
 
 ```
-composer require livewire/livewire
+composer require livewire/livewire:2.*
 composer require laravelcollective/html
 composer require intervention/image
 ```
